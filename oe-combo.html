@@ -25,7 +25,7 @@ specifying `listurl` property.
 -->
 <dom-module id="oe-combo">
   <style>
-    :host {
+     :host {
       display: block;
     }
 
@@ -72,7 +72,7 @@ specifying `listurl` property.
       cursor: pointer;
     }
 
-    .dropdown-content > ::content paper-item {
+    .dropdown-content> ::content paper-item {
       --paper-item-selected: {
         background-color: #ccc;
       }
@@ -241,7 +241,9 @@ specifying `listurl` property.
       },
       _listDataChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
         if (this.listdata) {
-          this.listdata.sort(this.sortData.bind(this));
+          if (this.sort) {
+            this.listdata.sort(this.sortData.bind(this));
+          }
           this._setDisplayAndValidate();
         }
       },
