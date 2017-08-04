@@ -24,6 +24,12 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="sorted">
+    <template>
+      <oe-combo sort displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
+
   <test-fixture id="freetext">
     <template>
       <oe-combo allow-free-text displayproperty="description" valueproperty="code"></oe-combo>
@@ -145,21 +151,22 @@
       });
 
       test('Displayed data is sorted', function () {
-        MockInteractions.tap(arrow);
-        var menu = el.querySelector('paper-material');
+        var sEl = fixture('sorted');
+        var newlist = JSON.parse(JSON.stringify(listdata));
+        sEl.set('listdata', newlist);
+        
+        //new list should be sorted now.
+        assert.deepEqual(sEl.listdata[0], listdata[1]);
+        assert.deepEqual(newlist[0], listdata[1]);
+        sArrow = sEl.$.dropdownicon;
+
+        MockInteractions.tap(sArrow);
+        var menu = sEl.querySelector('paper-material');
         assert.isDefined(menu);
 
         var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
-        assert.equal(menuItems.length, listdata.length);
-
-        assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
-        MockInteractions.tap(menuItems[1]);
-        listdata.sort(function (a, b) {
-          return a[el.displayproperty] > b[el.displayproperty] ? 1 : -1;
-        });
-        assert.equal(el.value, (listdata[1])[el.valueproperty]);
-        assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
-        assert.equal(el.selectedItem, listdata[1]);
+        assert.equal(menuItems.length, newlist.length);
+        assert.equal(menuItems[0].querySelector('span').innerHTML, (listdata[1])[sEl.displayproperty]);
       });
 
       test('When item in dropdown is tapped, it is set as selected', function () {
