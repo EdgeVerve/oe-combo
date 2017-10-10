@@ -300,6 +300,10 @@ specifying `listurl` property.
               this.selectedItem = this.value;
               this.displayValue = this._getDisplayValue(this.value);
               this.setValidity(true, undefined);
+            } else if (this.allowFreeText) {
+              this.selectedItem = this.value;
+              this.displayValue = this.value;
+              this.setValidity(true, undefined);
             } else {
               this.setValidity(false, 'invalidValue');
             }
