@@ -31,7 +31,7 @@
     <template>
       <template is="dom-bind">
         <span>{{cval}}</span>
-        <oe-combo label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"Uni-ted Kingdom"},{"c":"US","d":"United States"}]'>
+        <oe-combo error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
 
           <iron-icon prefix icon="home"></iron-icon>
 

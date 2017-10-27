@@ -101,7 +101,7 @@ specifying `listurl` property.
             <iron-icon icon="refresh" on-tap="_fetchListData"></iron-icon>
           </template>
         </div>
-        <oe-input-error invalid={{invalid}} placeholders={{errorPlaceholders}} error-message={{errorMessage}}></oe-input-error>
+        <oe-input-error invalid={{invalid}} placeholders={{errorPlaceholders}} error-message=[[errorMessage]]></oe-input-error>
       </paper-input-container>
       <div>
         <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}" no-auto-focus opened={{expand}}>
