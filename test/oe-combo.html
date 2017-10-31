@@ -24,6 +24,19 @@
     </template>
   </test-fixture>
 
+  <test-fixture id="with-template">
+    <template>
+      <oe-combo displayproperty="description" valueproperty="code">
+        <template item-template>
+          <paper-item>
+            <span class="layout flex centered">{{item.description}}</span>
+            <span>{{item.code}}</span>
+          </paper-item>
+        </template>
+      </oe-combo>
+    </template>
+  </test-fixture>
+
   <test-fixture id="sorted">
     <template>
       <oe-combo sort displayproperty="description" valueproperty="code"></oe-combo>
@@ -473,6 +486,374 @@
       });
     });
 
+    suite('<oe-combo with template>', function () {
+
+      setup(function () {
+        el = fixture('with-template');
+        el.set('listdata', listdata);
+        arrow = el.$.dropdownicon;
+      });
+
+      test('Setting value updates the display', function () {
+        el.set('value', (listdata[2])[el.valueproperty]);
+        assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
+        el.set('value', (listdata[4])[el.valueproperty]);
+        assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
+      });
+
+      test('Setting value, sets selectedItem', function () {
+        el.set('value', (listdata[3])[el.valueproperty]);
+        assert.equal(el.selectedItem, listdata[3]);
+      });
+
+      test('dropdown is not visible by default', function () {
+        assert.notEqual(el.expand, true);
+        var dropdown = el.$.dropdown;
+        dropdown && assert.equal(dropdown.opened, false);
+      });
+
+      test('dropdown is displayed when arrow is tapped', function () {
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, true);
+        var dropdown = el.$.dropdown;
+        assert.isDefined(dropdown);
+        assert.notEqual(dropdown.opened, false);
+      });
+
+      test('dropdown items are displayed as per the template', function () {
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, true);
+        var dropdown = el.$.dropdown;
+        assert.isDefined(dropdown);
+        assert.notEqual(dropdown.opened, false);
+        
+        var items = el.$.menu.querySelectorAll('paper-item');
+        for(var i=0;i<items.length;i++) {
+          var item = items[i];
+          assert.equal(item.children.length, 2);
+          assert.equal(item.children[0].nodeName, 'SPAN');
+          assert.equal(item.children[0].className, 'layout flex centered');
+          assert.equal(item.children[1].nodeName, 'SPAN');
+        }
+        
+      });
+
+      test('When dropdown is open and arrow is tapped, dropdown closes', function () {
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, true);
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, false);
+
+        var dropdown = el.$.dropdown;
+        dropdown && assert.notEqual(dropdown.opened, true);
+      });
+
+      test('All listdata items are displayed in menu', function () {
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, true);
+        var menu = el.querySelector('paper-menu');
+        assert.isDefined(menu);
+
+        var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+        assert.equal(menuItems.length, listdata.length);
+      });
+
+      test('Displayed data is sorted', function () {
+        var sEl = fixture('sorted');
+        var newlist = JSON.parse(JSON.stringify(listdata));
+        sEl.set('listdata', newlist);
+        
+        //new list should be sorted now.
+        assert.deepEqual(sEl.listdata[0], listdata[1]);
+        assert.deepEqual(newlist[0], listdata[1]);
+        sArrow = sEl.$.dropdownicon;
+
+        MockInteractions.tap(sArrow);
+        var menu = sEl.querySelector('paper-material');
+        assert.isDefined(menu);
+
+        var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+        assert.equal(menuItems.length, newlist.length);
+        assert.equal(menuItems[0].querySelector('span').innerHTML, (listdata[1])[sEl.displayproperty]);
+      });
+
+      test('When item in dropdown is tapped, it is set as selected', function () {
+        MockInteractions.tap(arrow);
+        var menu = el.querySelector('paper-material');
+        assert.isDefined(menu);
+
+        var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+        assert.equal(menuItems.length, listdata.length);
+
+        assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+        MockInteractions.tap(menuItems[1]);
+        assert.equal(el.value, (listdata[1])[el.valueproperty]);
+        assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
+        assert.equal(el.selectedItem, listdata[1]);
+      });
+
+      test('drowdown closes once selection is made', function (done) {
+        MockInteractions.tap(arrow);
+        assert.equal(el.expand, true);
+
+        var dropdown = el.$.dropdown;
+        var menuItems = Polymer.dom(dropdown).querySelectorAll('paper-item');
+
+        MockInteractions.tap(menuItems[1]);
+
+        assert.notEqual(el.expand, true);
+        Polymer.Base.async(function () {
+          assert.equal(dropdown.opened, false);
+          done();
+        });
+      });
+
+      test('When down arrow key is pressed, drowdown opens', function (done) {
+        var input = el.$.input;
+        MockInteractions.keyUpOn(input, 40);
+
+        Polymer.Base.async(function () {
+          assert.equal(el.expand, true);
+          var dropdown = el.$.dropdown;
+          assert.notEqual(dropdown.opened, false);
+          done();
+        });
+
+      });
+
+      test('down arrow + enter selects first element and closes menu', function (done) {
+        var input = el.$.input;
+        MockInteractions.focus(input);
+        MockInteractions.keyUpOn(input, 40);
+        Polymer.Base.async(function () {
+          MockInteractions.pressEnter(input);
+          Polymer.Base.async(function () {
+            assert.equal(el.expand, false);
+            assert.equal(el.value, (listdata[0])[el.valueproperty]);
+            done();
+          }, 500);
+        });
+      });
+
+      test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function (
+        done) {
+        var input = el.$.input;
+        MockInteractions.keyUpOn(input, 40);
+
+        Polymer.Base.async(function () {
+          assert.equal(el.expand, true);
+          var menu = el.querySelector('paper-menu');
+          assert.notEqual(getComputedStyle(menu).display, 'none');
+          var selectedItem = menu.focusedItem;
+          assert.isDefined(selectedItem);
+          assert.equal(menu.indexOf(selectedItem), 0);
+
+          MockInteractions.keyUpOn(input, 40);
+          Polymer.Base.async(function () {
+            selectedItem = menu.focusedItem;
+            assert.isDefined(selectedItem);
+            assert.equal(menu.indexOf(selectedItem), 1);
+            done();
+          });
+        });
+      });
+
+      test('When up arrow key is pressed on open dropdown, highlighted item are rotated', function (done) {
+        var input = el.$.input;
+        MockInteractions.keyUpOn(input, 40);
+
+        Polymer.Base.async(function () {
+          assert.equal(el.expand, true);
+          var menu = el.querySelector('paper-menu');
+          assert.notEqual(getComputedStyle(menu).display, 'none');
+          var selectedItem = menu.focusedItem;
+          assert.isDefined(selectedItem);
+          assert.equal(menu.indexOf(selectedItem), 0);
+
+          // up-arrow
+          MockInteractions.keyUpOn(input, 38);
+          Polymer.Base.async(function () {
+            selectedItem = menu.focusedItem;
+            assert.isDefined(selectedItem);
+            assert.equal(menu.indexOf(selectedItem), el._suggestions.length -
+              1);
+            done();
+          });
+        });
+      });
+
+      test('Value is set when typed input matches exactly one record, and dropdown does not open',
+        function (done) {
+          var input = el.$.input;
+          input.bindValue = 'i';
+          MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(0));
+          input.fire('change');
+          //Polymer.Base.async(function(){
+
+          assert.equal(el.displayValue, 'India');
+          assert.equal(el.value, 'IN');
+          assert.equal(el.expand, false);
+          assert.equal(el.invalid, false);
+          assert.isUndefined(el.errorMessage);
+          var dropdown = el.$.dropdown;
+          dropdown && assert.equal(dropdown.opened, false);
+          done();
+          //});
+        });
+
+      test('When typed input matches more than one record, dropdown is displayed with matching records on top',
+        function () {
+          var input = el.$.input;
+          input.bindValue = 'un';
+          MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
+          input.fire('change');
+        
+          assert.isUndefined(el.value);
+          assert.equal(el.expand, true);
+
+          var menu = el.querySelector('paper-menu');
+          assert.isNotNull(menu);
+          assert.notEqual(getComputedStyle(menu).display, 'none');
+          var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+
+          var item0 = menuItems[0].dataItem
+          var item1 = menuItems[1].dataItem;
+
+          assert.isTrue((item0[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
+          assert.isTrue((item1[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
+        });
+
+      test('When typed input does not match any record, control is set to error and dropdown is displayed',
+        function (done) {
+          var input = el.$.input;
+          input.set('bindValue', 'Ux');
+          MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
+          input.fire('change');
+
+          assert.isUndefined(el.value);
+          assert.equal(el.expand, true);
+
+          var menu = el.querySelector('paper-menu');
+          assert.isNotNull(menu);
+          assert.notEqual(getComputedStyle(menu).display, 'none');
+
+          //Ensure invalid
+          //Polymer.Base.async(function(){
+          assert.equal(el.invalid, true);
+          assert.equal(el.errorMessage, 'invalidValue');
+          done();
+          //});
+
+        });
+
+      test(
+        'When allowFreeText is set and typed input does not match any record, no error is raised and input is set as value',
+        function (done) {
+
+          //var el = fixture('freetext');
+          el.set('listdata', listdata);
+
+          var input = el.$.input;
+
+          input.set('bindValue', 'Ux');
+          MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
+          input.fire('change');
+
+          assert.isUndefined(el.value);
+          assert.equal(el.expand, true);
+
+          var menu = el.querySelector('paper-menu');
+          assert.isNotNull(menu);
+          assert.notEqual(getComputedStyle(menu).display, 'none');
+
+          //Ensure invalid
+          //Polymer.Base.async(function(){
+          assert.equal(el.invalid, true);
+          assert.equal(el.errorMessage, 'invalidValue');
+          done();
+          //});
+
+        });
+
+
+      test('When backspace is pressed, new set of matches are displayed in dropdown', function (done) {
+        var input = el.$.input;
+        input.set('bindValue', 'Cha');
+        MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(2));
+        input.fire('change');
+        assert.equal(el.value, 'CD');
+        assert.equal(el.expand, false);
+
+
+        input.set('bindValue', 'Ch');
+
+        // backspace
+        MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(46));
+
+        var menu = el.querySelector('paper-menu');
+        assert.isNotNull(menu);
+        assert.notEqual(getComputedStyle(menu).display, 'none');
+        var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+
+
+        assert.equal((menuItems[0].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+        assert.equal((menuItems[1].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+        assert.equal((menuItems[2].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+
+
+        //Ensure not invalid
+        //Polymer.Base.async(function(){
+        assert.notEqual(el.invalid, true);
+        assert.notEqual(el.errorMessage, 'invalidValue');
+        done();
+        //});
+      });
+
+      /*This test case is known to be failing*/
+      /*
+      test('When backspace is pressed from no-match to cause some match, error should not be set', function () {
+      	var input = el.$.input;
+      	input.set('bindValue', 'Chx');
+      	MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(2));
+      	input.fire('change');
+
+      	assert.equal(el.invalid, true);
+      	assert.equal(el.errorMessage, 'invalidValue');
+
+      	input.set('bindValue', 'Ch');
+      	MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(46));
+
+      	var menu = el.querySelector('paper-menu');
+      	assert.isNotNull(menu);
+      	assert.notEqual(getComputedStyle(menu).display, 'none');
+      	var menuItems = Polymer.dom(menu).querySelectorAll('paper-item');
+
+
+      	assert.equal((menuItems[0].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+      	assert.equal((menuItems[1].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+      	assert.equal((menuItems[2].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
+
+
+      	//Ensure not invalid
+      	//Polymer.Base.async(function(){
+      	assert.notEqual(el.invalid, true);
+      	assert.notEqual(el.errorMessage, 'invalidValue');
+      	done();
+      	//});
+      });
+      */
+
+
+
+      test('When value is pre-set, the displayValue is updated', function () {
+        var el = fixture('with-value');
+        el.set('listdata', listdata);
+
+        assert.equal(el.value, 'IN');
+        assert.equal(el.displayValue, 'India');
+      });
+    });
+    
     suite('<oe-combo listurl>', function () {
 
       var server;

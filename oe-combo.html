@@ -107,16 +107,19 @@ specifying `listurl` property.
         <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}" no-auto-focus opened={{expand}}>
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
             <paper-menu id="menu">
-              <template is="dom-repeat" items="{{_suggestions}}">
-                <paper-item on-mouseover="_selection" on-tap="_select" data-item={{item}} data-index={{index}} disabled$="[[readonly]]">
-                  <span>{{_getDisplayValue(item)}}</span>
-                </paper-item>
+              <template is="dom-if" if={{!hasCustomTemplate}}>
+                <template is="dom-repeat" items="{{_suggestions}}">
+                  <paper-item on-mouseover="_onMouseOver" on-tap="_select" data-item={{item}} disabled$="[[readonly]]">
+                    <span>{{_getDisplayValue(item)}}</span>
+                  </paper-item>
+                </template>
               </template>
             </paper-menu>
           </paper-material>
         </iron-dropdown>
       </div>
     </div>
+    <content id="itemTemplate" select="template[item-template]"></content>
   </template>
   <script>
     Polymer({
@@ -165,7 +168,9 @@ specifying `listurl` property.
           type: Boolean
         },
         _suggestions: {
-          type: Array
+          type: Array,
+          notify: true,
+          observer: '_suggestionsChanged'
         },
 
         /*Array of records to be displayed in dropdown. Can be array of primitives as well as objects.
@@ -208,7 +213,8 @@ specifying `listurl` property.
       behaviors: [
         Polymer.IronFormElementBehavior,
         Polymer.PaperInputBehavior,
-        OEUtils.FieldBehavior
+        OEUtils.FieldBehavior,
+        Polymer.Templatizer
       ],
 
       /**
@@ -217,7 +223,23 @@ specifying `listurl` property.
       get inputElement() {
         return this.$.input;
       },
+      _suggestionsChanged: function(suggestions){
+        if (this.hasCustomTemplate) {
+          var menu = Polymer.dom(this.$.menu);
+          while (menu.firstChild) {
+            menu.removeChild(menu.firstChild);
+          }
 
+          var items = suggestions;
+          for (var i = 0; i < items.length; i++) {
+            // clone the template and bind with the model
+            var clone = this.stamp({});
+            clone.item = items[i];
+            clone.index = i;
+            menu.appendChild(clone.root);
+          }
+        }
+      },
       _fetchListData: function () {
         if (this.listurl) {
           var self = this;
@@ -311,6 +333,21 @@ specifying `listurl` property.
         } else {
           this.displayValue = '';
           this.setValidity(true, undefined);
+        }
+      },
+      
+      ready: function() {
+        this.set('hasCustomTemplate', false);
+        var template = Polymer.dom(this.$.itemTemplate).getDistributedNodes()[0];
+        if(template) {
+          this.dataHost = this;
+          template.content.children[0].setAttribute('on-tap','_select');
+          template.content.children[0].setAttribute('on-mouseover','_onMouseOver');
+          template.content.children[0].setAttribute('data-item','{{item}}');
+          template.content.children[0].setAttribute('disabled','[[readOnly]]');
+          // templatize must be called once before stamp is called
+          this.templatize(template);
+          this.set('hasCustomTemplate', true);
         }
       },
       attached: function () {
@@ -460,17 +497,17 @@ specifying `listurl` property.
 
 
       /* on-mouseover it will fire */
-      _selection: function (e) {
+      _onMouseOver: function (e) {
         var suggestionsMenu = this.$.menu;
         if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          suggestionsMenu.select(e.currentTarget.dataIndex);
+          suggestionsMenu.select(e.model.index);
           this.$.input.focus();
         }
       },
 
       /* on-tap it will fire */
       _select: function (e) {
-        this._setSelectedItem(e.currentTarget.dataItem);
+        this._setSelectedItem(e.model.item);
         this.$.input.focus();
         e.stopPropagation();
       },
