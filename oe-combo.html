@@ -283,25 +283,6 @@ specifying `listurl` property.
           isValid = false;
         }
         return isValid;
-
-        //
-        //                var isValid = false;
-        //                if (this.displayValue) {
-        //                    for (idx in this.listdata) {
-        //                        var obj = this.displayproperty ? this.listdata[idx][this.displayproperty] : this.listdata[idx];
-        //                        if (obj == this.displayValue) {
-        //                            isValid = true;
-        //                            break;
-        //                        }
-        //                    }
-        //                    if (!isValid) {
-        //                        this.setValidity(false, 'invalidValue');
-        //                    }
-        //                } else {
-        //                    isValid = true;
-        //                }
-        //                return isValid;
-
       },
       _setDisplayAndValidate: function () {
 
@@ -593,36 +574,9 @@ specifying `listurl` property.
           }
         }
 
-        //                if (match.length == 0) {
-        //                    this.setValidity(false, 'invalidValue');
-        //                }
-
         this._suggestions = match.concat(unmatch);
         return results;
       },
-
-      //            _isMatchedObject: function () {
-      //                var list = this.listdata;
-      //                if (list) {
-      //                    var flag = false;
-      //                    for (key in list) {
-      //                        obj = this.displayproperty ? list[key][this.displayproperty].toUpperCase() : list[key];
-      //                        if (obj == this.$.input.value.toUpperCase()) {
-      //                            this._setSelectedItem(list[key]);
-      //                            flag = true;
-      //                            break;
-      //                        }
-      //                    }
-      //                    if (!flag) {
-      //                        this.value = "";
-      //                        if (this.$.input.value)
-      //                            this.setValidity(false, 'Not Matched');
-      //                    }
-      //                } else {
-      //                    console.log('Objects are not present');
-      //                }
-      //            },
-
       /*
        * Set the value to the value property
        * This will be the final step for selecting the listed items
