@@ -288,7 +288,7 @@ specifying `listurl` property.
 
         if (this.value !== null && this.value !== undefined && this.listdata) {
           var matchFound = false;
-          for (var idx in this.listdata) {
+          for (var idx=0; idx<this.listdata.length; idx++) {
             var item = this.listdata[idx];
             if ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item) {
               matchFound = true;
@@ -559,7 +559,7 @@ specifying `listurl` property.
         var regEx = new RegExp(val, 'i');
         var regEx2 = new RegExp('^' + val, 'i');
         //loop through out the list for checking the object's matches on val
-        for (var idx in this.listdata) {
+        for (var idx=0; idx<this.listdata.length; idx++) {
           var item = this.listdata[idx];
           var dispVal = this._getDisplayValue(item);
           var obj = dispVal.match(regEx);
