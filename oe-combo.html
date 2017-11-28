@@ -173,6 +173,15 @@ specifying `listurl` property.
                     notify: true,
                     observer: '_suggestionsChanged'
                 },
+                /* Key specifies the unique key to fetch data from cache(oeCache).Incase, there is no data for the 
+                              key specified in the cache and listurl is specified, the data is fetched from the listurl and set in 
+                              the cache for this key.
+                              */
+                listkey: {
+                    type: String,
+                    notify: true,
+                    observer: '_fetchListData'
+                },
 
                 /*Array of records to be displayed in dropdown. Can be array of primitives as well as objects.
                  * When items are objects, you should specify `displayproperty` and `valueproperty`.
@@ -189,15 +198,7 @@ specifying `listurl` property.
                     notify: true,
                     observer: '_fetchListData'
                 },
-                /* Key specifies the unique key to fetch data from cache(oeCache).Incase, there is no data for the 
-                key specified in the cache and listurl is specified, the data is fetched from the listurl and set in 
-                the cache for this key.
-                */
-                listkey: {
-                    type: String,
-                    notify: true,
-                    observer: '_fetchListData'
-                },
+
                 allowFreeText: {
                     type: Boolean,
                     value: false
@@ -264,8 +265,10 @@ specifying `listurl` property.
                     if (cacheValue) {
                         this.set('listdata', cacheValue);
                     } else {
-                        OEUtils.oeCache[listkey] = [];
-                        self._fetchData();
+                        if (this.listurl) {
+                            OEUtils.oeCache[listkey] = [];
+                            self._fetchData();
+                        }
                     }
                 } else {
                     //no cache available hence fetch data
