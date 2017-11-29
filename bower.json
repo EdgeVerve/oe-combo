@@ -6,7 +6,7 @@
     "oe-ajax": "^1.0.0",
     "oe-input": "^1.0.0",
     "oe-input-error": "^1.0.0",
-    "oe-field-behavior": "http://evgit/oecloud.io/oe-field-behavior.git#master",
+    "oe-field-behavior": "^1.0.0",
     "paper-menu": "^1.3.0",
     "paper-item": "^1.2.2",
     "iron-dropdown": "^1.5.6",
