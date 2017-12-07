@@ -28,7 +28,7 @@
     <template>
       <oe-combo displayproperty="description" valueproperty="code">
         <template item-template>
-          <paper-item>
+          <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}}>
             <span class="layout flex centered">{{item.description}}</span>
             <span>{{item.code}}</span>
           </paper-item>

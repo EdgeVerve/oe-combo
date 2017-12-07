@@ -107,19 +107,16 @@ specifying `listurl` property.
         <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}" no-auto-focus opened={{expand}}>
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
             <paper-menu id="menu">
-              <template is="dom-if" if={{!hasCustomTemplate}}>
-                <template is="dom-repeat" items="{{_suggestions}}">
-                  <paper-item on-mouseover="_onMouseOver" on-tap="_select" data-item={{item}} disabled$="[[readonly]]">
+              <template id="itemlist" is="dom-repeat" items="{{_suggestions}}">
+                <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[readonly]]">
                     <span>{{_getDisplayValue(item)}}</span>
-                  </paper-item>
-                </template>
+                </paper-item>
               </template>
             </paper-menu>
           </paper-material>
         </iron-dropdown>
       </div>
     </div>
-    <content id="itemTemplate" select="template[item-template]"></content>
   </template>
   <script>
     Polymer({
@@ -169,8 +166,7 @@ specifying `listurl` property.
         },
         _suggestions: {
           type: Array,
-          notify: true,
-          observer: '_suggestionsChanged'
+          notify: true
         },
 
         /*Array of records to be displayed in dropdown. Can be array of primitives as well as objects.
@@ -222,23 +218,6 @@ specifying `listurl` property.
        */
       get inputElement() {
         return this.$.input;
-      },
-      _suggestionsChanged: function(suggestions){
-        if (this.hasCustomTemplate) {
-          var menu = Polymer.dom(this.$.menu);
-          while (menu.firstChild) {
-            menu.removeChild(menu.firstChild);
-          }
-
-          var items = suggestions;
-          for (var i = 0; i < items.length; i++) {
-            // clone the template and bind with the model
-            var clone = this.stamp({});
-            clone.item = items[i];
-            clone.index = i;
-            menu.appendChild(clone.root);
-          }
-        }
       },
       _fetchListData: function () {
         if (this.listurl) {
@@ -318,17 +297,13 @@ specifying `listurl` property.
       },
       
       ready: function() {
-        this.set('hasCustomTemplate', false);
-        var template = Polymer.dom(this.$.itemTemplate).getDistributedNodes()[0];
-        if(template) {
-          this.dataHost = this;
-          template.content.children[0].setAttribute('on-tap','_select');
-          template.content.children[0].setAttribute('on-mouseover','_onMouseOver');
-          template.content.children[0].setAttribute('data-item','{{item}}');
-          template.content.children[0].setAttribute('disabled','[[readOnly]]');
-          // templatize must be called once before stamp is called
-          this.templatize(template);
-          this.set('hasCustomTemplate', true);
+        if(!this.ctor) {
+          const childTemplate = this.queryEffectiveChildren('template[item-template]');
+          if (childTemplate) {
+            const items = this.$.itemlist;
+            this.templatize(childTemplate);
+            items.templatize(childTemplate);
+          }
         }
       },
       attached: function () {
@@ -443,7 +418,6 @@ specifying `listurl` property.
       _dropdownClick: function (e) { // eslint-disable-line no-unused-vars
         if (this.expand) {
           this._menuClose();
-          //this._setDisplayAndValidate();
         } else {
           if (this.listdata) {
             this._suggestions = this.listdata;
@@ -472,13 +446,12 @@ specifying `listurl` property.
         var self = this;
         if (event.target != self.$.input && event.target != self.$.dropdownicon) {
           this._menuClose();
-          //this._setDisplayAndValidate();
         }
       },
 
 
-      /* on-mouseover it will fire */
-      _onMouseOver: function (e) {
+      /*When using custom templates, bind it to mouseover event of template component as on-mouseover="onMouseOver"*/
+      onMouseOver: function (e) {
         var suggestionsMenu = this.$.menu;
         if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
           suggestionsMenu.select(e.model.index);
@@ -487,7 +460,7 @@ specifying `listurl` property.
       },
 
       /* on-tap it will fire */
-      _select: function (e) {
+      onItemSelected: function (e) {
         this._setSelectedItem(e.model.item);
         this.$.input.focus();
         e.stopPropagation();
