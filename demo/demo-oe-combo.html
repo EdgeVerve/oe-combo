@@ -70,7 +70,7 @@
     <template>
       <oe-combo label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
         <template item-template>
-        <paper-item>
+        <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
           <div class="layout horizontal flex">
           <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>        
           <span class="layout flex centered">{{item.d}}</span>
