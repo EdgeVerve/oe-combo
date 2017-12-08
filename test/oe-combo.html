@@ -59,6 +59,26 @@
       <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
     </template>
   </test-fixture>
+<test-fixture id="with-existing-listurl">
+        <template>
+    <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
+  </template>
+    </test-fixture>
+    <test-fixture id="with-listkey-listurl">
+        <template>
+  <oe-combo listkey="countries"  listurl="get-object-list" displayproperty="description"></oe-combo>
+</template>
+    </test-fixture>
+    <test-fixture id="with-listkey1">
+        <template>
+<oe-combo listkey="countries" show-refresh  displayproperty="description"></oe-combo>
+</template>
+    </test-fixture>
+    <test-fixture id="with-listkey2">
+        <template>
+<oe-combo listkey="states" displayproperty="description"></oe-combo>
+</template>
+    </test-fixture>
   <script>
     HTMLImports.whenReady(function () {
       if (OEUtils.geturl) {
@@ -70,6 +90,9 @@
 
     var el;
     var arrow;
+  var listkey;
+        var isRequestMade = false;
+        var urlListKey = "countries";
     var listdata = [{
       'code': 'IN',
       'description': 'India'
@@ -101,6 +124,28 @@
       'Uganda',
       'Uruguay'
     ];
+  var states = [{
+            'code': 'AP',
+            'description': 'Andhra Pradesh'
+        }, {
+            'code': 'GJ',
+            'description': 'Gujarat'
+        }, {
+            'code': 'TN',
+            'description': 'Tamil Nadu'
+        }, {
+            'code': 'KA',
+            'description': 'Karnataka'
+        }, {
+            'code': 'MH',
+            'description': 'Maharashtra'
+        }, {
+            'code': 'DL',
+            'description': 'Delhi'
+        }, {
+            'code': 'CHD',
+            'description': 'Chandigarh'
+        }];
     suite('<oe-combo>', function () {
 
       setup(function () {
@@ -873,6 +918,7 @@
           'GET',
           /get-object-list/,
           function (req) {
+ isRequestMade = true;
             req.respond(200, 'application/json', JSON.stringify(listdata));
           }
         );
@@ -891,12 +937,90 @@
         var el = fixture('with-listurl');
         Polymer.Base.async(function () {
           assert.deepEqual(el.listdata, listdata);
+ assert.deepEqual(isRequestMade, true);
+                    //setting request made to false , so that the following testcases are not affected
+                    isRequestMade = false;
           done();
         }, 100);
       });
 
     });
 
+ suite('<oe-combo listkey>', function() {
+            //request is not made and picked from cache previously
+            test('loads data from listkey', function(done) {
+                var el = fixture('with-existing-listurl');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata, listdata);
+                    assert.deepEqual(isRequestMade, false);
+                    done();
+                }, 100);
+            });
+            //when user gives an explict key  for the data to cache, that key is set and not a hash of url
+            test('loads data from listkey', function(done) {
+                var el = fixture('with-listkey-listurl');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata, listdata);
+                    assert.deepEqual(isRequestMade, true);
+                    assert.deepEqual(window.OEUtils.oeCache[urlListKey], listdata)
+                    done();
+                }, 100);
+            });
+            //When only key is specified and not listurl. Data exists in cache for the key 
+            test('loads data from listkey', function(done) {
+                var el = fixture('with-listkey1');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata, listdata);
+                    assert.deepEqual(window.OEUtils.oeCache[urlListKey], listdata)
+                    done();
+                }, 100);
+            });
+            //When only key is specified and not listurl. Data does not exists in cache for the key 
+            test('loads data from listkey', function(done) {
+                var el = fixture('with-listkey2');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata, undefined);
+                    done();
+                }, 100);
+            });
+            //explicitly setting the data in cache
+            test('loads data from listkey', function(done) {
+                var evt = new CustomEvent("oe-update-cache", {
+                    bubbles: true,
+                    detail: {
+                        "key": "states",
+                        "data": states
+                    }
+                });
+                document.dispatchEvent(evt);
+                var el = fixture('with-listkey2');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata, states);
+                    done();
+                }, 100);
+            });
+            //Manipulating data in cache
+            test('loads data from listkey', function(done) {
+                var newListData = listdata;
+                newListData.pop();
+                var evt = new CustomEvent("oe-update-cache", {
+                    bubbles: true,
+                    detail: {
+                        "key": "countries",
+                        "data": newListData
+                    }
+                });
+                document.dispatchEvent(evt);
+                var el = fixture('with-listkey1');
+                Polymer.Base.async(function() {
+                    assert.deepEqual(el.listdata.length, 6);
+
+                    done();
+                }, 100);
+            });
+
+
+        });
   </script>
 </body>
 
