@@ -78,11 +78,15 @@ specifying `listurl` property.
                 background-color: #ccc;
             }
         }
+        
+        #templateDiv {
+            padding-bottom: 10px;
+        }
     </style>
-    <template>
+    <template>   
+           
     <div id="cover" style="position:relative;">
-      <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]"
-        auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
+    <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
         <content select="[prefix]"></content>
         <label hidden$="[[!label]]">
                     <oe-i18n-msg msgid=[[label]]>[[label]]</oe-i18n-msg>
@@ -90,9 +94,10 @@ specifying `listurl` property.
                         <span class="required"> *</span>
                     </template>
     </label>
+    <div id="templateDiv"></div>
     <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" bind-value="{{displayValue}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]" validator="[[validator]]"
-        required$="[[required]]" autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]" placeholder$="[[placeholder]]" readonly$="[[readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange"
-        tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]">
+        required$="[[required]]" autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]" placeholder$="[[placeholder]]" readonly$="[[_readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange"
+        tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" />
     <div suffix>
         <iron-icon id="dropdownicon" icon="arrow-drop-down"></iron-icon>
         <template is="dom-if" if={{showRefresh}}>
@@ -101,18 +106,39 @@ specifying `listurl` property.
     </div>
     <oe-input-error invalid={{invalid}} placeholders={{errorPlaceholders}} error-message=[[errorMessage]]></oe-input-error>
     </paper-input-container>
+    <!-- </div> -->
     <div>
         <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}" no-auto-focus opened={{expand}}>
             <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
-                <paper-menu id="menu">
+                <paper-menu id="menu" multi$="[[multi]]">
                     <template id="itemlist" is="dom-repeat" items="{{_suggestions}}">
-                <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[readonly]]">
-                    <span>{{_getDisplayValue(item)}}</span>
-                </paper-item>
-              </template>
+                        <template is="dom-if" if={{multi}}>
+                          
+                                <paper-item on-mouseover="onMouseOver" data-item={{item}} disabled$="[[disabledoption]]">
+                                      <span>{{_getDisplayValue(item)}}</span>
+                                    </paper-item>
+                           
+                        </template>
+                    <template is="dom-if" if={{!multi}}>
+                    <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
+                        <span>{{_getDisplayValue(item)}}</span>
+                    </paper-item>
+                </template>
+                    </template>
                 </paper-menu>
-            </paper-material>
-        </iron-dropdown>
+                <!--adding reset and select all buttons-->
+                <!-- <template is="dom-if" if={{multi}}>                          
+                  <div class="layout horizontal">
+                        <template is="dom-if" if={{selectall}}>  
+                      <paper-button id="selectall" on-tap="toggleSelect">Select All</paper-button>
+                      </template>
+                <template is="dom-if" if={{reset}}>  
+                            <paper-button id="reset" on-tap="toggleSelect">Reset</paper-button>
+                            </template> -->
+    </div>
+    </template>
+    </paper-material>
+    </iron-dropdown>
     </div>
     </div>
     </template>
@@ -122,7 +148,10 @@ specifying `listurl` property.
             listeners: {
                 'input.keyup': '_keyup',
                 'input.keydown': '_keydown',
-                'dropdownicon.tap': '_dropdownClick'
+                'dropdownicon.tap': '_dropdownClick',
+                'input.tap': '_dropdownClick',
+
+                'menu.selected-items-changed': "_selectedItemsChanged"
             },
             _onChange: function(e) {
                 e.stopPropagation();
@@ -143,6 +172,34 @@ specifying `listurl` property.
                     type: String
                 },
 
+                _readonly: {
+                    type: Boolean,
+                    value: false
+                },
+                /*
+                 * When set to true, enables combo to choose multiple values
+                 */
+                multi: {
+                    type: Boolean,
+                    value: false
+                },
+                /*
+                 * When set to true, the selected value is shown as the template given for the combo
+                 */
+                showTemplate: {
+                    type: Boolean,
+                    value: false,
+                    observer: '_showTemplateChanged'
+                },
+                // selectall: {
+                //     type: Boolean,
+                //     value: false
+                // },
+
+                // reset: {
+                //     type: Boolean,
+                //     value: false
+                // },
                 /*Current value*/
                 value: {
                     type: Object,
@@ -155,6 +212,14 @@ specifying `listurl` property.
                  */
                 selectedItem: {
                     type: Object,
+                    notify: true
+                },
+
+                /*Selected records from the list. `value` equals `selectedItem`[`valueproperty`].
+                 * When records are plain strings, it is same as `value`
+                 */
+                selectedItems: {
+                    type: Array,
                     notify: true
                 },
 
@@ -226,6 +291,43 @@ specifying `listurl` property.
             get inputElement() {
                 return this.$.input;
             },
+            _selectedItemsChanged: function(e) {
+                if (this.multi) {
+                    var items = [];
+                    items = e.detail.value;
+
+                    if (items && items.length > 0) {
+                        this.selectedItems = [];
+
+                        this.displayValue = this._getDisplayValue(items[0].dataItem) || ""
+                        var values = [];
+
+                        for (var i = 0; i < items.length; i++) {
+                            this.push('selectedItems', items[i].dataItem);
+                            var item = items[i].dataItem;
+
+                            if (i >= 1) {
+                                this.displayValue += " , " + this._getDisplayValue(item);
+                            }
+                            if (this.valueproperty) {
+                                var value = item ? item[this.valueproperty] : undefined;
+                                values.push(value);
+                            } else {
+                                values.push(item);
+                            }
+
+                        }
+                        this.value = values;
+                    } else {
+                        this.displayValue = "";
+                        this.value = [];
+                    }
+                    this.fire('pt-item-confirmed', item);
+                    this.setValidity(true, '');
+                }
+
+            },
+
 
             _fetchListData: function() {
                 var self = this;
@@ -288,10 +390,10 @@ specifying `listurl` property.
             _validate: function() {
 
                 var isValid = true;
-                if (!this.allowFreeText && this.displayValue && !this.selectedItem) {
+                if (!this.allowFreeText && this.displayValue && (!this.selectedItem && !this.selectedItems)) {
                     this.setValidity(false, 'invalidValue');
                     isValid = false;
-                } else if (!this.allowFreeText && this.displayValue != this._getDisplayValue(this.selectedItem)) {
+                } else if (!this.allowFreeText && (!this.multi && this.displayValue != this._getDisplayValue(this.selectedItem))) {
                     this.setValidity(false, 'invalidValue');
                     isValid = false;
                 } else if (this.required && !this.value) {
@@ -301,35 +403,71 @@ specifying `listurl` property.
                 return isValid;
             },
             _setDisplayAndValidate: function() {
-
-                if (this.value !== null && this.value !== undefined && this.listdata) {
-                    var matchFound = false;
-                    for (var idx = 0; idx < this.listdata.length; idx++) {
-                        var item = this.listdata[idx];
-                        if ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item) {
-                            matchFound = true;
-                            this.displayValue = this._getDisplayValue(item);
-                            this.selectedItem = item;
-                            this.setValidity(true, undefined);
-                            break;
+                //!multi
+                if (!Array.isArray(this.value) && !this.multi) {
+                    if (this.value !== null && this.value !== undefined && this.listdata) {
+                        var matchFound = false;
+                        for (var idx = 0; idx < this.listdata.length; idx++) {
+                            var item = this.listdata[idx];
+                            if ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item) {
+                                matchFound = true;
+                                this.displayValue = this._getDisplayValue(item);
+                                this.selectedItem = item;
+                                this.setValidity(true, undefined);
+                                break;
+                            }
                         }
+                        if (!matchFound) {
+                            if (this.value && typeof this.value === 'object') {
+                                this.selectedItem = this.value;
+                                this.displayValue = this._getDisplayValue(this.value);
+                                this.setValidity(true, undefined);
+                            } else if (this.allowFreeText) {
+                                this.selectedItem = this.value;
+                                this.displayValue = this.value;
+                                this.setValidity(true, undefined);
+                            } else {
+                                this.setValidity(false, 'invalidValue');
+                            }
+                        }
+                    } else {
+                        this.displayValue = '';
+                        this.setValidity(true, undefined);
                     }
-                    if (!matchFound) {
-                        if (this.value && typeof this.value === 'object') {
-                            this.selectedItem = this.value;
-                            this.displayValue = this._getDisplayValue(this.value);
+                } else {
+                    if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
+                        var matchFound = false;
+                        var numberOfRecords = 0;
+                        for (var idx = 0; idx < this.listdata.length; idx++) {
+                            var item = this.listdata[idx];
+                            if (!Array.isArray(this.value) && ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item)) {
+                                matchFound = true;
+                                // this._selectedItemsChanged(item);
+                                this.displayValue = this._getDisplayValue(item);
+                                var selectedItems = this.selectedItems || [];
+                                selectedItems.push(item);
+                                // this.$.menu.select(idx);
+                                this.set(selectedItems, selectedItems);
+
+                                break;
+                            } else {
+                                if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(item) > -1) {
+                                    numberOfRecords++;
+                                }
+                            }
+                        }
+                        if (!Array.isArray(this.value) && matchFound) {
                             this.setValidity(true, undefined);
-                        } else if (this.allowFreeText) {
-                            this.selectedItem = this.value;
-                            this.displayValue = this.value;
+                        } else if (Array.isArray(this.value) && (numberOfRecords == this.value.length)) {
                             this.setValidity(true, undefined);
                         } else {
                             this.setValidity(false, 'invalidValue');
+
                         }
+                    } else {
+                        this.displayValue = '';
+                        this.setValidity(true, undefined);
                     }
-                } else {
-                    this.displayValue = '';
-                    this.setValidity(true, undefined);
                 }
             },
 
@@ -337,6 +475,10 @@ specifying `listurl` property.
                 if (!this.ctor) {
                     const childTemplate = this.queryEffectiveChildren('template[item-template]');
                     if (childTemplate) {
+                        if (this.multi) {
+                            /* when template multi is not allowed*/
+                            this.multi = false;
+                        }
                         const items = this.$.itemlist;
                         this.templatize(childTemplate);
                         items.templatize(childTemplate);
@@ -347,8 +489,13 @@ specifying `listurl` property.
                 if (this.value) {
                     this._setDisplayAndValidate();
                 }
-                this.boundClickHandler = this._closeIfApplicable.bind(this);
+                if (!this.multi) {
+                    this.boundClickHandler = this._closeIfApplicable.bind(this);
+                } else {
+                    this._readonly = true;
+                }
                 this._suggestions = [];
+
             },
 
             _keydown: function(e) {
@@ -357,6 +504,19 @@ specifying `listurl` property.
                 } else if (e.keyCode == 13 && this.expand) {
                     e.stopPropagation();
                 }
+            },
+            _showTemplateChanged: function(e) {
+                if (this.showTemplate) {
+                    this.$.templateDiv.style.display = "flex";
+                    this.$.input.type = "hidden";
+                } else {
+                    this.$.templateDiv.style.display = "none";;
+                    this.$.input.type = "text";
+                }
+
+
+
+
             },
             _keyup: function(e) {
 
@@ -417,12 +577,14 @@ specifying `listurl` property.
             _handleEnterEvent: function(e) { // eslint-disable-line no-unused-vars
                 if (this.expand) {
                     var suggestionsMenu = this.$.menu;
-                    if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined') {
+                    if (suggestionsMenu && typeof(suggestionsMenu) != 'undefined' && !this.multi) {
                         var selectedItem = suggestionsMenu.focusedItem;
                         if (typeof(selectedItem) != 'undefined') {
                             this._setSelectedItem(selectedItem.dataItem);
                         }
                         this.$.input.focus();
+                    } else {
+                        this.set('expand', false);
                     }
                 }
             },
@@ -461,7 +623,7 @@ specifying `listurl` property.
                         this._menuOpen(false);
                     }
                 }
-                this.$.input.focus();
+                //  this.$.input.focus();
             },
 
             /*
@@ -498,9 +660,17 @@ specifying `listurl` property.
 
             /* on-tap it will fire */
             onItemSelected: function(e) {
-                this._setSelectedItem(e.model.item);
+                var item = e.model.item;
+                if (this.showTemplate) {
+                    this.$.templateDiv.innerHTML = "";
+                    var children = e.currentTarget.children[0]
+                    this.$.templateDiv.appendChild(children)
+                }
+
+                this._setSelectedItem(item);
                 this.$.input.focus();
                 e.stopPropagation();
+
             },
 
             /*Revisit getDisplayValue with iron-list template */
@@ -595,7 +765,6 @@ specifying `listurl` property.
 
                 this.selectedItem = item;
                 this.displayValue = this._getDisplayValue(item);
-
                 if (this.valueproperty) {
                     this.value = item ? item[this.valueproperty] : undefined;
                 } else {
@@ -609,7 +778,6 @@ specifying `listurl` property.
                     this.fire('change');
                 });
             },
-
             /*
              * Sorts data based on displayproperty
              * Kept method as public so that user can overwrite it if needed
