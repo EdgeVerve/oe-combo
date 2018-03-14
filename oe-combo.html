@@ -511,6 +511,8 @@ specifying `listurl` property.
           e.preventDefault();
         } else if (e.keyCode == 13 && this.expand) {
           e.stopPropagation();
+        } else if (e.keyCode == 9 && this.expand) {
+          this.set('expand', false);
         }
       },
       _showTemplateChanged: function (e) {
@@ -597,10 +599,6 @@ specifying `listurl` property.
         }
       },
 
-      _handleTabEvent: function (e) { // eslint-disable-line no-unused-vars
-        //TODO: Need to check for what to handle on tab event
-      },
-
       _menuClose: function () {
         this._suggestions = [];
         this.set('expand', false);
@@ -631,7 +629,6 @@ specifying `listurl` property.
             this._menuOpen(false);
           }
         }
-        //  this.$.input.focus();
       },
 
       /*
