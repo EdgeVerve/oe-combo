@@ -739,16 +739,26 @@
                 });
             });
 
-
-
-
-
             test('When value is pre-set, the displayValue is updated', function() {
                 var el = fixture('with-value');
                 el.set('listdata', listdata);
 
                 assert.equal(el.value, 'IN');
                 assert.equal(el.displayValue, 'India');
+            });
+          
+            test('selectedItem is updated when value is set', function() {
+              var el = fixture('with-value');
+              el.set('listdata', listdata);
+              assert.equal(el.value, 'IN');
+              assert.equal(el.displayValue, 'India');
+              assert.equal(el.selectedItem, listdata.find(function(item){
+                return item.code === 'IN';
+              }));
+              
+              el.set('value', undefined);
+              assert.equal(el.displayValue, '');
+              assert.equal(el.selectedItem, undefined);
             });
         });
         suite('<oe-combo with template>', function() {
