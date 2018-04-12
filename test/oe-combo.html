@@ -564,9 +564,9 @@
             });
 
             test('Setting value updates the display', function() {
-                el.set('value', (listdata[2])[el.valueproperty]);
+                el.set('value', [(listdata[2])[el.valueproperty]]);
                 assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
-                el.set('value', (listdata[4])[el.valueproperty]);
+                el.set('value', [(listdata[4])[el.valueproperty]]);
                 assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
             });
 
@@ -657,7 +657,7 @@
                 selectedValues.push((listdata[2])[el.valueproperty])
 
                 assert.deepEqual(el.value, selectedValues);
-                assert.deepEqual(el.displayValue, ((listdata[1])[el.displayproperty] + " , " + (listdata[2])[el.displayproperty]));
+                assert.deepEqual(el.displayValue, ((listdata[1])[el.displayproperty] + ", " + (listdata[2])[el.displayproperty]));
                 assert.deepEqual(el.selectedItems, selectedItems);
 
             });

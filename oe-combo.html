@@ -305,23 +305,18 @@ specifying `listurl` property.
           if (items && items.length > 0) {
             this.selectedItems = [];
 
-            this.displayValue = this._getDisplayValue(items[0].dataItem) || ""
             var values = [];
 
             for (var i = 0; i < items.length; i++) {
               this.push('selectedItems', items[i].dataItem);
               var item = items[i].dataItem;
 
-              if (i >= 1) {
-                this.displayValue += " , " + this._getDisplayValue(item);
-              }
               if (this.valueproperty) {
                 var value = item ? item[this.valueproperty] : undefined;
                 values.push(value);
               } else {
                 values.push(item);
               }
-
             }
             this.value = values;
           } else {
@@ -383,7 +378,21 @@ specifying `listurl` property.
         }
       },
       _valueChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
-        this._setDisplayAndValidate();
+        var self = this;
+        if(this.multi && typeof newV === 'string') {
+          try {
+            var valueArr = JSON.parse(newV);
+            if(Array.isArray(valueArr)) {
+              this.set('value', valueArr);              
+              /* We will revisit this function again with newV as an Array.*/
+            }
+          } catch(e) {
+            console.warn(e);
+            self.setValidity(false,'invalidValue');
+          }
+        } else {
+          this._setDisplayAndValidate();
+        }
       },
       _listDataChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
         if (this.listdata) {
@@ -445,6 +454,7 @@ specifying `listurl` property.
           if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
             var matchFound = false;
             var numberOfRecords = 0;
+            this.displayValue = "";
             for (var idx = 0; idx < this.listdata.length; idx++) {
               var item = this.listdata[idx];
               if (!Array.isArray(this.value) && ((this.valueproperty && this.value == item[this.valueproperty]) ||
@@ -461,6 +471,7 @@ specifying `listurl` property.
               } else {
                 if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
                     item) > -1) {
+                  this.displayValue += ((numberOfRecords==0?"":", ")+(this._getDisplayValue(item)));
                   numberOfRecords++;
                 }
               }
@@ -471,7 +482,6 @@ specifying `listurl` property.
               this.setValidity(true, undefined);
             } else {
               this.setValidity(false, 'invalidValue');
-
             }
           } else {
             this.displayValue = '';
