@@ -122,7 +122,7 @@ specifying `listurl` property.
                   <paper-item on-mouseover="onMouseOver" data-item={{item}} disabled$="[[disabledoption]]">
                     <span>{{_getDisplayValue(item)}}</span>
                   </paper-item>
-
+                  
                 </template>
                 <template is="dom-if" if={{!multi}}>
                   <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
@@ -451,6 +451,7 @@ specifying `listurl` property.
             this.setValidity(true, undefined);
           }
         } else {
+          var selectedItemsIndex = [];
           if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
             var matchFound = false;
             var numberOfRecords = 0;
@@ -471,6 +472,7 @@ specifying `listurl` property.
               } else {
                 if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
                     item) > -1) {
+                  selectedItemsIndex.push(idx);
                   this.displayValue += ((numberOfRecords==0?"":", ")+(this._getDisplayValue(item)));
                   numberOfRecords++;
                 }
@@ -487,9 +489,27 @@ specifying `listurl` property.
             this.displayValue = '';
             this.setValidity(true, undefined);
           }
+          var menuSelected = this.$.menu.selectedValues || []
+          if(!this._isEqualArray(selectedItemsIndex.sort(),menuSelected.sort())){
+            debugger;
+            this.$.menu.set('selectedValues',selectedItemsIndex);
+          } 
         }
       },
-
+      _isEqualArray:function(arr1,arr2){
+          if(!arr1 || !arr2 || !Array.isArray(arr1) || !Array.isArray(arr2)){
+            return false;
+          }
+          if(arr1.length !== arr2.length){
+            return false;
+          }
+          for(var i = 0,len = arr1.length;i<len;i++){
+            if(arr1[i] !== arr2[i]){
+              return false;
+            }
+          }
+          return true;
+      },
       ready: function () {
         if (!this.ctor) {
           const childTemplate = this.queryEffectiveChildren('template[item-template]');
@@ -623,8 +643,7 @@ specifying `listurl` property.
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
-
-        Polymer.dom.flush();
+       
       },
 
       /*
