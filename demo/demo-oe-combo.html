@@ -41,8 +41,6 @@
         </template>
     </demo-snippet>
 
-
-
     <h3>Pre Selected Value</h3>
     <demo-snippet>
         <template>
@@ -53,7 +51,6 @@
       </template>
         </template>
     </demo-snippet>
-
 
     <h3>Use multi select to choose multiple options</h3>
     <demo-snippet>
@@ -69,13 +66,11 @@
         </template>
     </demo-snippet>
 
-
-
     <h3>Multi select with Pre Selected Value</h3>
     <demo-snippet>
         <template>
       <template is="dom-bind">
-        <oe-combo multi   label="Country" displayproperty="d" valueproperty="c" value="DE" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        <oe-combo multi   label="Country" displayproperty="d" valueproperty="c" value='["DE","IN"]' listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
 
         </oe-combo>
       </template>

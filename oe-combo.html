@@ -60,10 +60,6 @@ specifying `listurl` property.
       cursor: pointer;
     }
 
-    paper-menu {
-      max-height: 235px;
-      overflow: auto;
-    }
 
     .iron-selected {
       background: var(--combo-selected-backgroud, #e0e0e0);
@@ -77,6 +73,10 @@ specifying `listurl` property.
       --paper-item-selected: {
         background-color: #ccc;
       }
+    }
+    
+    .dropdown-content> ::content{
+      max-height: 235px;
     }
 
     #templateDiv {
@@ -122,7 +122,7 @@ specifying `listurl` property.
                   <paper-item on-mouseover="onMouseOver" data-item={{item}} disabled$="[[disabledoption]]">
                     <span>{{_getDisplayValue(item)}}</span>
                   </paper-item>
-
+                  
                 </template>
                 <template is="dom-if" if={{!multi}}>
                   <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
@@ -305,23 +305,18 @@ specifying `listurl` property.
           if (items && items.length > 0) {
             this.selectedItems = [];
 
-            this.displayValue = this._getDisplayValue(items[0].dataItem) || ""
             var values = [];
 
             for (var i = 0; i < items.length; i++) {
               this.push('selectedItems', items[i].dataItem);
               var item = items[i].dataItem;
 
-              if (i >= 1) {
-                this.displayValue += " , " + this._getDisplayValue(item);
-              }
               if (this.valueproperty) {
                 var value = item ? item[this.valueproperty] : undefined;
                 values.push(value);
               } else {
                 values.push(item);
               }
-
             }
             this.value = values;
           } else {
@@ -383,7 +378,21 @@ specifying `listurl` property.
         }
       },
       _valueChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
-        this._setDisplayAndValidate();
+        var self = this;
+        if(this.multi && typeof newV === 'string') {
+          try {
+            var valueArr = JSON.parse(newV);
+            if(Array.isArray(valueArr)) {
+              this.set('value', valueArr);              
+              /* We will revisit this function again with newV as an Array.*/
+            }
+          } catch(e) {
+            console.warn(e);
+            self.setValidity(false,'invalidValue');
+          }
+        } else {
+          this._setDisplayAndValidate();
+        }
       },
       _listDataChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
         if (this.listdata) {
@@ -438,12 +447,15 @@ specifying `listurl` property.
             }
           } else {
             this.displayValue = '';
+            this.set('selectedItem', undefined);
             this.setValidity(true, undefined);
           }
         } else {
+          var selectedItemsIndex = [];
           if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
             var matchFound = false;
             var numberOfRecords = 0;
+            this.displayValue = "";
             for (var idx = 0; idx < this.listdata.length; idx++) {
               var item = this.listdata[idx];
               if (!Array.isArray(this.value) && ((this.valueproperty && this.value == item[this.valueproperty]) ||
@@ -460,6 +472,8 @@ specifying `listurl` property.
               } else {
                 if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
                     item) > -1) {
+                  selectedItemsIndex.push(idx);
+                  this.displayValue += ((numberOfRecords==0?"":", ")+(this._getDisplayValue(item)));
                   numberOfRecords++;
                 }
               }
@@ -470,15 +484,32 @@ specifying `listurl` property.
               this.setValidity(true, undefined);
             } else {
               this.setValidity(false, 'invalidValue');
-
             }
           } else {
             this.displayValue = '';
             this.setValidity(true, undefined);
           }
+          var menuSelected = this.$.menu.selectedValues || []
+          if(!this._isEqualArray(selectedItemsIndex.sort(),menuSelected.sort())){
+            debugger;
+            this.$.menu.set('selectedValues',selectedItemsIndex);
+          } 
         }
       },
-
+      _isEqualArray:function(arr1,arr2){
+          if(!arr1 || !arr2 || !Array.isArray(arr1) || !Array.isArray(arr2)){
+            return false;
+          }
+          if(arr1.length !== arr2.length){
+            return false;
+          }
+          for(var i = 0,len = arr1.length;i<len;i++){
+            if(arr1[i] !== arr2[i]){
+              return false;
+            }
+          }
+          return true;
+      },
       ready: function () {
         if (!this.ctor) {
           const childTemplate = this.queryEffectiveChildren('template[item-template]');
@@ -511,6 +542,8 @@ specifying `listurl` property.
           e.preventDefault();
         } else if (e.keyCode == 13 && this.expand) {
           e.stopPropagation();
+        } else if (e.keyCode == 9 && this.expand) {
+          this.set('expand', false);
         }
       },
       _showTemplateChanged: function (e) {
@@ -597,10 +630,6 @@ specifying `listurl` property.
         }
       },
 
-      _handleTabEvent: function (e) { // eslint-disable-line no-unused-vars
-        //TODO: Need to check for what to handle on tab event
-      },
-
       _menuClose: function () {
         this._suggestions = [];
         this.set('expand', false);
@@ -614,8 +643,7 @@ specifying `listurl` property.
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
-
-        Polymer.dom.flush();
+       
       },
 
       /*
@@ -631,7 +659,6 @@ specifying `listurl` property.
             this._menuOpen(false);
           }
         }
-        //  this.$.input.focus();
       },
 
       /*
