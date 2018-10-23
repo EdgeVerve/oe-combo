@@ -499,6 +499,16 @@
             });
         });
 
+        suite('a11y', function () {
+            setup(function(done) {
+                el = fixture('basic');
+                el.set('listdata', listdata);
+                flush(function(){
+                    done();
+                });
+            });
+            a11ySuite('basic'); // eslint-disable-line no-undef
+        });
 
 
         suite('<oe-combo multi', function() {
