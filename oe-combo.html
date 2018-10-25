@@ -74,8 +74,8 @@ specifying `listurl` property.
         background-color: #ccc;
       }
     }
-    
-    .dropdown-content> ::content{
+
+    .dropdown-content> ::content {
       max-height: 235px;
     }
 
@@ -97,12 +97,12 @@ specifying `listurl` property.
           </template>
         </label>
         <div id="templateDiv"></div>
-        <input is="iron-input" id="input" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]"
-          bind-value="{{displayValue}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]" validator="[[validator]]"
-          required$="[[required]]" autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]" placeholder$="[[placeholder]]"
-          readonly$="[[_readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]" on-change="_onChange"
-          tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]"
-        />
+        <input is="iron-input" id="[[_inputId]]" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]"
+          disabled$="[[disabled]]" bind-value="{{displayValue}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]"
+          validator="[[validator]]" required$="[[required]]" autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]"
+          placeholder$="[[placeholder]]" readonly$="[[_readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]"
+          on-change="_onChange" tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]"
+          multiple$="[[multiple]]" on-keyup="_keyup" on-keydown="_keydown" on-tap="_dropdownClick"/>
         <div suffix>
           <iron-icon id="dropdownicon" icon="arrow-drop-down"></iron-icon>
           <template is="dom-if" if={{showRefresh}}>
@@ -122,7 +122,7 @@ specifying `listurl` property.
                   <paper-item on-mouseover="onMouseOver" data-item={{item}} disabled$="[[disabledoption]]">
                     <span>{{_getDisplayValue(item)}}</span>
                   </paper-item>
-                  
+
                 </template>
                 <template is="dom-if" if={{!multi}}>
                   <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
@@ -152,11 +152,7 @@ specifying `listurl` property.
     Polymer({
       is: 'oe-combo',
       listeners: {
-        'input.keyup': '_keyup',
-        'input.keydown': '_keydown',
         'dropdownicon.tap': '_dropdownClick',
-        'input.tap': '_dropdownClick',
-
         'menu.selected-items-changed': "_selectedItemsChanged"
       },
       _onChange: function (e) {
@@ -291,14 +287,12 @@ specifying `listurl` property.
         Polymer.Templatizer
       ],
 
-      /**
-       * Returns a reference to the input element.
-       */
-      get inputElement() {
-        return this.$.input;
-      },
       _selectedItemsChanged: function (e) {
         if (this.multi) {
+          if (this.$.menu.selectedValues.sort().join() === this.__prevSelectedValues) {
+              return;
+          }
+
           var items = [];
           items = e.detail.value;
 
@@ -379,16 +373,16 @@ specifying `listurl` property.
       },
       _valueChanged: function (newV, oldV) { // eslint-disable-line no-unused-vars
         var self = this;
-        if(this.multi && typeof newV === 'string') {
+        if (this.multi && typeof newV === 'string') {
           try {
             var valueArr = JSON.parse(newV);
-            if(Array.isArray(valueArr)) {
-              this.set('value', valueArr);              
+            if (Array.isArray(valueArr)) {
+              this.set('value', valueArr);
               /* We will revisit this function again with newV as an Array.*/
             }
-          } catch(e) {
+          } catch (e) {
             console.warn(e);
-            self.setValidity(false,'invalidValue');
+            self.setValidity(false, 'invalidValue');
           }
         } else {
           this._setDisplayAndValidate();
@@ -429,6 +423,7 @@ specifying `listurl` property.
                 this.displayValue = this._getDisplayValue(item);
                 this.selectedItem = item;
                 this.setValidity(true, undefined);
+                this.$.menu.select(idx);
                 break;
               }
             }
@@ -444,6 +439,7 @@ specifying `listurl` property.
               } else {
                 this.setValidity(false, 'invalidValue');
               }
+              this.$.menu.select(-1);
             }
           } else {
             this.displayValue = '';
@@ -465,7 +461,7 @@ specifying `listurl` property.
                 this.displayValue = this._getDisplayValue(item);
                 var selectedItems = this.selectedItems || [];
                 selectedItems.push(item);
-                // this.$.menu.select(idx);
+                this.$.menu.select(idx);
                 this.set(selectedItems, selectedItems);
 
                 break;
@@ -473,7 +469,7 @@ specifying `listurl` property.
                 if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
                     item) > -1) {
                   selectedItemsIndex.push(idx);
-                  this.displayValue += ((numberOfRecords==0?"":", ")+(this._getDisplayValue(item)));
+                  this.displayValue += ((numberOfRecords == 0 ? "" : ", ") + (this._getDisplayValue(item)));
                   numberOfRecords++;
                 }
               }
@@ -489,27 +485,12 @@ specifying `listurl` property.
             this.displayValue = '';
             this.setValidity(true, undefined);
           }
-          var menuSelected = this.$.menu.selectedValues || []
-          if(!this._isEqualArray(selectedItemsIndex.sort(),menuSelected.sort())){
-            debugger;
-            this.$.menu.set('selectedValues',selectedItemsIndex);
-          } 
+          var menuSelected = this.$.menu.selectedValues || [];
+          this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
+          this.$.menu.set('selectedValues', selectedItemsIndex);
         }
       },
-      _isEqualArray:function(arr1,arr2){
-          if(!arr1 || !arr2 || !Array.isArray(arr1) || !Array.isArray(arr2)){
-            return false;
-          }
-          if(arr1.length !== arr2.length){
-            return false;
-          }
-          for(var i = 0,len = arr1.length;i<len;i++){
-            if(arr1[i] !== arr2[i]){
-              return false;
-            }
-          }
-          return true;
-      },
+
       ready: function () {
         if (!this.ctor) {
           const childTemplate = this.queryEffectiveChildren('template[item-template]');
@@ -549,15 +530,11 @@ specifying `listurl` property.
       _showTemplateChanged: function (e) {
         if (this.showTemplate) {
           this.$.templateDiv.style.display = "flex";
-          this.$.input.type = "hidden";
+          this.inputElement.type = "hidden";
         } else {
           this.$.templateDiv.style.display = "none";;
-          this.$.input.type = "text";
+          this.inputElement.type = "text";
         }
-
-
-
-
       },
       _keyup: function (e) {
 
@@ -574,8 +551,8 @@ specifying `listurl` property.
           //ignore tab in
           //Pass only the unselected text for search
           var searchTerm = this.displayValue;
-          if (this.$.input.selectionStart > 0) {
-            searchTerm = searchTerm.substring(0, this.$.input.selectionStart);
+          if (this.inputElement.selectionStart > 0) {
+            searchTerm = searchTerm.substring(0, this.inputElement.selectionStart);
           }
 
           this._search(e, searchTerm.trim());
@@ -588,17 +565,19 @@ specifying `listurl` property.
           this._menuOpen(false);
         }
         var suggestionsMenu = this.$.menu;
-        if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          var selectedItem = suggestionsMenu.focusedItem;
-          var index = 0;
-          if (typeof (selectedItem) != 'undefined') {
-            index = Number(suggestionsMenu.indexOf(selectedItem));
-            //Math.min(index + 1, this._suggestions.length - 1);
-            index = index < this._suggestions.length - 1 ? index + 1 : 0;
+        this.async(function(){
+          if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+            var selectedItem = suggestionsMenu.focusedItem;
+            var index = 0;
+            if (typeof (selectedItem) != 'undefined') {
+              index = Number(suggestionsMenu.indexOf(selectedItem));
+              //Math.min(index + 1, this._suggestions.length - 1);
+              index = index < this._suggestions.length - 1 ? index + 1 : 0;
+            }
+            suggestionsMenu.select(index);
+            this.inputElement.focus();
           }
-          suggestionsMenu.select(index);
-          this.$.input.focus();
-        }
+        });
       },
 
       _handleUpEvent: function (e) { // eslint-disable-line no-unused-vars
@@ -611,7 +590,7 @@ specifying `listurl` property.
             index = index > 0 ? index - 1 : this._suggestions.length - 1;
             suggestionsMenu.select(index);
           }
-          this.$.input.focus();
+          this.inputElement.focus();
         }
       },
 
@@ -623,7 +602,7 @@ specifying `listurl` property.
             if (typeof (selectedItem) != 'undefined') {
               this._setSelectedItem(selectedItem.dataItem);
             }
-            this.$.input.focus();
+            this.inputElement.focus();
           } else {
             this.set('expand', false);
           }
@@ -643,7 +622,7 @@ specifying `listurl` property.
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
-       
+
       },
 
       /*
@@ -689,7 +668,7 @@ specifying `listurl` property.
         var suggestionsMenu = this.$.menu;
         if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
           suggestionsMenu.select(e.model.index);
-          this.$.input.focus();
+          this.inputElement.focus();
         }
       },
 
@@ -703,7 +682,7 @@ specifying `listurl` property.
         }
 
         this._setSelectedItem(item);
-        this.$.input.focus();
+        this.inputElement.focus();
         e.stopPropagation();
 
       },
@@ -736,7 +715,7 @@ specifying `listurl` property.
           self._setSelectedItem(results[0]);
 
           //get length of current displayvalue and make remaining as selected
-          this.$.input.setSelectionRange(term.length, self.displayValue.length);
+          this.inputElement.setSelectionRange(term.length, self.displayValue.length);
         } else {
           self._menuOpen(true);
           var suggestionsMenu = self.$.menu;
