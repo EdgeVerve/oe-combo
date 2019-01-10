@@ -231,7 +231,13 @@ specifying `listurl` property.
 
         /*Flag to control whether refresh butyon is displayed or not.*/
         showRefresh: {
-          type: Boolean
+          type: Boolean,
+          value :false
+        },
+        /*Flag to control whether only the filtered values should be displayed.*/
+        showFilteredOnly:{
+          type: Boolean,
+          value:false
         },
         _suggestions: {
           type: Array,
@@ -633,7 +639,7 @@ specifying `listurl` property.
         var elementPos = (window.innerHeight / this.getBoundingClientRect().top);
         var validatePos = elementPos < 1.7
         this.set('verticalAlign', validatePos ? 'bottom' : 'top');
-        this.set('verticalOffset', validatePos ? 63 : 10);
+        this.set('verticalOffset', validatePos ? 55 : -8);
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
@@ -782,8 +788,11 @@ specifying `listurl` property.
             unmatch.push(item);
           }
         }
-
-        this._suggestions = match.concat(unmatch);
+        if(this.showFilteredOnly){
+          this._suggestions = match;
+        }else{
+          this._suggestions = match.concat(unmatch);
+        }
         return results;
       },
       /*
