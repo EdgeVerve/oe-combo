@@ -288,6 +288,11 @@ specifying `listurl` property.
         verticalAlign: {
           type: String,
           value: 'top'
+        },
+        /** Disable caching of listdata */
+        disableCache:{
+          type:Boolean,
+          value:false
         }
       },
       behaviors: [
@@ -343,7 +348,7 @@ specifying `listurl` property.
       _fetchListData: function () {
         var self = this;
         /* If List-Key is present, check if cache exists and set it on listdata */
-        if (OEUtils.oeCache && (this.listkey || this.listurl)) {
+        if (!self.disableCache && OEUtils.oeCache && (this.listkey || this.listurl)) {
           var listkey = this.listkey || this.hashFunc(this.listurl);
           window.addEventListener('oe-cache-' + listkey + '-updated', function (e) {
             self.set('listdata', e.detail);
@@ -374,8 +379,10 @@ specifying `listurl` property.
           ajaxCall.method = 'get';
           ajaxCall.addEventListener('response', function (event) {
             self.set('listdata', event.detail.response);
+            if(self.disableCache){
+              return;
+            }
             var listkey = self.listkey || self.hashFunc(self.listurl);
-
             self.fire('oe-update-cache', {
               key: listkey,
               data: event.detail.response
