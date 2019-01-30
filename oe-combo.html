@@ -114,7 +114,7 @@ specifying `listurl` property.
       </paper-input-container>
       <!-- </div> -->
       <div>
-        <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}"
+        <iron-dropdown id="dropdown" vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]"
           no-auto-focus opened={{expand}}>
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
             <paper-menu id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
@@ -282,7 +282,7 @@ specifying `listurl` property.
           value: false
         },
         verticalOffset: {
-          type: String,
+          type: Number,
           value: 0
         },
         verticalAlign: {
@@ -645,8 +645,16 @@ specifying `listurl` property.
       _menuOpen: function (sort) {
         var elementPos = (window.innerHeight / this.getBoundingClientRect().top);
         var validatePos = elementPos < 1.7
-        this.set('verticalAlign', validatePos ? 'bottom' : 'top');
-        this.set('verticalOffset', validatePos ? 55 : -8);
+        if (this.verticalAlign !== undefined) {
+          this.set('_verticalAlign', this.verticalAlign);
+        } else {
+          this.set('_verticalAlign', validatePos ? 'bottom' : 'top');
+        }
+        if (this.verticalOffset !== undefined) {
+          this.set('_verticalOffset', this.verticalOffset);
+        } else {
+          this.set('_verticalOffset', validatePos ? 55 : -8);
+        }
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
