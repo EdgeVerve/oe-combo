@@ -74,6 +74,10 @@ specifying `listurl` property.
         background-color: #ccc;
       }
     }
+    .dropdown-content> ::content paper-item:hover{
+      background-color: #DDD;
+    }
+
 
     .dropdown-content> ::content {
       max-height: 235px;
@@ -118,35 +122,13 @@ specifying `listurl` property.
           no-auto-focus opened={{expand}}>
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
             <paper-menu id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
-              <template id="itemlist" is="dom-repeat" items="{{_suggestions}}">
-                <template is="dom-if" if={{multi}}>
-
-                  <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-mouseover="onMouseOver"
-                    data-item={{item}} disabled$="[[disabledoption]]">
-                    <span>[[_getDisplayValue(item)]]</span>
-                  </paper-item>
-
-                </template>
-                <template is="dom-if" if={{!multi}}>
-                  <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-mouseover="onMouseOver" on-tap="onItemSelected"
-                    data-item={{item}} disabled$="[[disabledoption]]">
-                    <span>[[_getDisplayValue(item)]]</span>
-                  </paper-item>
-                </template>
+              <template id="itemlist" is="dom-repeat" items="[[_suggestions]]">
+                <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-tap="onItemSelected"
+                  data-item={{item}} disabled$="[[disabledoption]]">
+                  <span>[[_getDisplayValue(item)]]</span>
+                </paper-item>
               </template>
             </paper-menu>
-            <!--adding reset and select all buttons-->
-            <!-- <template is="dom-if" if={{multi}}>                          
-                  <div class="layout horizontal">
-                        <template is="dom-if" if={{selectall}}>  
-                      <paper-button id="selectall" on-tap="toggleSelect">Select All</paper-button>
-                      </template>
-                <template is="dom-if" if={{reset}}>  
-                            <paper-button id="reset" on-tap="toggleSelect">Reset</paper-button>
-                            </template> 
-           
-                </div>
-            </template> -->
           </paper-material>
         </iron-dropdown>
       </div>
@@ -232,12 +214,12 @@ specifying `listurl` property.
         /*Flag to control whether refresh butyon is displayed or not.*/
         showRefresh: {
           type: Boolean,
-          value :false
+          value: false
         },
         /*Flag to control whether only the filtered values should be displayed.*/
-        showFilteredOnly:{
+        showFilteredOnly: {
           type: Boolean,
-          value:false
+          value: false
         },
         _suggestions: {
           type: Array,
@@ -282,17 +264,15 @@ specifying `listurl` property.
           value: false
         },
         verticalOffset: {
-          type: Number,
-          value: 0
+          type: Number
         },
         verticalAlign: {
-          type: String,
-          value: 'top'
+          type: String
         },
         /** Disable caching of listdata */
-        disableCache:{
-          type:Boolean,
-          value:false
+        disableCache: {
+          type: Boolean,
+          value: false
         }
       },
       behaviors: [
@@ -337,7 +317,7 @@ specifying `listurl` property.
         }
 
       },
-      
+
       //Overriding paper-input-behavior
       _focusBlurHandler: function (event) {
         Polymer.IronControlState._focusBlurHandler.call(this, event); // Forward the focus to the nested input.
@@ -379,7 +359,7 @@ specifying `listurl` property.
           ajaxCall.method = 'get';
           ajaxCall.addEventListener('response', function (event) {
             self.set('listdata', event.detail.response);
-            if(self.disableCache){
+            if (self.disableCache) {
               return;
             }
             var listkey = self.listkey || self.hashFunc(self.listurl);
@@ -575,7 +555,9 @@ specifying `listurl` property.
         } else if (e.keyCode == 27) {
           //escape key
           this.set('expand', false);
-        } else if (e.keyCode != 9) {
+        }else if(e.keyCode == 8) {
+          //backspace key
+        }else if (e.keyCode != 9) {
           //ignore tab in
           //Pass only the unselected text for search
           var searchTerm = this.displayValue;
@@ -644,16 +626,17 @@ specifying `listurl` property.
 
       _menuOpen: function (sort) {
         var elementPos = (window.innerHeight / this.getBoundingClientRect().top);
-        var validatePos = elementPos < 1.7
+        var showDropDownAbove = elementPos > 0 && elementPos < 1.7;
+        
         if (this.verticalAlign !== undefined) {
           this.set('_verticalAlign', this.verticalAlign);
         } else {
-          this.set('_verticalAlign', validatePos ? 'bottom' : 'top');
+          this.set('_verticalAlign', showDropDownAbove ? 'bottom' : 'top');
         }
         if (this.verticalOffset !== undefined) {
           this.set('_verticalOffset', this.verticalOffset);
         } else {
-          this.set('_verticalOffset', validatePos ? 55 : -8);
+          this.set('_verticalOffset', showDropDownAbove ? 55 : -8);
         }
         this.set('expand', true);
         if (sort) this.set('sort', true);
@@ -701,15 +684,19 @@ specifying `listurl` property.
 
       /*When using custom templates, bind it to mouseover event of template component as on-mouseover="onMouseOver"*/
       onMouseOver: function (e) {
-        var suggestionsMenu = this.$.menu;
-        if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          suggestionsMenu.select(e.model.index);
-          this.inputElement.focus();
-        }
+        // var suggestionsMenu = this.$.menu;
+        // if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+        //   suggestionsMenu.select(e.model.index);
+        //   this.inputElement.focus();
+        // }
       },
 
       /* on-tap it will fire */
       onItemSelected: function (e) {
+        if (this.multi) {
+          return;
+        }
+        e.stopPropagation();
         var item = e.model.item;
         if (this.showTemplate) {
           this.$.templateDiv.innerHTML = "";
@@ -719,8 +706,6 @@ specifying `listurl` property.
 
         this._setSelectedItem(item);
         this.inputElement.focus();
-        e.stopPropagation();
-
       },
 
       /*Revisit getDisplayValue with iron-list template */
@@ -803,9 +788,9 @@ specifying `listurl` property.
             unmatch.push(item);
           }
         }
-        if(this.showFilteredOnly){
+        if (this.showFilteredOnly) {
           this._suggestions = match;
-        }else{
+        } else {
           this._suggestions = match.concat(unmatch);
         }
         return results;
