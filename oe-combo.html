@@ -82,10 +82,10 @@ specifying `listurl` property.
     .dropdown-content> ::content {
       max-height: 235px;
     }
-
+/* 
     #templateDiv {
       padding-bottom: 10px;
-    }
+    } */
   </style>
   <template>
 
@@ -143,6 +143,9 @@ specifying `listurl` property.
       },
       _onChange: function (e) {
         e.stopPropagation();
+        if(this.showTemplate){
+          return;
+        }
         this.validate();
       },
       properties: {
@@ -321,8 +324,9 @@ specifying `listurl` property.
       //Overriding paper-input-behavior
       _focusBlurHandler: function (event) {
         Polymer.IronControlState._focusBlurHandler.call(this, event); // Forward the focus to the nested input.
-
-        // if (this.focused && !this._shiftTabPressed && this._focusableElement) this._focusableElement.focus();
+        if (this.focused && !this._shiftTabPressed && this._focusableElement && !this.expand){
+          this._focusableElement.focus();
+        }
       },
 
       _fetchListData: function () {
@@ -533,7 +537,7 @@ specifying `listurl` property.
       _showTemplateChanged: function (e) {
         if (this.showTemplate) {
           this.$.templateDiv.style.display = "flex";
-          this.inputElement.type = "hidden";
+          this.inputElement.readonly = true;
         } else {
           this.$.templateDiv.style.display = "none";;
           this.inputElement.type = "text";
@@ -577,21 +581,16 @@ specifying `listurl` property.
         var suggestionsMenu = this.$.menu;
         this.async(function () {
           if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-            var selectedItem = suggestionsMenu.focusedItem;
-            var index = 0;
-            if (typeof (selectedItem) != 'undefined') {
-              index = Number(suggestionsMenu.indexOf(selectedItem));
-              //Math.min(index + 1, this._suggestions.length - 1);
-              index = index < this._suggestions.length - 1 ? index + 1 : 0;
+            suggestionsMenu.focus();
+            if(typeof suggestionsMenu.focusedItem === 'undefined'){
+              suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
             }
-            suggestionsMenu.select(index);
-            //this.inputElement.focus();
           }
         });
       },
 
       _handleUpEvent: function (e) { // eslint-disable-line no-unused-vars
-        var suggestionsMenu = this.$.menu;
+        /*         var suggestionsMenu = this.$.menu;
         if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
           var selectedItem = suggestionsMenu.focusedItem;
           if (typeof (selectedItem) != 'undefined') {
@@ -601,7 +600,7 @@ specifying `listurl` property.
             suggestionsMenu.select(index);
           }
           //this.inputElement.focus();
-        }
+        } */
       },
 
       _handleEnterEvent: function (e) { // eslint-disable-line no-unused-vars
@@ -701,7 +700,9 @@ specifying `listurl` property.
         if (this.showTemplate) {
           this.$.templateDiv.innerHTML = "";
           var children = e.currentTarget.children[0]
-          this.$.templateDiv.appendChild(children)
+          this.$.templateDiv.appendChild(children);
+          this.inputElement.style.zIndex = -1;
+          this.inputElement.style.position = "absolute";
         }
 
         this._setSelectedItem(item);
