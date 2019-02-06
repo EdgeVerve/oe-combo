@@ -74,7 +74,8 @@ specifying `listurl` property.
         background-color: #ccc;
       }
     }
-    .dropdown-content> ::content paper-item:hover{
+
+    .dropdown-content> ::content paper-item:hover {
       background-color: #DDD;
     }
 
@@ -83,9 +84,10 @@ specifying `listurl` property.
       max-height: 235px;
     }
 
+    /* 
     #templateDiv {
       padding-bottom: 10px;
-    }
+    } */
   </style>
   <template>
 
@@ -123,8 +125,8 @@ specifying `listurl` property.
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
             <paper-menu id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
               <template id="itemlist" is="dom-repeat" items="[[_suggestions]]">
-                <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-tap="onItemSelected"
-                  data-item={{item}} disabled$="[[disabledoption]]">
+                <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-tap="onItemSelected" data-item={{item}}
+                  disabled$="[[disabledoption]]">
                   <span>[[_getDisplayValue(item)]]</span>
                 </paper-item>
               </template>
@@ -143,6 +145,9 @@ specifying `listurl` property.
       },
       _onChange: function (e) {
         e.stopPropagation();
+        if (this.showTemplate) {
+          return;
+        }
         this.validate();
       },
       properties: {
@@ -310,7 +315,7 @@ specifying `listurl` property.
             this.value = values;
           } else {
             this.displayValue = "";
-            this.value = [];
+            this.value = null;
           }
           this.fire('pt-item-confirmed', item);
           this.setValidity(true, '');
@@ -321,8 +326,9 @@ specifying `listurl` property.
       //Overriding paper-input-behavior
       _focusBlurHandler: function (event) {
         Polymer.IronControlState._focusBlurHandler.call(this, event); // Forward the focus to the nested input.
-
-        // if (this.focused && !this._shiftTabPressed && this._focusableElement) this._focusableElement.focus();
+        if (this.focused && !this._shiftTabPressed && this._focusableElement && !this.expand) {
+          this._focusableElement.focus();
+        }
       },
 
       _fetchListData: function () {
@@ -415,82 +421,97 @@ specifying `listurl` property.
         return isValid;
       },
       _setDisplayAndValidate: function () {
-        //!multi
-        if (!Array.isArray(this.value) && !this.multi) {
-          if (this.value !== null && this.value !== undefined && this.listdata) {
-            var matchFound = false;
-            for (var idx = 0; idx < this.listdata.length; idx++) {
-              var item = this.listdata[idx];
-              if ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item) {
-                matchFound = true;
-                this.displayValue = this._getDisplayValue(item);
-                this.selectedItem = item;
-                this.setValidity(true, undefined);
-                this.$.menu.select(idx);
-                break;
-              }
-            }
-            if (!matchFound) {
-              if (this.value && typeof this.value === 'object') {
-                this.selectedItem = this.value;
-                this.displayValue = this._getDisplayValue(this.value);
-                this.setValidity(true, undefined);
-              } else if (this.allowFreeText) {
-                this.selectedItem = this.value;
-                this.displayValue = this.value;
-                this.setValidity(true, undefined);
-              } else {
-                this.setValidity(false, 'invalidValue');
-              }
-              this.$.menu.select(-1);
-            }
-          } else {
-            this.displayValue = '';
-            this.set('selectedItem', undefined);
-            this.setValidity(true, undefined);
-          }
-        } else {
-          var selectedItemsIndex = [];
-          if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
-            var matchFound = false;
-            var numberOfRecords = 0;
-            this.displayValue = "";
-            for (var idx = 0; idx < this.listdata.length; idx++) {
-              var item = this.listdata[idx];
-              if (!Array.isArray(this.value) && ((this.valueproperty && this.value == item[this.valueproperty]) ||
-                this.value == item)) {
-                matchFound = true;
-                // this._selectedItemsChanged(item);
-                this.displayValue = this._getDisplayValue(item);
-                var selectedItems = this.selectedItems || [];
-                selectedItems.push(item);
-                this.$.menu.select(idx);
-                this.set(selectedItems, selectedItems);
 
-                break;
-              } else {
-                if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
-                  item) > -1) {
-                  selectedItemsIndex.push(idx);
-                  this.displayValue += ((numberOfRecords == 0 ? "" : ", ") + (this._getDisplayValue(item)));
-                  numberOfRecords++;
-                }
+        if (this.value === null || this.value === undefined || !this.listdata) {
+          //if value or listdata is not present 
+          this.displayValue = '';
+          this.set('selectedItem', undefined);
+          this.setValidity(true, undefined);
+          return;
+        }
+
+        var menuList = this.$.menu;
+
+
+        if (this.multi) {
+          //Multiple selection sets displayValue,selectedItems,validity
+          if (typeof this.value === "string") {
+            try {
+              //parse the value to get the array
+              var valueArr = JSON.parse(this.value);
+              if (Array.isArray(valueArr)) {
+                this.set('value', valueArr);
+                return;
+              }
+            } catch (e) {
+              this.displayValue = '';
+              this.setValidity(false, 'invalidValue');
+              return;
+            }
+          } else if (Array.isArray(this.value)) {
+            var selectedItemsIndex = [];
+            var selectedItems = [];
+            var displayValues = [];
+            for (var idx = 0, len = this.listdata.length; idx < len; idx++) {
+              var item = this.listdata[idx];
+              if (this.value.indexOf(this._getItemValue(item)) !== -1) {
+                selectedItems.push(item);
+                selectedItemsIndex.push(idx);
+                displayValues.push(this._getDisplayValue(item));
               }
             }
-            if (!Array.isArray(this.value) && matchFound) {
-              this.setValidity(true, undefined);
-            } else if (Array.isArray(this.value) && (numberOfRecords == this.value.length)) {
+            this.displayValue = displayValues.join(', ');
+            this.set('selectedItems', selectedItems);
+            this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
+            if (selectedItems.length === this.value.length) {
+              menuList.set('selectedValues', selectedItemsIndex);
               this.setValidity(true, undefined);
             } else {
               this.setValidity(false, 'invalidValue');
             }
           } else {
-            this.displayValue = '';
-            this.setValidity(true, undefined);
+            for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
+              let item = this.listdata[idx];
+              if (this.value === this._getItemValue(item)) {
+                //Match found
+                this.displayValue = this._getDisplayValue(item);
+                this.set('selectedItems', [item]);
+                this.setValidity(true, undefined);
+
+                //Select the item in paper-list
+                menuList.select(idx);
+                return;
+              }
+            }
           }
-          var menuSelected = this.$.menu.selectedValues || [];
-          this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
-          this.$.menu.set('selectedValues', selectedItemsIndex);
+        } else {
+          //Single selection sets displayValue,selectedItem,validity
+          for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
+            let item = this.listdata[idx];
+            if (this.value === this._getItemValue(item)) {
+              //Match found
+              this.displayValue = this._getDisplayValue(item);
+              this.selectedItem = item;
+              this.setValidity(true, undefined);
+
+              //Select the item in paper-list
+              menuList.select(idx);
+              return;
+            }
+          }
+
+          //Match not found
+          if (typeof this.value === 'object') {
+            this.displayValue = this._getDisplayValue(this.value);
+            this.selectedItem = this.value;
+            this.setValidity(true, undefined);
+          } else if (this.allowFreeText) {
+            this.displayValue = this.value;
+            this.selectedItem = this.value;
+            this.setValidity(true, undefined);
+          } else {
+            this.setValidity(false, 'invalidValue');
+          }
         }
       },
 
@@ -533,7 +554,7 @@ specifying `listurl` property.
       _showTemplateChanged: function (e) {
         if (this.showTemplate) {
           this.$.templateDiv.style.display = "flex";
-          this.inputElement.type = "hidden";
+          this.inputElement.readonly = true;
         } else {
           this.$.templateDiv.style.display = "none";;
           this.inputElement.type = "text";
@@ -546,7 +567,7 @@ specifying `listurl` property.
           this._handleDownEvent(e);
         } else if (e.keyCode == 38) {
           //up
-          this._handleUpEvent(e);
+          //this._handleUpEvent(e);
         } else if (e.keyCode == 13) {
           //Enter
           this._handleEnterEvent(e);
@@ -555,9 +576,9 @@ specifying `listurl` property.
         } else if (e.keyCode == 27) {
           //escape key
           this.set('expand', false);
-        }else if(e.keyCode == 8) {
+        } else if (e.keyCode == 8) {
           //backspace key
-        }else if (e.keyCode != 9) {
+        } else if (e.keyCode != 9) {
           //ignore tab in
           //Pass only the unselected text for search
           var searchTerm = this.displayValue;
@@ -577,31 +598,12 @@ specifying `listurl` property.
         var suggestionsMenu = this.$.menu;
         this.async(function () {
           if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-            var selectedItem = suggestionsMenu.focusedItem;
-            var index = 0;
-            if (typeof (selectedItem) != 'undefined') {
-              index = Number(suggestionsMenu.indexOf(selectedItem));
-              //Math.min(index + 1, this._suggestions.length - 1);
-              index = index < this._suggestions.length - 1 ? index + 1 : 0;
+            suggestionsMenu.focus();
+            if (typeof suggestionsMenu.focusedItem === 'undefined') {
+              suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
             }
-            suggestionsMenu.select(index);
-            //this.inputElement.focus();
           }
         });
-      },
-
-      _handleUpEvent: function (e) { // eslint-disable-line no-unused-vars
-        var suggestionsMenu = this.$.menu;
-        if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          var selectedItem = suggestionsMenu.focusedItem;
-          if (typeof (selectedItem) != 'undefined') {
-            var index = Number(suggestionsMenu.indexOf(selectedItem));
-            //Math.max(index - 1, -1);
-            index = index > 0 ? index - 1 : this._suggestions.length - 1;
-            suggestionsMenu.select(index);
-          }
-          //this.inputElement.focus();
-        }
       },
 
       _handleEnterEvent: function (e) { // eslint-disable-line no-unused-vars
@@ -627,7 +629,7 @@ specifying `listurl` property.
       _menuOpen: function (sort) {
         var elementPos = (window.innerHeight / this.getBoundingClientRect().top);
         var showDropDownAbove = elementPos > 0 && elementPos < 1.7;
-        
+
         if (this.verticalAlign !== undefined) {
           this.set('_verticalAlign', this.verticalAlign);
         } else {
@@ -683,13 +685,13 @@ specifying `listurl` property.
 
 
       /*When using custom templates, bind it to mouseover event of template component as on-mouseover="onMouseOver"*/
-      onMouseOver: function (e) {
-        // var suggestionsMenu = this.$.menu;
-        // if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-        //   suggestionsMenu.select(e.model.index);
-        //   this.inputElement.focus();
-        // }
-      },
+      // onMouseOver: function (e) {
+      //   var suggestionsMenu = this.$.menu;
+      //   if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+      //     suggestionsMenu.select(e.model.index);
+      //     this.inputElement.focus();
+      //   }
+      // },
 
       /* on-tap it will fire */
       onItemSelected: function (e) {
@@ -701,7 +703,9 @@ specifying `listurl` property.
         if (this.showTemplate) {
           this.$.templateDiv.innerHTML = "";
           var children = e.currentTarget.children[0]
-          this.$.templateDiv.appendChild(children)
+          this.$.templateDiv.appendChild(children);
+          this.inputElement.style.zIndex = -1;
+          this.inputElement.style.position = "absolute";
         }
 
         this._setSelectedItem(item);
@@ -715,6 +719,14 @@ specifying `listurl` property.
           ret = ret[this.displayproperty];
         }
         return (ret !== null && ret !== undefined) ? ret.toString() : '';
+      },
+
+      _getItemValue:function(item) {
+        var ret = item;
+        if (ret && this.valueproperty) {
+          ret = ret[this.valueproperty];
+        }
+        return ret;
       },
 
       /* It will fire when we type any key except ['enter', 'up', 'down']*/
