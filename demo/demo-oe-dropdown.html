@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>oe-dropdown demo</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/web-animations-js/web-animations-next.min.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles'; 
+    import '@polymer/iron-demo-helpers/demo-snippet'; 
+    import '@polymer/iron-image/iron-image';
+    import '@polymer/polymer/lib/elements/dom-bind'; 
+    import '@polymer/polymer/lib/elements/custom-style';
+  </script>
+
+  <script type="module" src="../oe-dropdown.js"></script>
+
+  <script type="text/javascript">
+    window.OEUtils = window.OEUtils || {};
+  </script>
+  <custom-style>
+    <style include="demo-pages-shared-styles">
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+
+       <h3>ListData as [String]</h3>
+      <demo-snippet>
+        <template>
+          <dom-bind>
+            <template>
+              <span>{{cval}}</span>
+              <oe-dropdown error-message="Please enter a valid value" label="Country" required value="{{cval}}"
+                listdata='["India","China","Germany","France","United Kingdom","United States"]'>
+              </oe-dropdown>
+            </template>
+          </dom-bind>
+        </template>
+      </demo-snippet>
+
+    <h3>ListData as [Object] displayproperty and valueproperty</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <span>{{cval}}</span>
+            <oe-dropdown error-message="Please enter a valid value" label="valueproperty=c" displayproperty="d" valueproperty="c" required value="{{cval}}"
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            </oe-dropdown>
+
+
+            <span>{{cval1.c}} - {{cval1.d}}</span>
+            <oe-dropdown error-message="Please enter a valid value" label="No valueproperty" displayproperty="d" required value="{{cval1}}"
+            listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          </oe-dropdown>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Pre Selected Value</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <oe-dropdown label="Country" displayproperty="d" valueproperty="c" value="DE" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            </oe-dropdown>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Templating the Item</h3>
+    <demo-snippet>
+      <template>
+        <oe-dropdown label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
+              <div class="layout horizontal flex">
+                <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <span class="layout flex centered">{{item.d}}</span>
+                <span>{{item.c}}</span>
+              </div>
+            </paper-item>
+          </template>
+        </oe-dropdown>
+      </template>
+    </demo-snippet>
+
+  </div>
+</body>
+</html>

@@ -1,135 +1,146 @@
-<!-- 
-  ©2016-2017 EdgeVerve Systems Limited (a fully owned Infosys subsidiary),
-  Bangalore, India. All Rights Reserved.
--->
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-  <title>evf-ui demo</title>
+  <title>oe-combo demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../paper-styles/paper-styles.html">
-  <link rel="import" href="../../iron-image/iron-image.html">
-  <link rel="import" href="custom-styles.html">
-  <link rel="import" href="utils.html">
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles'; 
+    import '@polymer/iron-demo-helpers/demo-snippet'; 
+    import '@polymer/iron-image/iron-image';
+    import '@polymer/polymer/lib/elements/dom-bind'; 
+    import '@polymer/polymer/lib/elements/custom-style';
+  </script>
 
-  <link rel="import" href="../oe-combo.html">
-  <link rel="import" href="../../oe-input/oe-input.html">
+  <script type="module" src="../oe-combo.js"></script>
+
+  <script type="text/javascript">
+    window.OEUtils = window.OEUtils || {};
+  </script>
+  <custom-style>
+    <style include="demo-pages-shared-styles">
+    </style>
+  </custom-style>
 </head>
 
-<body unresolved>
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Set Display attribute into dropdown and value attribute into model</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <span>{{cval}}</span>
+            <oe-combo error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}"
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+              <iron-icon slot="prefix" icon="home"></iron-icon>
+            </oe-combo>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
 
-  <h3>Set Display attribute into dropdown and value attribute into model</h3>
-  <demo-snippet>
-    <template>
-      <template is="dom-bind">
-        <span>{{cval}}</span>
-        <oe-combo show-filtered-only error-message="Please enter a valid value" label="Country" displayproperty="d"
-          valueproperty="c" required value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-
-          <iron-icon prefix icon="home"></iron-icon>
-
+    <h3>Show Filtered values only</h3>
+    <demo-snippet>
+      <template>
+        <oe-combo error-message="Please enter a valid value" 
+          show-filtered-only
+          label="Country" displayproperty="d" valueproperty="c" required listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
         </oe-combo>
       </template>
-    </template>
-  </demo-snippet>
+    </demo-snippet>
 
-  <h3>Pre Selected Value</h3>
-  <demo-snippet>
-    <template>
-      <template is="dom-bind">
-        <oe-combo label="Country" displayproperty="d" valueproperty="c" value="DE" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
 
+    <h3>Pre Selected Value</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <oe-combo label="Country" displayproperty="d" valueproperty="c" value="DE" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            </oe-combo>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Use multi select to choose multiple options</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <span>{{cval}}</span>
+            <oe-combo multi error-message="Please enter a valid value" multi label="Country" displayproperty="d" valueproperty="c" required
+              value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+              <iron-icon slot="prefix" icon="home"></iron-icon>
+            </oe-combo>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Multi select with Pre Selected Value</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <oe-combo multi label="Country" displayproperty="d" valueproperty="c" value='["DE","IN"]' listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            </oe-combo>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Allow Free Text</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <span>{{cval}}</span>
+            <oe-combo allow-free-text label="Country" displayproperty="d" valueproperty="c" value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            </oe-combo>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Templating the Item</h3>
+    <demo-snippet>
+      <template>
+        <oe-combo label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
+              <div class="layout horizontal flex">
+                <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <span class="layout flex centered">{{item.d}}</span>
+                <span>{{item.c}}</span>
+              </div>
+            </paper-item>
+          </template>
         </oe-combo>
       </template>
-    </template>
-  </demo-snippet>
+    </demo-snippet>
 
-  <h3>Use multi select to choose multiple options</h3>
-  <demo-snippet>
-    <template>
-      <template is="dom-bind">
-        <span>{{cval}}</span>
-        <oe-combo multi error-message="Please enter a valid value" multi label="Country" displayproperty="d"
-          valueproperty="c" required value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-
-          <iron-icon prefix icon="home"></iron-icon>
-
+    <h3>Templating the Item with the input shown as template</h3>
+    <demo-snippet>
+      <template>
+        <oe-combo show-template label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
+              <div class="layout horizontal flex">
+                <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <span class="layout flex centered">{{item.d}}</span>
+                <span>{{item.c}}</span>
+              </div>
+            </paper-item>
+          </template>
         </oe-combo>
       </template>
-    </template>
-  </demo-snippet>
-
-  <h3>Multi select with Pre Selected Value</h3>
-  <demo-snippet>
-    <template>
-      <template is="dom-bind">
-        <oe-combo multi label="Country" displayproperty="d" valueproperty="c" value='["DE","IN"]' listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-
-        </oe-combo>
-      </template>
-    </template>
-  </demo-snippet>
-
-  <h3>Allow Free Text</h3>
-  <demo-snippet>
-    <template>
-      <template is="dom-bind">
-        <style>
-          #no-clear-ie ::-ms-clear {
-            display: none;
-          }
-        </style>
-        <span>[[cval]]</span>
-        <oe-combo id="no-clear-ie" allow-free-text label="Country" displayproperty="d" valueproperty="c" value="{{cval}}"
-          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-        </oe-combo>
-      </template>
-    </template>
-  </demo-snippet>
-
-  <h3>Templating the Item</h3>
-  <demo-snippet>
-    <template>
-      <oe-combo label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-        <template item-template>
-          <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
-            <div class="layout horizontal flex">
-              <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
-              <span class="layout flex centered">{{item.d}}</span>
-              <span>{{item.c}}</span>
-            </div>
-          </paper-item>
-        </template>
-      </oe-combo>
-    </template>
-  </demo-snippet>
-
-  <h3>Templating the Item with the input shown as template</h3>
-  <demo-snippet>
-    <template>
-      <oe-combo show-template label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
-        <template item-template>
-          <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
-            <div class="layout horizontal flex">
-              <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
-              <span class="layout flex centered">{{item.d}}</span>
-              <span>{{item.c}}</span>
-            </div>
-          </paper-item>
-        </template>
-      </oe-combo>
-    </template>
-  </demo-snippet>
-
+    </demo-snippet>
+  </div>
 </body>
-
 </html>

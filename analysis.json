@@ -1,0 +1,3295 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "# oe-combo\n\nAn input control with dropdown for possible valid values.\nThe data can be supplied statically under `listdata` property and can be dynamically fetched by\nspecifying `listurl` property.",
+      "summary": "",
+      "path": "oe-combo.js",
+      "properties": [
+        {
+          "name": "_focusableElement",
+          "type": "!HTMLElement",
+          "description": "Returns a reference to the focusable element. Overridden from\nPaperInputBehavior to correctly focus the native input.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 352,
+              "column": 2
+            },
+            "end": {
+              "line": 355,
+              "column": 3
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "displayproperty",
+          "type": "string | null | undefined",
+          "description": "Property within the listdata to be used for display",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 169,
+              "column": 6
+            },
+            "end": {
+              "line": 169,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "valueproperty",
+          "type": "string | null | undefined",
+          "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 175,
+              "column": 6
+            },
+            "end": {
+              "line": 175,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "_readonly",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 6
+            },
+            "end": {
+              "line": 180,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "multi",
+          "type": "boolean | null | undefined",
+          "description": "Flag to set for enabling combo to choose multiple values",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 185,
+              "column": 6
+            },
+            "end": {
+              "line": 188,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "showTemplate",
+          "type": "boolean | null | undefined",
+          "description": "When set to true, the selected value is shown as the template given for the combo",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 194,
+              "column": 6
+            },
+            "end": {
+              "line": 198,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_showTemplateChanged\"",
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "value",
+          "type": "Object | null | undefined",
+          "description": "Current selected value",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 6
+            },
+            "end": {
+              "line": 206,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "selectedItem",
+          "type": "Object | null | undefined",
+          "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 214,
+              "column": 6
+            },
+            "end": {
+              "line": 217,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "selectedItems",
+          "type": "Array | null | undefined",
+          "description": "Selected records from the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 223,
+              "column": 6
+            },
+            "end": {
+              "line": 226,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Array"
+            }
+          }
+        },
+        {
+          "name": "showRefresh",
+          "type": "boolean | null | undefined",
+          "description": "Flag to control whether refresh button is displayed or not.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 231,
+              "column": 6
+            },
+            "end": {
+              "line": 234,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "showFilteredOnly",
+          "type": "boolean | null | undefined",
+          "description": "Flag to control whether only the filtered values should be displayed.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 239,
+              "column": 6
+            },
+            "end": {
+              "line": 242,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "disableCache",
+          "type": "boolean | null | undefined",
+          "description": "Disable caching of listdata",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 244,
+              "column": 6
+            },
+            "end": {
+              "line": 247,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "_suggestions",
+          "type": "Array | null | undefined",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 248,
+              "column": 6
+            },
+            "end": {
+              "line": 251,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Array"
+            }
+          }
+        },
+        {
+          "name": "listkey",
+          "type": "string | null | undefined",
+          "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 258,
+              "column": 6
+            },
+            "end": {
+              "line": 262,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_fetchListData\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "listdata",
+          "type": "Array | null | undefined",
+          "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 268,
+              "column": 6
+            },
+            "end": {
+              "line": 272,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_listDataChanged\"",
+              "attributeType": "Array"
+            }
+          }
+        },
+        {
+          "name": "listurl",
+          "type": "string | null | undefined",
+          "description": "URL from where data to be displayed in dropdown, should be fetched",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 277,
+              "column": 6
+            },
+            "end": {
+              "line": 281,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_fetchListData\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "allowFreeText",
+          "type": "boolean | null | undefined",
+          "description": "Flag to set to enable entering values not present in the listdata",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 286,
+              "column": 6
+            },
+            "end": {
+              "line": 289,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "expand",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 291,
+              "column": 6
+            },
+            "end": {
+              "line": 295,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_expandChange\"",
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "sort",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 297,
+              "column": 6
+            },
+            "end": {
+              "line": 300,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "verticalOffset",
+          "type": "string | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 302,
+              "column": 6
+            },
+            "end": {
+              "line": 304,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "verticalAlign",
+          "type": "string | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 306,
+              "column": 6
+            },
+            "end": {
+              "line": 308,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        }
+      ],
+      "methods": [
+        {
+          "name": "_focusBlurHandler",
+          "description": "Override paper-input-behavior focus-blur handler",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 334,
+              "column": 2
+            },
+            "end": {
+              "line": 339,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "FocusEvent"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onChange",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 341,
+              "column": 2
+            },
+            "end": {
+              "line": 344,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "eve"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_selectedItemsChanged",
+          "description": "Event listener to set the value based on the user selection,\nwhen `multi` is set as true.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 362,
+              "column": 2
+            },
+            "end": {
+              "line": 387,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "Event",
+              "description": "selected-items-changed event by paper-listbox"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_fetchListData",
+          "description": "Check of cache store in OEUtils namespace and add event listeners.\nIf cache is present set the cached data in `listdata` else call `_fetchData`",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 393,
+              "column": 2
+            },
+            "end": {
+              "line": 415,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_fetchData",
+          "description": "Fetches the listdata based on the `listurl` and fires\nevent 'oe-update-cache' to update the cache store",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 422,
+              "column": 2
+            },
+            "end": {
+              "line": 447,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_listDataChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 449,
+              "column": 2
+            },
+            "end": {
+              "line": 455,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "newV"
+            },
+            {
+              "name": "oldV"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_validate",
+          "description": "Custom validation of oe-combo to check based on allowFreeText and other flags",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 460,
+              "column": 2
+            },
+            "end": {
+              "line": 474,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_setDisplayAndValidate",
+          "description": "Observer function listening to changes in `value` and `listdata`\nComputes the display of the oe-combo and selects the correct values from paper-listbox,\nbased on `value` set on the element.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 484,
+              "column": 2
+            },
+            "end": {
+              "line": 577,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "newV",
+              "type": "(string | Array)",
+              "description": "value set on element"
+            },
+            {
+              "name": "newL",
+              "type": "Array",
+              "description": "listdata of the element"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "connectedCallback",
+          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 594,
+              "column": 2
+            },
+            "end": {
+              "line": 611,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_keydown",
+          "description": "Key down event listener for oe-combo",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 616,
+              "column": 2
+            },
+            "end": {
+              "line": 624,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_showTemplateChanged",
+          "description": "Observer to `showTemplate`.\nCSS management to display the template instead of the input box.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 631,
+              "column": 2
+            },
+            "end": {
+              "line": 641,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "boolean",
+              "description": "flag to show template"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_keyup",
+          "description": "Key up event listener to handle 'Up/Down/Enter' keys and other keys as search term.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 647,
+              "column": 2
+            },
+            "end": {
+              "line": 675,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "Event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_handleDownEvent",
+          "description": "Down key listener to open and display the menu box.\nOnce opened traverse the list data",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 682,
+              "column": 2
+            },
+            "end": {
+              "line": 697,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "Event",
+              "description": "Key up event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_handleEnterEvent",
+          "description": "Select the focused Item from the listbox using the 'Enter' key",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 703,
+              "column": 2
+            },
+            "end": {
+              "line": 716,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "Event",
+              "description": "Key up event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_menuClose",
+          "description": "Close menu and empty the list",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 721,
+              "column": 2
+            },
+            "end": {
+              "line": 724,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_menuOpen",
+          "description": "Based on the position of the element in screen,\nComputes alighnment , offset and opens the menu.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 731,
+              "column": 2
+            },
+            "end": {
+              "line": 747,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "sort",
+              "type": "boolean",
+              "description": "Sort option for listdata"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_dropdownClick",
+          "description": "Shows all the listdata items when drop down arrow clicks\nIt will check for open if not it will add class open and it will add to suggestions",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 753,
+              "column": 2
+            },
+            "end": {
+              "line": 763,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_expandChange",
+          "description": "It will execute when the expand property changes\nAnd adds event listener for click on html when it open (expand = true)",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 769,
+              "column": 2
+            },
+            "end": {
+              "line": 778,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_closeIfApplicable",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 780,
+              "column": 2
+            },
+            "end": {
+              "line": 787,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "onItemSelected",
+          "description": "on-tap of a list item it is selected",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 793,
+              "column": 2
+            },
+            "end": {
+              "line": 811,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_getDisplayValue",
+          "description": "Returns the display property of the item or the item",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 818,
+              "column": 2
+            },
+            "end": {
+              "line": 824,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object",
+              "description": "object from the list"
+            }
+          ],
+          "return": {
+            "type": "string",
+            "desc": "Display string for the item"
+          }
+        },
+        {
+          "name": "_getItemValue",
+          "description": "Returns the value property of the item or the item",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 831,
+              "column": 2
+            },
+            "end": {
+              "line": 837,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object",
+              "description": "object from the list"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value of the item."
+          }
+        },
+        {
+          "name": "_search",
+          "description": "It will fire when we type any key except ['enter', 'up', 'down']",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 842,
+              "column": 2
+            },
+            "end": {
+              "line": 882,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            },
+            {
+              "name": "term"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_findMatchedObjects",
+          "description": "Finds the matched objects\nTODO: Check regular expression for all the possible cases and for valid expression also.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 888,
+              "column": 2
+            },
+            "end": {
+              "line": 918,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "val"
+            }
+          ]
+        },
+        {
+          "name": "_setSelectedItem",
+          "description": "Set the value to the value property\nThis will be the final step for selecting the listed items",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 925,
+              "column": 2
+            },
+            "end": {
+              "line": 941,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object",
+              "description": "Selected Item"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "sortData",
+          "description": "Sorts data based on displayproperty\nKept method as public so that user can overwrite it if needed",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 947,
+              "column": 2
+            },
+            "end": {
+              "line": 951,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "a"
+            },
+            {
+              "name": "b"
+            }
+          ]
+        },
+        {
+          "name": "__resetComponent",
+          "description": "Reset the fields in the component,\nremoves 'value',displayValue and error state.",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 957,
+              "column": 2
+            },
+            "end": {
+              "line": 960,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/demo-oe-combo.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 43,
+          "column": 0
+        },
+        "end": {
+          "line": 961,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "OeCombo",
+      "attributes": [
+        {
+          "name": "displayproperty",
+          "description": "Property within the listdata to be used for display",
+          "sourceRange": {
+            "start": {
+              "line": 169,
+              "column": 6
+            },
+            "end": {
+              "line": 169,
+              "column": 29
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "valueproperty",
+          "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
+          "sourceRange": {
+            "start": {
+              "line": 175,
+              "column": 6
+            },
+            "end": {
+              "line": 175,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "multi",
+          "description": "Flag to set for enabling combo to choose multiple values",
+          "sourceRange": {
+            "start": {
+              "line": 185,
+              "column": 6
+            },
+            "end": {
+              "line": 188,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "show-template",
+          "description": "When set to true, the selected value is shown as the template given for the combo",
+          "sourceRange": {
+            "start": {
+              "line": 194,
+              "column": 6
+            },
+            "end": {
+              "line": 198,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "value",
+          "description": "Current selected value",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 6
+            },
+            "end": {
+              "line": 206,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "selected-item",
+          "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "sourceRange": {
+            "start": {
+              "line": 214,
+              "column": 6
+            },
+            "end": {
+              "line": 217,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "selected-items",
+          "description": "Selected records from the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "sourceRange": {
+            "start": {
+              "line": 223,
+              "column": 6
+            },
+            "end": {
+              "line": 226,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined"
+        },
+        {
+          "name": "show-refresh",
+          "description": "Flag to control whether refresh button is displayed or not.",
+          "sourceRange": {
+            "start": {
+              "line": 231,
+              "column": 6
+            },
+            "end": {
+              "line": 234,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "show-filtered-only",
+          "description": "Flag to control whether only the filtered values should be displayed.",
+          "sourceRange": {
+            "start": {
+              "line": 239,
+              "column": 6
+            },
+            "end": {
+              "line": 242,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "disable-cache",
+          "description": "Disable caching of listdata",
+          "sourceRange": {
+            "start": {
+              "line": 244,
+              "column": 6
+            },
+            "end": {
+              "line": 247,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "listkey",
+          "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
+          "sourceRange": {
+            "start": {
+              "line": 258,
+              "column": 6
+            },
+            "end": {
+              "line": 262,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "listdata",
+          "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
+          "sourceRange": {
+            "start": {
+              "line": 268,
+              "column": 6
+            },
+            "end": {
+              "line": 272,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined"
+        },
+        {
+          "name": "listurl",
+          "description": "URL from where data to be displayed in dropdown, should be fetched",
+          "sourceRange": {
+            "start": {
+              "line": 277,
+              "column": 6
+            },
+            "end": {
+              "line": 281,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "allow-free-text",
+          "description": "Flag to set to enable entering values not present in the listdata",
+          "sourceRange": {
+            "start": {
+              "line": 286,
+              "column": 6
+            },
+            "end": {
+              "line": 289,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "expand",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 291,
+              "column": 6
+            },
+            "end": {
+              "line": 295,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "sort",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 297,
+              "column": 6
+            },
+            "end": {
+              "line": 300,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "vertical-offset",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 302,
+              "column": 6
+            },
+            "end": {
+              "line": 304,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "vertical-align",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 306,
+              "column": 6
+            },
+            "end": {
+              "line": 308,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "oe-update-cache",
+          "description": "Fetches the listdata based on the `listurl` and fires\nevent 'oe-update-cache' to update the cache store",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "pt-item-confirmed",
+          "description": "Fired when the element item is selected",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected-item-changed",
+          "description": "Fired when the `selectedItem` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected-items-changed",
+          "description": "Fired when the `selectedItems` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listkey-changed",
+          "description": "Fired when the `listkey` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listdata-changed",
+          "description": "Fired when the `listdata` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listurl-changed",
+          "description": "Fired when the `listurl` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "oe-combo",
+      "mixins": [
+        "OEFieldMixin",
+        "OETemplatizeMixin",
+        "OECommonMixin"
+      ]
+    },
+    {
+      "description": "# oe-dropdown\n\nAn input control with dropdown for possible valid values.\nThe data can be supplied statically under `listdata` property and can be dynamically fetched by\nspecifying `listurl` property.",
+      "summary": "",
+      "path": "oe-dropdown.js",
+      "properties": [
+        {
+          "name": "displayproperty",
+          "type": "string | null | undefined",
+          "description": "Property within the listdata to be used for display",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 88,
+              "column": 6
+            },
+            "end": {
+              "line": 88,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "label",
+          "type": "string | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 90,
+              "column": 6
+            },
+            "end": {
+              "line": 90,
+              "column": 19
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "valueproperty",
+          "type": "string | null | undefined",
+          "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 95,
+              "column": 6
+            },
+            "end": {
+              "line": 95,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "value",
+          "type": "Object | null | undefined",
+          "description": "Current selected value",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 100,
+              "column": 6
+            },
+            "end": {
+              "line": 103,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "selectedItem",
+          "type": "Object | null | undefined",
+          "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 110,
+              "column": 6
+            },
+            "end": {
+              "line": 113,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "listkey",
+          "type": "string | null | undefined",
+          "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 120,
+              "column": 6
+            },
+            "end": {
+              "line": 124,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_fetchListData\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "listdata",
+          "type": "Array | null | undefined",
+          "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 130,
+              "column": 6
+            },
+            "end": {
+              "line": 134,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_listDataChanged\"",
+              "attributeType": "Array"
+            }
+          }
+        },
+        {
+          "name": "listurl",
+          "type": "string | null | undefined",
+          "description": "URL from where data to be displayed in dropdown, should be fetched",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 139,
+              "column": 6
+            },
+            "end": {
+              "line": 143,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_fetchListData\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "sort",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 145,
+              "column": 6
+            },
+            "end": {
+              "line": 148,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        }
+      ],
+      "methods": [
+        {
+          "name": "_onChange",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 170,
+              "column": 2
+            },
+            "end": {
+              "line": 173,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "eve"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_selectedItemsChanged",
+          "description": "Event listener to set the value based on the user selection,",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 180,
+              "column": 2
+            },
+            "end": {
+              "line": 180,
+              "column": 29
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "Event",
+              "description": "selected-items-changed event by paper-listbox"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_fetchListData",
+          "description": "Check of cache store in OEUtils namespace and add event listeners.\nIf cache is present set the cached data in `listdata` else call `_fetchData`",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 186,
+              "column": 2
+            },
+            "end": {
+              "line": 208,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_fetchData",
+          "description": "Fetches the listdata based on the `listurl` and fires\nevent 'oe-update-cache' to update the cache store",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 215,
+              "column": 2
+            },
+            "end": {
+              "line": 238,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_listDataChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 240,
+              "column": 2
+            },
+            "end": {
+              "line": 246,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "newV"
+            },
+            {
+              "name": "oldV"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_validate",
+          "description": "Custom validation of oe-dropdown to check based on allowFreeText and other flags",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 251,
+              "column": 2
+            },
+            "end": {
+              "line": 259,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_setDisplayAndValidate",
+          "description": "Observer function listening to changes in `value` and `listdata`\nComputes the display of the oe-dropdown and selects the correct values from paper-listbox,\nbased on `value` set on the element.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 269,
+              "column": 2
+            },
+            "end": {
+              "line": 304,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "newV",
+              "type": "(string | Array)",
+              "description": "value set on element"
+            },
+            {
+              "name": "newL",
+              "type": "Array",
+              "description": "listdata of the element"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "connectedCallback",
+          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 320,
+              "column": 2
+            },
+            "end": {
+              "line": 333,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "onItemSelected",
+          "description": "on-tap of a list item it is selected",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 338,
+              "column": 2
+            },
+            "end": {
+              "line": 342,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_getDisplayValue",
+          "description": "Returns the display property of the item or the item",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 349,
+              "column": 2
+            },
+            "end": {
+              "line": 355,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object",
+              "description": "object from the list"
+            }
+          ],
+          "return": {
+            "type": "string",
+            "desc": "Display string for the item"
+          }
+        },
+        {
+          "name": "_getItemValue",
+          "description": "Returns the value property of the item or the item",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 362,
+              "column": 2
+            },
+            "end": {
+              "line": 368,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object",
+              "description": "object from the list"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value of the item."
+          }
+        },
+        {
+          "name": "_setSelectedItem",
+          "description": "Set the value to the value property\nThis will be the final step for selecting the listed items",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 374,
+              "column": 2
+            },
+            "end": {
+              "line": 389,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "sortData",
+          "description": "Sorts data based on displayproperty\nKept method as public so that user can overwrite it if needed",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 395,
+              "column": 2
+            },
+            "end": {
+              "line": 399,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "a"
+            },
+            {
+              "name": "b"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/demo-oe-dropdown.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 54,
+          "column": 0
+        },
+        "end": {
+          "line": 401,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "OeDropdown",
+      "attributes": [
+        {
+          "name": "displayproperty",
+          "description": "Property within the listdata to be used for display",
+          "sourceRange": {
+            "start": {
+              "line": 88,
+              "column": 6
+            },
+            "end": {
+              "line": 88,
+              "column": 29
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "label",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 90,
+              "column": 6
+            },
+            "end": {
+              "line": 90,
+              "column": 19
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "valueproperty",
+          "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
+          "sourceRange": {
+            "start": {
+              "line": 95,
+              "column": 6
+            },
+            "end": {
+              "line": 95,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "value",
+          "description": "Current selected value",
+          "sourceRange": {
+            "start": {
+              "line": 100,
+              "column": 6
+            },
+            "end": {
+              "line": 103,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "selected-item",
+          "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
+          "sourceRange": {
+            "start": {
+              "line": 110,
+              "column": 6
+            },
+            "end": {
+              "line": 113,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "listkey",
+          "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
+          "sourceRange": {
+            "start": {
+              "line": 120,
+              "column": 6
+            },
+            "end": {
+              "line": 124,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "listdata",
+          "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
+          "sourceRange": {
+            "start": {
+              "line": 130,
+              "column": 6
+            },
+            "end": {
+              "line": 134,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined"
+        },
+        {
+          "name": "listurl",
+          "description": "URL from where data to be displayed in dropdown, should be fetched",
+          "sourceRange": {
+            "start": {
+              "line": 139,
+              "column": 6
+            },
+            "end": {
+              "line": 143,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "sort",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 145,
+              "column": 6
+            },
+            "end": {
+              "line": 148,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "oe-update-cache",
+          "description": "Fetches the listdata based on the `listurl` and fires\nevent 'oe-update-cache' to update the cache store",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "pt-item-confirmed",
+          "description": "Fired when the element item is selected",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected-item-changed",
+          "description": "Fired when the `selectedItem` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listkey-changed",
+          "description": "Fired when the `listkey` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listdata-changed",
+          "description": "Fired when the `listdata` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "listurl-changed",
+          "description": "Fired when the `listurl` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "oe-dropdown",
+      "mixins": [
+        "OEFieldMixin",
+        "OETemplatizeMixin",
+        "OECommonMixin"
+      ]
+    },
+    {
+      "description": "# oe-typeahead\nAn input control with autocomplete and dynamic search\n\n```\n  <oe-typeahead label=\"Search...\" searchurl=\"data/list/SEARCH_STRING.json\" dataurl=\"data/list/VALUE_STRING.json\" value=\"{{value}}\"></oe-typeahead>\n\n  <oe-typeahead label=\"Search...\" strict searchurl=\"data/list/SEARCH_STRING.json\" dataurl=\"data/list/VALUE_STRING.json\" value=\"{{value}}\"></oe-typeahead>\n\n  <oe-typeahead label=\"Search...\" displayproperty=\"description\" valueproperty=\"code\" searchurl=\"data/country/SEARCH_STRING.json\" dataurl=\"data/country/VALUE_STRING.json\" value=\"{{value}}\"></oe-typeahead>\n```",
+      "summary": "",
+      "path": "oe-typeahead.js",
+      "properties": [
+        {
+          "name": "_focusableElement",
+          "type": "!HTMLElement",
+          "description": "Returns a reference to the focusable element. Overridden from\nPaperInputBehavior to correctly focus the native input.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 281,
+              "column": 2
+            },
+            "end": {
+              "line": 284,
+              "column": 3
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "errorMessage",
+          "type": "string | null | undefined",
+          "description": "Custom user error mesasge",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 149,
+              "column": 6
+            },
+            "end": {
+              "line": 152,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "displayValue",
+          "type": "string | null | undefined",
+          "description": "Value which will be displayed on input field",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 154,
+              "column": 6
+            },
+            "end": {
+              "line": 156,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "displayproperty",
+          "type": "string | null | undefined",
+          "description": "For object, which property to be shown for display in the input field",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 158,
+              "column": 6
+            },
+            "end": {
+              "line": 160,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "valueproperty",
+          "type": "string | null | undefined",
+          "description": "For object, which property to be placed as value for typeahead",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 162,
+              "column": 6
+            },
+            "end": {
+              "line": 164,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "value",
+          "type": "Object | null | undefined",
+          "description": "Value of the object/string",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 166,
+              "column": 6
+            },
+            "end": {
+              "line": 170,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_fetchModel\"",
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "_suggestions",
+          "type": "Array | null | undefined",
+          "description": "List of values fetched from server for matching values with given rest API",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 172,
+              "column": 6
+            },
+            "end": {
+              "line": 175,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_suggestionsChanged\"",
+              "attributeType": "Array"
+            }
+          }
+        },
+        {
+          "name": "selectedItem",
+          "type": "Object | null | undefined",
+          "description": "For object, has the whole object of the selection",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 6
+            },
+            "end": {
+              "line": 180,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Object"
+            }
+          }
+        },
+        {
+          "name": "debounceDuration",
+          "type": "number | null | undefined",
+          "description": "Duration between successive requests",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 182,
+              "column": 6
+            },
+            "end": {
+              "line": 185,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "300"
+        },
+        {
+          "name": "searchString",
+          "type": "string | null | undefined",
+          "description": "String using which pattern is matched to get suggested values",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 6
+            },
+            "end": {
+              "line": 190,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "searchurl",
+          "type": "string | null | undefined",
+          "description": "REST API endpoint which will be used to fetch suggested values matching the pattern",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 192,
+              "column": 6
+            },
+            "end": {
+              "line": 194,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "dataurl",
+          "type": "string | null | undefined",
+          "description": "Used during edit of typeahead, this will be used to fetch/search\nfor correct object/value with given value",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 199,
+              "column": 6
+            },
+            "end": {
+              "line": 202,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_fetchModel\"",
+              "attributeType": "String"
+            }
+          }
+        },
+        {
+          "name": "disabled",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 6
+            },
+            "end": {
+              "line": 206,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "required",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 207,
+              "column": 6
+            },
+            "end": {
+              "line": 210,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "strict",
+          "type": "boolean | null | undefined",
+          "description": "Checks for typed value present in the suggestions\nIf true, throws error if value typed not present in suggested list\nIf false, allows values not present in suggestions",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 216,
+              "column": 6
+            },
+            "end": {
+              "line": 219,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "noDataFound",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 224,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        }
+      ],
+      "methods": [
+        {
+          "name": "connectedCallback",
+          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 243,
+              "column": 2
+            },
+            "end": {
+              "line": 257,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onBlur",
+          "description": "Applies when blur event is generated on the element to\nvalidate the value of element.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 265,
+              "column": 2
+            },
+            "end": {
+              "line": 267,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e",
+              "type": "event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onChange",
+          "description": "}",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 271,
+              "column": 2
+            },
+            "end": {
+              "line": 273,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onAjaxResponse",
+          "description": "Checks response for search/data and sets the noDataFound property",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 290,
+              "column": 2
+            },
+            "end": {
+              "line": 329,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onAjaxError",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 330,
+              "column": 2
+            },
+            "end": {
+              "line": 349,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onKeyUp",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 350,
+              "column": 2
+            },
+            "end": {
+              "line": 395,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_onKeyDown",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 396,
+              "column": 2
+            },
+            "end": {
+              "line": 412,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "onMouseOver",
+          "description": "When using custom templates, bind it to mouseover event\nof template component as on-mouseover=\"onMouseOver\"",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 417,
+              "column": 2
+            },
+            "end": {
+              "line": 420,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "onItemSelected",
+          "description": "When using custom templates, bind it to tap event\nof template component as on-tap=\"onItemSelected\"",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 425,
+              "column": 2
+            },
+            "end": {
+              "line": 432,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_setSelectedItem",
+          "description": "Used to set the selectedItem and value properties",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 438,
+              "column": 2
+            },
+            "end": {
+              "line": 458,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item",
+              "type": "Object"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_getDisplayValue",
+          "description": "Revisit getDisplayValue with iron-list template",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 461,
+              "column": 2
+            },
+            "end": {
+              "line": 467,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item"
+            }
+          ]
+        },
+        {
+          "name": "_getRequestUrl",
+          "description": "Used to get the search url after replacing the search pattern",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 474,
+              "column": 2
+            },
+            "end": {
+              "line": 481,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "searchString",
+              "type": "string"
+            }
+          ],
+          "return": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "_onInput",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 482,
+              "column": 2
+            },
+            "end": {
+              "line": 506,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_fetchModel",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 507,
+              "column": 2
+            },
+            "end": {
+              "line": 564,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "nVal"
+            },
+            {
+              "name": "oVal"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_validate",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 2
+            },
+            "end": {
+              "line": 578,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_suggestionsChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 579,
+              "column": 2
+            },
+            "end": {
+              "line": 581,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "suggestions"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "sortData",
+          "description": "Sorts data based on displayproperty\nKept method as public so that user can overwrite it if needed",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 587,
+              "column": 2
+            },
+            "end": {
+              "line": 589,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "a"
+            },
+            {
+              "name": "b"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/demo-oe-typeahead.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 47,
+          "column": 0
+        },
+        "end": {
+          "line": 591,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "OeTypeahead",
+      "attributes": [
+        {
+          "name": "error-message",
+          "description": "Custom user error mesasge",
+          "sourceRange": {
+            "start": {
+              "line": 149,
+              "column": 6
+            },
+            "end": {
+              "line": 152,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "display-value",
+          "description": "Value which will be displayed on input field",
+          "sourceRange": {
+            "start": {
+              "line": 154,
+              "column": 6
+            },
+            "end": {
+              "line": 156,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "displayproperty",
+          "description": "For object, which property to be shown for display in the input field",
+          "sourceRange": {
+            "start": {
+              "line": 158,
+              "column": 6
+            },
+            "end": {
+              "line": 160,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "valueproperty",
+          "description": "For object, which property to be placed as value for typeahead",
+          "sourceRange": {
+            "start": {
+              "line": 162,
+              "column": 6
+            },
+            "end": {
+              "line": 164,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "value",
+          "description": "Value of the object/string",
+          "sourceRange": {
+            "start": {
+              "line": 166,
+              "column": 6
+            },
+            "end": {
+              "line": 170,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "selected-item",
+          "description": "For object, has the whole object of the selection",
+          "sourceRange": {
+            "start": {
+              "line": 177,
+              "column": 6
+            },
+            "end": {
+              "line": 180,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "debounce-duration",
+          "description": "Duration between successive requests",
+          "sourceRange": {
+            "start": {
+              "line": 182,
+              "column": 6
+            },
+            "end": {
+              "line": 185,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "search-string",
+          "description": "String using which pattern is matched to get suggested values",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 6
+            },
+            "end": {
+              "line": 190,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "searchurl",
+          "description": "REST API endpoint which will be used to fetch suggested values matching the pattern",
+          "sourceRange": {
+            "start": {
+              "line": 192,
+              "column": 6
+            },
+            "end": {
+              "line": 194,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "dataurl",
+          "description": "Used during edit of typeahead, this will be used to fetch/search\nfor correct object/value with given value",
+          "sourceRange": {
+            "start": {
+              "line": 199,
+              "column": 6
+            },
+            "end": {
+              "line": 202,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined"
+        },
+        {
+          "name": "disabled",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 203,
+              "column": 6
+            },
+            "end": {
+              "line": 206,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "required",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 207,
+              "column": 6
+            },
+            "end": {
+              "line": 210,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "strict",
+          "description": "Checks for typed value present in the suggestions\nIf true, throws error if value typed not present in suggested list\nIf false, allows values not present in suggestions",
+          "sourceRange": {
+            "start": {
+              "line": 216,
+              "column": 6
+            },
+            "end": {
+              "line": 219,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "no-data-found",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 224,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "error-message-changed",
+          "description": "Fired when the `errorMessage` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected-item-changed",
+          "description": "Fired when the `selectedItem` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "search-string-changed",
+          "description": "Fired when the `searchString` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "disabled-changed",
+          "description": "Fired when the `disabled` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "required-changed",
+          "description": "Fired when the `required` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "no-data-found-changed",
+          "description": "Fired when the `noDataFound` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "oe-typeahead",
+      "mixins": [
+        "OEFieldMixin",
+        "OETemplatizeMixin",
+        "OECommonMixin"
+      ]
+    }
+  ]
+}

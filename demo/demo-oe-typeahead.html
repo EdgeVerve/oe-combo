@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>oe-typeahead demo</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles'; 
+    import '@polymer/iron-demo-helpers/demo-snippet'; 
+    import '@polymer/iron-image/iron-image';
+    import '@polymer/paper-item/paper-item-body';
+    import '@polymer/iron-flex-layout/iron-flex-layout';
+    import '@polymer/iron-flex-layout/iron-flex-layout-classes';
+    import '@polymer/polymer/lib/elements/dom-bind'; 
+    import '@polymer/polymer/lib/elements/custom-style';
+  </script>
+
+  <script type="module" src="../oe-typeahead.js"></script>
+
+  <script type="text/javascript">
+    window.OEUtils = window.OEUtils || {};
+  </script>
+  <custom-style>
+    <style include="demo-pages-shared-styles">
+    </style>
+  </custom-style>
+</head>
+
+<body>
+
+  <div class="vertical-section-container centered">
+    <h3>Typeahead</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <oe-typeahead label="Object property as value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
+            <template is="dom-if" if=[[value2]]>
+              <label>[[value2]]</label>
+            </template>
+
+            <oe-typeahead label="Object as value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" displayproperty="title" value="{{value1}}"></oe-typeahead>
+            <template is="dom-if" if=[[value1]]>
+              <pre>
+              {
+                albumId: <label>[[value1.albumId]]</label>
+                id: <label>[[value1.id]]</label>
+                title: <label>[[value1.title]]</label>
+                url: <label>[[value1.url]]</label>
+                thumbnailUrl: <label>[[value1.thumbnailUrl]]</label>
+              }
+              </pre>
+            </template>
+
+            <oe-typeahead label="Preset Value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" 
+            dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING"
+            displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
+
+            <oe-typeahead dir="auto" label="كنية" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Validations</h3>
+    <demo-snippet>
+      <template>
+        <dom-bind>
+          <template>
+            <oe-typeahead label="Disabled" disabled searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value0}}"></oe-typeahead>
+            <oe-typeahead label="Read Only" readonly searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" 
+            dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING"
+            displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
+
+            <oe-typeahead label="Required" required searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value1}}"></oe-typeahead>
+            <span>[[value1]]</span>
+            <oe-typeahead label="Strict" strict searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
+            <span>[[value2]]</span>
+            <oe-typeahead label="Required & Strict" required strict searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value3}}"></oe-typeahead>
+            <span>[[value3]]</span>
+          </template>
+        </dom-bind>
+      </template>
+    </demo-snippet>
+
+    <h3>Templating the Item</h3>
+    <demo-snippet>
+      <template>
+        <oe-typeahead label="Templated Items" required searchurl="https://jsonplaceholder.typicode.com/users?q=SEARCH_STRING&_limit=10" displayproperty="name" valueproperty="email" value="{{value1}}">
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled=[[readOnly]]>
+              <paper-item-body two-line>
+                <div class="layout horizontal flex">
+                  <span class="layout flex">[[item.name]]</span>
+                  <iron-image style="width:36px; height:24px;" sizing="contain" src="https://via.placeholder.com/24/771796?text=[[item.id]]"></iron-image>
+                </div>
+                <div secondary>
+                  <span>{{item.phone}}</span>
+                </div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </oe-typeahead>
+
+        <oe-typeahead dir="auto" label="من اليمين الى اليسار" required searchurl="https://jsonplaceholder.typicode.com/users?q=SEARCH_STRING&_limit=10" displayproperty="name" valueproperty="email" value="{{value1}}">
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled=[[readOnly]]>
+              <paper-item-body two-line>
+                <div class="layout horizontal flex">
+                  <span class="layout flex">[[item.name]]</span>
+                  <iron-image style="width:36px; height:24px;" sizing="contain" src="https://via.placeholder.com/24/771796?text=[[item.id]]"></iron-image>
+                </div>
+                <div secondary>
+                  <span>{{item.phone}}</span>
+                </div>
+              </paper-item-body>
+            </paper-item>
+          </template>
+        </oe-typeahead>
+
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+
+</html>
