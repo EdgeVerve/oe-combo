@@ -105,18 +105,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             }
           }
           
-	    .dropdown-content>  ::slotted(*) paper-item:hover {
-	      background-color: #DDD;
-	    }
+          .dropdown-content>  ::slotted(*) paper-item:hover {
+            background-color: #DDD;
+          }
           .dropdown-content > ::slotted(*){
             max-height: 235px;
           }
-
-    /* 
-          #templateDiv {
-            padding-bottom: 10px;
-    } */
-
         </style>
         <div id="cover" style="position:relative;">
           <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]"
@@ -771,7 +765,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var hold = document.querySelector('html');
     var self = this;
     if (this.expand) {
-      this.$.dropdown.style.width = this.offsetWidth - 10 + 'px';
+      this.$.dropdown.style.width = this.offsetWidth + 'px';
       hold.addEventListener('click', self.boundClickHandler);
     } else {
       hold.removeEventListener('click', self.boundClickHandler);
