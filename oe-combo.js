@@ -655,8 +655,6 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else if (e.keyCode == 27) {
       //escape key
       this.set('expand', false);
-    } else if (e.keyCode == 8) {
-      //backspace key
     } else if (e.keyCode != 9) {
       //ignore tab in
       //Pass only the unselected text for search
@@ -846,6 +844,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       return;
     }
     var results = self._findMatchedObjects(term);
+    /* 
     if (results.length == 1 && e.keyCode != 8) {
       //there is exactly only one match. set it directly.
       //no need to open the menu.
@@ -853,10 +852,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
       //get length of current displayvalue and make remaining as selected
       this.inputElement.inputElement.setSelectionRange(term.length, self.displayValue.length);
-    } else {
+    } else { */
       self._menuOpen(true);
       var suggestionsMenu = self.$.menu;
-      if (self.allowFreeText) {
+      if (self.allowFreeText && results.length === 0) {
         var newValue = self.displayValue;
         if (self.valueproperty || self.displayproperty) {
           newValue = {};
@@ -869,11 +868,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         }
         self._setSelectedItem(newValue);
       } else if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-        //suggestionsMenu.select(0);
-        self.inputElement.focus();
+        suggestionsMenu.select(0);
+        self._focusableElement.focus();
       }
-    }
-
+    
   }
 
   /**

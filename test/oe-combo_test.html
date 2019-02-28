@@ -389,7 +389,7 @@
                 });
             });
 
-            test('Value is set when typed input matches exactly one record, and dropdown does not open',
+/*             test('Value is set when typed input matches exactly one record, and dropdown does not open',
                 function(done) {
                     var input = el.inputElement;
                     input.bindValue = 'i';
@@ -407,7 +407,7 @@
                         done();
                     });
             });
-
+ */
             test('When typed input matches more than one record, dropdown is displayed with matching records on top',
                 function(done) {
                     var input = el.inputElement;
@@ -470,7 +470,7 @@
                         });
                     });
             });
-
+/* 
             test('When backspace is pressed, new set of matches are displayed in dropdown', function(done) {
                 var input = el.inputElement;
                 input.set('bindValue', 'Cha');
@@ -494,7 +494,7 @@
                     done();
                 });
             });
-
+ */
            
             test('When value is pre-set, the displayValue is updated', function() {
                 var el = fixture('with-value');
@@ -941,7 +941,7 @@
                 });
             });
 
-           
+/*            
             test('Value is set when typed input matches exactly one record, and dropdown does not open',
                 function(done) {
                     var input = el.inputElement;
@@ -960,7 +960,7 @@
                         done();
                     });
             });
-
+ */
             test('When typed input matches more than one record, dropdown is displayed with matching records on top',
                 function(done) {
                     var input = el.inputElement;
@@ -1024,7 +1024,7 @@
                     });
             });
 
-            test('When backspace is pressed, new set of matches are displayed in dropdown', function(done) {
+/*             test('When backspace is pressed, new set of matches are displayed in dropdown', function(done) {
                 var input = el.inputElement;
                 input.set('bindValue', 'Cha');
                 MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(2));
@@ -1047,7 +1047,7 @@
                     done();
                 });
             });
-
+ */
             test('When value is pre-set, the displayValue is updated', function() {
                 var el = fixture('with-value');
                 el.set('listdata', listdata);
