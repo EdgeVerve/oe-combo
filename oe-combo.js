@@ -336,6 +336,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   _onChange(eve) {
     eve.stopPropagation();
+    if(this.multi){
+      this.validate();
+      return;
+    }
+    if(this.displayValue && this.displayValue != this._getDisplayValue(this.selectedItem)){
+      var matchedRecord = this._matchedResults.find(function(rec){
+        return this.displayValue === this._getDisplayValue(rec)
+      }.bind(this));
+      if(matchedRecord){
+        this._setSelectedItem(matchedRecord);
+      }
+    }
     this.validate();
   }
 
@@ -444,9 +456,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   _listDataChanged(newV, oldV) { // eslint-disable-line no-unused-vars
     if (this.listdata) {
+      var self = this;
       if (this.sort) {
         this.listdata.sort(this.sortData.bind(this));
       }
+      this.listMeta = this.listdata.map(function(d){
+        var metaObj = {
+          value : self._getItemValue(d),
+          display: self._getDisplayValue(d)
+        }
+        metaObj.searchKey = metaObj.display.toLocaleLowerCase();
+        return metaObj;
+      });
     }
   }
 
@@ -853,6 +874,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       //get length of current displayvalue and make remaining as selected
       this.inputElement.inputElement.setSelectionRange(term.length, self.displayValue.length);
     } else { */
+      this._matchedResults = results;
       self._menuOpen(true);
       var suggestionsMenu = self.$.menu;
       if (self.allowFreeText && results.length === 0) {
@@ -882,22 +904,21 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var match = [],
       results = [],
       unmatch = [];
+    var searchVal = val.toLocaleLowerCase();
 
     //replacing special characters from the string with space from regular expression
-    val = val.replace(/[`~!@#$%^&*()|+\=?;:'",.<>\{\}\[\]\\\/]/gi, ''); // eslint-disable-line
-    var regEx = new RegExp(val, 'i');
-    var regEx2 = new RegExp('^' + val, 'i');
+    // val = val.replace(/[`~!@#$%^&*()|+\=?;:'",.<>\{\}\[\]\\\/]/gi, ''); // eslint-disable-line
+    // var regEx = new RegExp(val, 'i');
+    // var regEx2 = new RegExp('^' + val, 'i');
     //loop through out the list for checking the object's matches on val
     for (var idx = 0; idx < this.listdata.length; idx++) {
       var item = this.listdata[idx];
-      var dispVal = this._getDisplayValue(item);
-      var obj = dispVal.match(regEx);
-      if (obj) {
-        // if the obj matches push to the result array
+      var itemMeta = this.listMeta[idx];
+      var searchIdx = itemMeta.searchKey.indexOf(searchVal);
+      if (searchIdx !== -1) {
+        // if the data contains the key push to the match array
         match.push(item);
-        if (dispVal.match(regEx2)) {
-          results.push(item);
-        }
+        results.push(item);
       } else {
         unmatch.push(item);
       }
