@@ -1,0 +1,382 @@
+<!-- ©2015-2016 EdgeVerve Systems Limited (a fully owned Infosys subsidiary), Bangalore, India. All Rights Reserved.
+The EdgeVerve proprietary software program ("Program"), is protected by copyrights laws, international treaties and other pending or existing intellectual property rights in India, the United States and other countries.
+The Program may contain/reference third party or open source components, the rights to which continue to
+remain with the applicable third party licensors or the open source community as the case may be and nothing
+here transfers the rights to the third party and open source components, except as expressly permitted.
+Any unauthorized reproduction, storage, transmission in any form or by any means (including without limitation to electronic, mechanical, printing, photocopying, recording or  otherwise), or any distribution of this Program,or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law. -->
+<!doctype html>
+
+<html>
+
+<head>
+
+  <title>oe-typeahead tests</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+  <script src="../node_modules/fakerest/dist/FakeRest.min.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+
+  <script type="module" src="../oe-typeahead.js"></script>
+
+</head>
+
+<body>
+
+  <test-fixture id="basic">
+    <template>
+      <oe-typeahead></oe-typeahead>
+    </template>
+  </test-fixture>
+  <test-fixture id="search">
+    <template>
+      <oe-typeahead searchurl="searchmodel/description/SEARCH_STRING"></oe-typeahead>
+    </template>
+  </test-fixture>
+  <test-fixture id="withTemplate">
+    <template>
+      <oe-typeahead searchurl="searchmodel/description/SEARCH_STRING">
+        <template item-template>
+          <paper-item class="xtest" on-tap="onItemSelected" on-mouseover="onMouseOver" data-item={{item}} disabled="[[readOnly]]">
+            <div>
+              <span>{{item.code}}</span>-<span>{{item.description}}</span>
+            </div>
+          </paper-item>
+        </template>
+      </oe-typeahead>
+    </template>
+  </test-fixture>
+
+  <script type="module">
+    import { DomApi } from "@polymer/polymer/lib/legacy/polymer.dom";
+    import '@polymer/iron-test-helpers/mock-interactions';
+  
+    function getDom(node) {
+      return new DomApi(node);
+    }
+    window.OEUtils  = window.OEUtils || {};
+    window.OEUtils.geturl = window.OEUtils.geturl ||  function (url) {
+      return url;
+    }
+    //   HTMLImports.whenReady(function () {
+    //   OEUtils.geturl = function (url) {
+    //     return url;
+    //   }
+    // });
+
+    suite('oe-typeahead', function () {
+
+      var server;
+      var xhr, requests;
+
+      var modeldata = [{
+        'id': 1,
+        'code': 'IN',
+        'description': 'India'
+      }, {
+        'id': 2,
+        'code': 'IR',
+        'description': 'Ireland'
+      }, {
+        'id': 3,
+        'code': 'ID',
+        'description': 'Indonesia'
+      }, {
+        'id': 12,
+        'code': 'US',
+        'description': 'United States of America'
+      }, {
+        'id': 13,
+        'code': 'UK',
+        'description': 'United Kingdom'
+      }, {
+        'id': 14,
+        'code': 'UG',
+        'description': 'Uganda'
+      }, {
+        'id': 14,
+        'code': 'UR',
+        'description': 'Uruguay'
+      }];
+      var stringdata = [
+        'India',
+        'Ireland',
+        'Indonesia',
+        'United States of America',
+        'United Kingdom',
+        'Uganda',
+        'Uruguay'
+      ];
+
+      suiteSetup(function () {
+        //xhr = sinon.useFakeXMLHttpRequest();
+        requests = [];
+        //xhr.onCreate = function (req) {
+        //  requests.push(req);
+        //};
+
+        server = sinon.fakeServer.create();
+        server.autoRespond = true;
+        server.respondImmediately = true;
+        // /.*\/searchmodel\/.*\/.*/,
+        server.respondWith(
+          'GET',
+          /searchmodel\/.*\/.*/,
+          //url ~ search-model/description/Sw
+          function (req) {
+            var url = req.url.split('?')[0];
+            var parts = url.split('/');
+            var searchField = parts[parts.length - 2];
+            var searchString = parts[parts.length - 1];
+            var response = modeldata.filter(function (item) {
+              return item[searchField].indexOf(searchString) >= 0;
+            });
+            req.respond(200, 'application/json', JSON.stringify(response));
+          }
+        );
+        server.respondWith(
+          'GET',
+          /fetch-model\/.*\/.*/,
+          //url ~ fetch-model/code/CH
+          function (req) {
+            var parts = req.url.split('/');
+            var searchField = parts[1];
+            var searchString = parts[2];
+            var response = modeldata.filter(function (item) {
+              return item[searchField] == (searchString);
+            });
+            response = response && response[0];
+
+            req.respond(200, 'application/json', response ? JSON.stringify(response) : undefined);
+          }
+        );
+
+        server.respondWith(
+          'GET',
+          /search-string\/.*/,
+          //url ~ typeahead-data/b
+          function (req) {
+            var parts = req.url.split('/');
+            var searchString = parts[1];
+            var response = stringdata.filter(function (item) {
+              return item.indexOf(searchString) >= 0;
+            });
+            response = response && response[0];
+            req.respond(200, 'application/json', JSON.stringify(response));
+          }
+        );
+
+        server.respondWith(
+          'GET',
+          /get-string\/.*/,
+          //url ~ typeahead-data/b
+          function (req) {
+            var url = req.url.split('?')[0];
+            var parts = url.split('/');
+            var searchString = parts[3];
+            var response = stringdata.filter(function (item) {
+              return item === searchString;
+            });
+            req.respond(200, 'application/json', JSON.stringify(response));
+          }
+        );
+
+      });
+      suiteTeardown(function () {
+        //xhr.restore();
+        server.restore();
+      });
+
+      suite('without searchurl', function(){
+      var el;
+      setup(function(done) {
+        el = fixture('basic');
+        flush(function(){
+          done();
+        });
+      });
+
+      test('when searchUrl is not defined, displayValue should set value', function (done) {
+        el.set('displayValue', 'ABC');
+        el.inputElement.fire('input');
+        expect(el.value).to.equal('ABC');
+        done();
+      });
+
+      test('fetches data using dataurl and sets display', function (done) {
+        el.set('dataurl', 'http://get-string/VALUE_STRING');
+        el.set('value', 'India');
+        flush(function () {
+          expect(el.inputElement.bindValue).to.be.equal('India');
+          done();
+        });
+      });
+    });
+
+    suite('with searchurl', function(){
+
+      var typeahead;
+      setup(function(done) {
+        typeahead = fixture('basic');
+        typeahead.set('searchurl','searchmodel/description/SEARCH_STRING');
+        flush(function(){
+          done();
+        });
+      });
+
+      test('suggestions are fetched and displayed', function (done) {
+        typeahead.set('displayValue', 'nd');
+        typeahead.set('searchString', 'nd');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          expect(typeahead._suggestions).to.be.a('array');
+          expect(typeahead._suggestions.length).to.equal(4);
+          done();
+        });
+      });
+
+      test('suggestions should not fetch when we type wrong word', function (done) {
+        typeahead.set('displayValue', 'lmn');
+        typeahead.set('searchString', 'lmn');
+        typeahead.inputElement.fire('input');
+
+        flush(function () {
+          expect(typeahead._suggestions).to.be.a('array');
+          expect(typeahead._suggestions.length).to.equal(0);
+          done();
+        });
+      });
+
+      test('selects when paper-item is focused and enter key pressed', function (done) {
+        typeahead.set('displayValue', 'nd');
+        typeahead.set('searchString', 'nd');
+        typeahead.set('displayproperty', 'description');
+        typeahead.set('valueproperty', 'code');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          var menuItems = typeahead.shadowRoot.querySelectorAll('paper-item');
+          MockInteractions.keyUpOn(typeahead.inputElement, 40);
+          MockInteractions.keyUpOn(typeahead.inputElement, 40);
+          MockInteractions.keyUpOn(typeahead.inputElement, 40);
+          MockInteractions.keyUpOn(typeahead.inputElement, 38);
+          MockInteractions.focus(menuItems[1]);
+          MockInteractions.keyUpOn(typeahead.inputElement, 13);
+          expect(typeahead.inputElement.bindValue).to.be.equal('Indonesia');
+          done();
+        });
+      });
+
+      test('selects when paper-item is clicked', function (done) {
+        typeahead.set('displayValue', 'nd');
+        typeahead.set('searchString', 'nd');
+        typeahead.set('displayproperty', 'description');
+        typeahead.set('valueproperty', 'code');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          var menuItems = typeahead.shadowRoot.querySelectorAll('paper-item');
+          MockInteractions.focus(menuItems[1]);
+          MockInteractions.tap(menuItems[1]);
+          expect(typeahead.inputElement.bindValue).to.be.equal('Indonesia');
+          done();
+        });
+      });
+
+      test('paper-items are cleared for empty input', function (done) {
+        typeahead.set('displayValue', '');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          var menuItems = typeahead.shadowRoot.querySelectorAll('paper-item');
+          expect(menuItems.length).to.be.equal(0);
+          done();
+        });
+      });
+
+      test('updates the display when Object value is set', function (done) {
+        typeahead.set('displayproperty', 'description');
+        typeahead.set('value', {
+          'id': 14,
+          'code': 'UG',
+          'description': 'Uganda'
+        });
+        flush(function () {
+          expect(typeahead.inputElement.bindValue).to.equal('Uganda');
+          expect(typeahead.displayValue).to.equal('Uganda');
+          done();
+        });
+      });
+
+      test('Setting text without any match sets the text as value', function (done) {
+        typeahead.set('displayValue', 'ddd');
+        typeahead.set('searchString', 'ddd');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          expect(typeahead.inputElement.bindValue).to.equal('ddd');
+          expect(typeahead.value).to.equal('ddd');
+          done();
+        });
+      });
+
+      test('In strict mode, Setting text without any match sets error', function (done) {
+        typeahead.set('strict', true);
+        typeahead.set('displayValue', 'ddd');
+        typeahead.set('searchString', 'ddd');
+        typeahead.inputElement.fire('input');
+        flush(function () {
+          expect(typeahead.inputElement.bindValue).to.equal('ddd');
+          expect(typeahead.value).to.not.exist;
+          expect(typeahead.invalid).to.be.true;
+          expect(typeahead.errorMessage).to.exist;
+          done();
+        });
+      });
+      });
+
+
+    suite('withTemplate', function(){
+      var typeahead1;
+      setup(function(done) {
+        typeahead1 = fixture('withTemplate');
+        typeahead1.async(done, 500);
+        // flush(function(){
+        //   done();
+        // });
+      });
+
+      test('When template is specified, suggestions are shown as per the template', function (done) {
+        typeahead1.set('displayValue', 'nd');
+        typeahead1.set('searchString', 'nd');
+        typeahead1.inputElement.fire('input');
+        flush(function () {
+          expect(typeahead1._suggestions).to.be.a('array');
+          expect(typeahead1._suggestions.length).to.equal(4);
+          var allItems = typeahead1.$.menu.querySelectorAll('paper-item');
+          expect(allItems.length).to.equal(4);
+          for(var i = 0; i<allItems.length;i++) { 
+            var spans=allItems[i].querySelectorAll('span'); 
+            expect(spans.length).to.equal(2); 
+            var record=typeahead1._suggestions.find(function(r){ 
+              return r.code===spans[0].innerText; 
+            });
+            expect(spans[0].innerText).to.equal(record.code);
+            expect(spans[1].innerText).to.equal(record.description); 
+          }
+          done(); 
+        });         
+      });
+    });
+
+  });
+
+  </script>
+
+</body>
+
+</html>
