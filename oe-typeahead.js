@@ -226,12 +226,15 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       }
     };
   }
-
+  static get _invalidValue(){
+    return {};
+  }
   /**
    * Constructor gets the light-dom element for templating
    */
   constructor() {
     super();
+    this._invalidValue = OeTypeahead._invalidValue;
     if (!this.ctor) {
       this.childTemplate = this.queryEffectiveChildren('template[item-template]');
     }
@@ -296,7 +299,8 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       self.noDataFound = true;
 
       if (self.strict) {
-        self.setValidity(false, 'no-matching-records');
+        self.validate();
+        //self.setValidity(false, 'no-matching-records');
       } else {
         newValue = self.displayValue;
         if (self.valueproperty || self.displayproperty) {
@@ -333,7 +337,9 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     var self = this;
     self.noDataFound = true;
     if (self.strict) {
-      self.setValidity(false, 'no-matching-records');
+      //self.setValidity(false, 'no-matching-records');
+      //self._setSelectedItem(undefined);
+      self.validate();
     } else {
       var newValue = self.displayValue;
       if (self.valueproperty || self.displayproperty) {
@@ -451,12 +457,12 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     if (!this.multiple) {
       //this.$.dropdown.set('opened', false);
       this.set('_suggestions', []);
-
     }
 
     if (this.noDataFound) {
       this.set('_suggestions', []);
     }
+    this.validate();
   }
 
   /* Revisit getDisplayValue with iron-list template */
@@ -509,6 +515,9 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
   _fetchModel(nVal, oVal) { // eslint-disable-line no-unused-vars
     //Common Observer for dataurl as well as value property.
     //Do not rely on nVal or oVal to be value or dataurl.
+    if(this.value === this._invalidValue){
+      return;
+    }
 
     if (!this.value || this.value.length === 0) {
       this._setSelectedItem(undefined);
@@ -539,8 +548,9 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
           //Set value as displayValue, (value as cleared, if strict is true otherwise value is not cleared) if response is empty
           let tempValue = self.value;
           if (self.strict) {
-            self.setValidity(false, 'no-matching-records');
-            self._setSelectedItem(undefined);
+            self.validate();
+            // self.setValidity(false, 'no-matching-records');
+            // self._setSelectedItem(undefined);
           }
           self.set('displayValue', tempValue);
         }
@@ -576,6 +586,11 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
+
+    if(!isValid){
+      this.value = this._invalidValue;
+    }
+
     return isValid;
   }
   _suggestionsChanged(suggestions) {

@@ -103,7 +103,7 @@
       import { DomApi } from "@polymer/polymer/lib/legacy/polymer.dom";
       import '@polymer/iron-test-helpers/mock-interactions';
       import { timeOut, microTask } from '@polymer/polymer/lib/utils/async.js';
-      
+
     function _asyncFn(callback, waitTime) {
         return waitTime > 0 ? timeOut.run(callback.bind(this), waitTime) :
             ~microTask.run(callback.bind(this));
@@ -417,7 +417,7 @@
 
                     flush(function(){
                         
-                        assert.isUndefined(el.value);
+                        assert.equal(el.value,el._invalidValue);
                         assert.equal(el.expand, true);
                         var menu = el.shadowRoot.querySelector('paper-listbox');
                         assert.isNotNull(menu);
@@ -440,7 +440,7 @@
                     MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
                     input.fire('change');
                     flush(function(){
-                        assert.isUndefined(el.value);
+                        assert.equal(el.value,el._invalidValue);
                         assert.equal(el.expand, true);
                         var menu = el.shadowRoot.querySelector('paper-listbox');
                         assert.isNotNull(menu);
@@ -970,7 +970,7 @@
 
                     flush(function(){
                         
-                        assert.isUndefined(el.value);
+                        assert.equal(el.value,el._invalidValue);
                         assert.equal(el.expand, true);
                         var menu = el.shadowRoot.querySelector('paper-listbox');
                         assert.isNotNull(menu);
@@ -993,7 +993,7 @@
                     MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
                     input.fire('change');
                     flush(function(){
-                        assert.isUndefined(el.value);
+                        assert.equal(el.value,el._invalidValue);
                         assert.equal(el.expand, true);
                         var menu = el.shadowRoot.querySelector('paper-listbox');
                         assert.isNotNull(menu);

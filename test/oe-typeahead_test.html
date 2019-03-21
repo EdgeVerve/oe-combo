@@ -331,7 +331,7 @@ Any unauthorized reproduction, storage, transmission in any form or by any means
         typeahead.inputElement.fire('input');
         flush(function () {
           expect(typeahead.inputElement.bindValue).to.equal('ddd');
-          expect(typeahead.value).to.not.exist;
+          expect(typeahead.value,typeahead._invalidValue).to.be.equal;
           expect(typeahead.invalid).to.be.true;
           expect(typeahead.errorMessage).to.exist;
           done();

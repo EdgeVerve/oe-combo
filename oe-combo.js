@@ -487,6 +487,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
+    if(!isValid){
+      this.value = this._invalidValue;
+    }
     return isValid;
   }
 
@@ -499,6 +502,11 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    * @param {Array} newL listdata of the element
    */
   _setDisplayAndValidate(newV, newL) { // eslint-disable-line no-unused-vars
+
+    if(this.value === this._invalidValue){
+      return;
+    }
+
 
     if (this.value === null || this.value === undefined || !this.listdata) {
       //if value or listdata is not present 
@@ -593,11 +601,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   }
 
+  static get _invalidValue(){
+    return {};
+  }
+
   /**
    * Constructor gets the light-dom element for templating
    */
   constructor() {
     super();
+    this._invalidValue = OeCombo._invalidValue;
     if (!this.ctor && !this.multi) {
       this.childTemplate = this.queryEffectiveChildren('template[item-template]');
     }
