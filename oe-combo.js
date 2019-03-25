@@ -644,12 +644,14 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    * Key down event listener for oe-combo
    */
   _keydown(e) {// eslint-disable-line no-unused-vars
-    if (e.keyCode == 40 || e.keyCode == 38) {
-      e.preventDefault();
-    } else if (e.keyCode == 13 && this.expand) {
-      e.stopPropagation();
-    } else if (e.keyCode == 9 && this.expand) {
-      this.$.dropdown.close();
+    if (!this.readonly) {
+        if (e.keyCode == 40 || e.keyCode == 38) {
+            e.preventDefault();
+        } else if (e.keyCode == 13 && this.expand) {
+            e.stopPropagation();
+        } else if (e.keyCode == 9 && this.expand) {
+            this.$.dropdown.close();
+        }
     }
   }
 
@@ -675,32 +677,33 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    * @param {Event} e 
    */
   _keyup(e) {
+        if (!this.readonly) {
+            if (e.keyCode == 40) {
+                //down button
+                this._handleDownEvent(e);
+            } else if (e.keyCode == 38) {
+                //up
+                //this._handleUpEvent(e);
+            } else if (e.keyCode == 13) {
+                //Enter
+                this._handleEnterEvent(e);
+            } else if (e.keyCode == 37 || e.keyCode == 39) {
+                //ignore for left/right arrow keys
+            } else if (e.keyCode == 27) {
+                //escape key
+                this.set('expand', false);
+            } else if (e.keyCode != 9) {
+                //ignore tab in
+                //Pass only the unselected text for search
+                var searchTerm = this.displayValue;
+                if (this._focusableElement.selectionStart > 0) {
+                    searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
+                }
 
-    if (e.keyCode == 40) {
-      //down button
-      this._handleDownEvent(e);
-    } else if (e.keyCode == 38) {
-      //up
-      //this._handleUpEvent(e);
-    } else if (e.keyCode == 13) {
-      //Enter
-      this._handleEnterEvent(e);
-    } else if (e.keyCode == 37 || e.keyCode == 39) {
-      //ignore for left/right arrow keys
-    } else if (e.keyCode == 27) {
-      //escape key
-      this.set('expand', false);
-    } else if (e.keyCode != 9) {
-      //ignore tab in
-      //Pass only the unselected text for search
-      var searchTerm = this.displayValue;
-      if (this._focusableElement.selectionStart > 0) {
-        searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
-      }
-
-      this._search(e, searchTerm.trim());
+                this._search(e, searchTerm.trim());
+            }
+        }
     }
-  }
 
   /**
    * Down key listener to open and display the menu box.
