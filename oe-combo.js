@@ -514,6 +514,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.set('selectedItem', undefined);
       this.setValidity(true, undefined);
       this.$.menu._selectMulti();
+      this.$.menu.selectedValues = [];
       return;
     }
 
