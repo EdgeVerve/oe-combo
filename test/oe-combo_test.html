@@ -77,6 +77,11 @@
       <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
     </template>
   </test-fixture>
+  <test-fixture id="with-error-listurl">
+    <template>
+      <oe-combo listurl="get-error-list" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
   <test-fixture id="with-existing-listurl">
     <template>
       <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
@@ -1290,6 +1295,13 @@
 
                 server.respondWith(
                     'GET',
+                    /get-error-list/,
+                    function(req) {
+                        req.respond(404, 'application/json', JSON.stringify({}));
+                    }
+                );
+                server.respondWith(
+                    'GET',
                     /get-string-list/,
                     function(req) {
                         req.respond(200, 'application/json', JSON.stringify(stringdata));
@@ -1309,6 +1321,13 @@
                 }, 100);
             });
 
+            test('Throws "error" event on listurl error', function(done) {
+                var el = fixture('with-error-listurl');
+                el.addEventListener('error',function(ev){
+                    assert.equal(ev.target,el);
+                    done();
+                });
+            });
         });
 
         suite('<oe-combo listkey>', function() {

@@ -448,6 +448,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         });
       });
       ajaxCall.addEventListener('error', function (event) { // eslint-disable-line no-unused-vars
+        self.fire("error",event);
         console.error('error fetching the list');
       });
       ajaxCall.generateRequest();
