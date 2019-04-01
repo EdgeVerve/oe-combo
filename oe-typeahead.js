@@ -129,7 +129,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
 
       </paper-input-container>
       <div>
-        <iron-dropdown id="dropdown" no-auto-focus opened="[[_suggestions.length]]" >
+        <iron-dropdown id="dropdown" scroll-action="[[scrollAction]]" no-auto-focus opened="[[_suggestions.length]]" >
           <paper-material slot="dropdown-content" class="dropdown-content">
             <paper-listbox id="menu">
               <template id="itemlist" is="dom-repeat" items="{{_suggestions}}" sort="sortData">
@@ -223,6 +223,16 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
         type: Boolean,
         notify: true,
         value: false
+      },
+      
+      /**
+       * scrollAction binded to iron-dropdown
+       * * "lock" - Prevents scrolling of body
+       * * "refit" - Moves the dropdown based on scroll
+       * * "cancel" - Closes the dropdown on scroll
+       */
+      scrollAction : {
+        type: String
       }
     };
   }

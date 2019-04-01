@@ -141,7 +141,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             </paper-input-error>
           </paper-input-container>
           <div>
-            <iron-dropdown id="dropdown" no-animations vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" no-auto-focus opened={{expand}}>
+            <iron-dropdown id="dropdown" scroll-action="[[scrollAction]]" no-animations vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" no-auto-focus opened={{expand}}>
               <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
                 <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
                   <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
@@ -296,6 +296,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       },
 
       verticalOffset: {
+        type: String
+      },
+
+      /**
+       * scrollAction binded to iron-dropdown
+       * * "lock" - Prevents scrolling of body
+       * * "refit" - Moves the dropdown based on scroll
+       * * "cancel" - Closes the dropdown on scroll
+       */
+      scrollAction : {
         type: String
       },
 
