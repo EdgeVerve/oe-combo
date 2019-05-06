@@ -141,17 +141,24 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             </paper-input-error>
           </paper-input-container>
           <div>
-            <iron-dropdown id="dropdown" scroll-action="[[scrollAction]]" no-animations vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" no-auto-focus opened={{expand}}>
-              <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
-                <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
-                  <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
-                    <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
-                      <span>[[_getDisplayValue(item)]]</span>
-                    </paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-material>
-            </iron-dropdown>
+            <dom-if if=[[_dropdownAttached]] id="dropdownContainer">
+              <template>
+                <iron-dropdown id="dropdown" 
+                  scroll-action="[[scrollAction]]" no-animations 
+                  vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" 
+                  no-auto-focus opened=[[expand]]>
+                  <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
+                    <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
+                      <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
+                        <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
+                          <span>[[_getDisplayValue(item)]]</span>
+                        </paper-item>
+                      </template>
+                    </paper-listbox>
+                  </paper-material>
+                </iron-dropdown>
+              </template>
+            </dom-if>
           </div>
         </div>
     `;
@@ -311,7 +318,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
       verticalAlign: {
         type: String
-      }
+      },
+
+      _dropdownAttached:{
+        type:Boolean,
+        value:false
+      },
       /**
        * Fired when the element item is selected
        * 
@@ -517,19 +529,25 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     if(this.value === this._invalidValue){
       return;
     }
+    if(!this.isConnected){
+      return;
+    }
 
+    var menuList = this.$.menu;
 
     if (this.value === null || this.value === undefined || !this.listdata) {
       //if value or listdata is not present 
       this.displayValue = '';
       this.set('selectedItem', undefined);
       this.setValidity(true, undefined);
-      this.$.menu._selectMulti();
-      this.$.menu.selectedValues = [];
+      if(menuList){
+        menuList._selectMulti();
+        menuList.selectedValues = [];
+      }
       return;
     }
 
-    var menuList = this.$.menu;
+    
 
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
@@ -562,7 +580,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         this.set('selectedItems', selectedItems);
         this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
         if (selectedItems.length === this.value.length) {
-          menuList.set('selectedValues', selectedItemsIndex);
+          menuList && menuList.set('selectedValues', selectedItemsIndex);
           this.setValidity(true, undefined);
         } else {
           this.setValidity(false, 'invalidValue');
@@ -577,7 +595,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             this.setValidity(true, undefined);
 
             //Select the item in paper-list
-            menuList.select(idx);
+            menuList && menuList.select(idx);
             return;
           }
         }
@@ -593,7 +611,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.setValidity(true, undefined);
 
           //Select the item in paper-list
-          menuList.select(idx);
+          menuList && menuList.select(idx);
           return;
         }
       }
@@ -642,14 +660,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._readonly = true;
     }
     this._suggestions = [];
+
     if (this.childTemplate) {
-      this.async(function () {
+      /**
+       * When a custom template is provided for list items , 
+       * The dropdown is attached when the component is attached so as to change the template of the dom-repeat
+       */
+      this._initDropdown(function () {
         const itemList = this.shadowRoot.querySelector('#itemlist');
         this.__customTemplatize(itemList, this.childTemplate);
-      }.bind(this), 300);
+      }.bind(this));
     }
 
-    this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
   }
 
   /**
@@ -662,7 +684,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         } else if (e.keyCode == 13 && this.expand) {
             e.stopPropagation();
         } else if (e.keyCode == 9 && this.expand) {
-            this.$.dropdown.close();
+            this.set('expand',false);
         }
     }
   }
@@ -727,8 +749,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._suggestions = this.listdata;
       this._menuOpen(false);
     }
-    var suggestionsMenu = this.$.menu;
     this.async(function () {
+      var suggestionsMenu = this.$.menu;
+      var itemsList = suggestionsMenu.querySelector('#itemlist');
+      itemsList.render();
       suggestionsMenu._updateItems();
       if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
         suggestionsMenu.focus();
@@ -736,7 +760,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
         }
       }
-    });
+    },300);
   }
 
   /**
@@ -752,8 +776,6 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this._setSelectedItem(selectedItem.dataItem);
         }
         this.inputElement.focus();
-      } else {
-        this.$.dropdown.close();
       }
     }
   }
@@ -763,7 +785,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _menuClose() {
     this._suggestions = [];
-    this.$.dropdown.close();
+    this.set('expand',false);
   }
 
   /**
@@ -784,10 +806,32 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else {
       this.set('_verticalOffset', showDropDownAbove ? 55 : -8);
     }
-    this.$.dropdown.open();
+    this._initDropdown(function(){
+      this.set('expand',true);
+    }.bind(this));
     if (sort) this.set('sort', true);
     else this.set('sort', false);
   }
+
+  _initDropdown(cb){
+    if(this._dropdownAttached){
+      cb();
+    }else{
+      function onRender(){
+        this.$.dropdownContainer.removeEventListener('dom-change',onRender);
+        this.$.dropdown = this.shadowRoot.querySelector('#dropdown');
+        this.fire('combo-dropdown-attached',this.$.dropdown);
+        this.$.menu = this.shadowRoot.querySelector('#menu');
+        this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
+        cb();
+        this._setDisplayAndValidate();
+      }
+
+      this.$.dropdownContainer.addEventListener('dom-change',onRender.bind(this));
+      this.set('_dropdownAttached',true);
+    }
+  }
+
 
   /**
    * Shows all the listdata items when drop down arrow clicks
