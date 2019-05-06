@@ -346,14 +346,14 @@
                 var input = el.inputElement;
                 MockInteractions.focus(input);
                 MockInteractions.keyUpOn(input, 40);
-                _asyncFn(function () {
+                el.async(function () {
                     MockInteractions.pressEnter(input);
-                    _asyncFn(function () {
+                    flush(function () {
                         assert.equal(el.expand, false);
                         assert.equal(el.value, (listdata[0])[el.valueproperty]);
                         done();
-                    }, 100);
-                }, 200);
+                    });
+                }, 300);
             });
 
             test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function (
@@ -361,7 +361,7 @@
                 var input = el.inputElement.inputElement;
                 MockInteractions.keyUpOn(input, 40);
 
-                flush(function () {
+                el.async(function () {
                     assert.equal(el.expand, true);
                     var menu = el.shadowRoot.querySelector('paper-listbox');
                     assert.notEqual(getComputedStyle(menu).display, 'none');
@@ -376,7 +376,7 @@
                         assert.equal(menu.indexOf(selectedItem), 1);
                         done();
                     });
-                });
+                }, 300);
 
 
             });
@@ -385,7 +385,7 @@
                 var input = el.inputElement;
                 MockInteractions.keyUpOn(input, 40);
 
-                flush(function () {
+                el.async(function () {
                     assert.equal(el.expand, true);
                     var menu = el.shadowRoot.querySelector('paper-listbox');
                     assert.notEqual(getComputedStyle(menu).display, 'none');
@@ -402,7 +402,7 @@
                             1);
                         done();
                     });
-                });
+                }, 300);
             });
 
             test('When typed input matches more than one record, dropdown is displayed with matching records on top',
@@ -477,8 +477,6 @@
             });
         });
 
-
-
         suite('<oe-combo multi>', function () {
 
             setup(function (done) {
@@ -489,7 +487,6 @@
                     done();
                 });
             });
-
 
             test('Setting value updates the display', function () {
                 el.set('value', [(listdata[2])[el.valueproperty]]);
@@ -544,70 +541,6 @@
                 });
             });
 
-            test('down arrow + enter selects first element', function (done) {
-                var input = el.inputElement;
-                MockInteractions.focus(input);
-                debugger;
-                MockInteractions.keyUpOn(input, 40);
-                _asyncFn(function () {
-                    MockInteractions.pressEnter(input);
-                    _asyncFn(function () {
-                        assert.equal(el.expand, true);
-                        done();
-                    }, 100);
-                }, 200);
-            });
-
-            test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function (
-                done) {
-                var input = el.inputElement.inputElement;
-                MockInteractions.keyUpOn(input, 40);
-
-                flush(function () {
-                    assert.equal(el.expand, true);
-                    var menu = el.shadowRoot.querySelector('paper-listbox');
-                    assert.notEqual(getComputedStyle(menu).display, 'none');
-                    var selectedItem = menu.focusedItem;
-                    assert.isDefined(selectedItem);
-                    assert.equal(menu.indexOf(selectedItem), 0);
-
-                    MockInteractions.keyDownOn(menu, 40);
-                    flush(function () {
-                        selectedItem = menu.focusedItem;
-                        assert.isDefined(selectedItem);
-                        assert.equal(menu.indexOf(selectedItem), 1);
-                        done();
-                    });
-                });
-
-
-            });
-
-            test('When up arrow key is pressed on open dropdown, highlighted item are rotated', function (done) {
-                var input = el.inputElement;
-                MockInteractions.keyUpOn(input, 40);
-
-                flush(function () {
-                    assert.equal(el.expand, true);
-                    var menu = el.shadowRoot.querySelector('paper-listbox');
-                    assert.notEqual(getComputedStyle(menu).display, 'none');
-                    var selectedItem = menu.focusedItem;
-                    assert.isDefined(selectedItem);
-                    assert.equal(menu.indexOf(selectedItem), 0);
-
-                    // up-arrow
-                    MockInteractions.keyDownOn(menu, 38);
-                    flush(function () {
-                        selectedItem = menu.focusedItem;
-                        assert.isDefined(selectedItem);
-                        assert.equal(menu.indexOf(selectedItem), el._suggestions.length -
-                            1);
-                        done();
-                    });
-                });
-            });
-
-
             test('When value is pre-set, the displayValue is updated', function () {
                 var el = fixture('with-value');
                 el.set('listdata', listdata);
@@ -630,7 +563,6 @@
             });
         });
 
-
         suite('<oe-combo with template>', function () {
 
             setup(function (done) {
@@ -642,70 +574,24 @@
                 })
             });
 
-            test('Setting value updates the display', function () {
-                el.set('value', (listdata[2])[el.valueproperty]);
-                assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
-                el.set('value', (listdata[4])[el.valueproperty]);
-                assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
-            });
-
-            test('Setting value, sets selectedItem', function () {
-                el.set('value', (listdata[3])[el.valueproperty]);
-                assert.equal(el.selectedItem, listdata[3]);
-            });
-
-            test('dropdown is not visible by default', function () {
-                assert.notEqual(el.expand, true);
-                var dropdown = el.$.dropdown;
-                dropdown && assert.equal(dropdown.opened, false);
-            });
-
-            test('dropdown is displayed when arrow is tapped', function () {
+            test('dropdown items are displayed as per the template', function (done) {
                 MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var dropdown = el.$.dropdown;
-                assert.isDefined(dropdown);
-                assert.notEqual(dropdown.opened, false);
-            });
-
-            test('dropdown items are displayed as per the template', function () {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var dropdown = el.$.dropdown;
-                assert.isDefined(dropdown);
-                assert.notEqual(dropdown.opened, false);
-
-                var items = el.$.menu.querySelectorAll('paper-item');
-                for (var i = 0; i < items.length; i++) {
-                    var item = items[i];
-                    assert.equal(item.children.length, 2);
-                    assert.equal(item.children[0].nodeName, 'SPAN');
-                    assert.equal(item.children[0].className, 'layout flex centered');
-                    assert.equal(item.children[1].nodeName, 'SPAN');
-                }
-
-            });
-
-            test('When dropdown is open and arrow is tapped, dropdown closes', function () {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, false);
-
-                var dropdown = el.$.dropdown;
-                dropdown && assert.notEqual(dropdown.opened, true);
-            });
-
-            test('All listdata items are displayed in menu', function (done) {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var menu = el.shadowRoot.querySelector('paper-listbox');
-                assert.isDefined(menu);
                 flush(function () {
-                    var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                    assert.equal(menuItems.length, listdata.length);
+                    assert.equal(el.expand, true);
+                    var dropdown = el.$.dropdown;
+                    assert.isDefined(dropdown);
+                    assert.notEqual(dropdown.opened, false);
+
+                    var items = el.$.menu.querySelectorAll('paper-item');
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i];
+                        assert.equal(item.children.length, 2);
+                        assert.equal(item.children[0].nodeName, 'SPAN');
+                        assert.equal(item.children[0].className, 'layout flex centered');
+                        assert.equal(item.children[1].nodeName, 'SPAN');
+                    }
                     done();
-                });
+                })
             });
 
             test('Displayed data is sorted', function (done) {
@@ -718,13 +604,15 @@
                 sArrow = sEl.$.dropdownicon;
 
                 MockInteractions.tap(sArrow);
-                var menu = sEl.shadowRoot.querySelector('paper-material');
-                assert.isDefined(menu);
                 flush(function () {
-                    var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                    assert.equal(menuItems.length, newlist.length);
-                    assert.equal(menuItems[0].querySelector('span').innerHTML, (listdata[1])[sEl.displayproperty]);
-                    done();
+                    var menu = sEl.shadowRoot.querySelector('paper-material');
+                    assert.isDefined(menu);
+                    flush(function () {
+                        var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                        assert.equal(menuItems.length, newlist.length);
+                        assert.equal(menuItems[0].querySelector('span').innerHTML, (listdata[1])[sEl.displayproperty]);
+                        done();
+                    });
                 });
             });
 
@@ -761,196 +649,6 @@
                 });
             });
 
-            test('When down arrow key is pressed, drowdown opens', function (done) {
-                var input = el.inputElement;
-                MockInteractions.keyUpOn(input, 40);
-
-                flush(function () {
-                    assert.equal(el.expand, true);
-                    var dropdown = el.$.dropdown;
-                    assert.notEqual(dropdown.opened, false);
-                    done();
-                });
-
-            });
-
-            test('down arrow + enter selects first element and closes menu', function (done) {
-                var input = el.inputElement;
-                MockInteractions.focus(input);
-                MockInteractions.keyUpOn(input, 40);
-                _asyncFn(function () {
-                    MockInteractions.pressEnter(input);
-                    _asyncFn(function () {
-                        assert.equal(el.expand, false);
-                        assert.equal(el.value, (listdata[0])[el.valueproperty]);
-                        done();
-                    }, 100);
-                }, 200);
-            });
-
-            test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function (
-                done) {
-                var input = el.inputElement.inputElement;
-                MockInteractions.keyUpOn(input, 40);
-
-                flush(function () {
-                    assert.equal(el.expand, true);
-                    var menu = el.shadowRoot.querySelector('paper-listbox');
-                    assert.notEqual(getComputedStyle(menu).display, 'none');
-                    var selectedItem = menu.focusedItem;
-                    assert.isDefined(selectedItem);
-                    assert.equal(menu.indexOf(selectedItem), 0);
-
-                    MockInteractions.keyDownOn(menu, 40);
-                    flush(function () {
-                        selectedItem = menu.focusedItem;
-                        assert.isDefined(selectedItem);
-                        assert.equal(menu.indexOf(selectedItem), 1);
-                        done();
-                    });
-                });
-
-
-            });
-
-            test('When up arrow key is pressed on open dropdown, highlighted item are rotated', function (done) {
-                var input = el.inputElement;
-                MockInteractions.keyUpOn(input, 40);
-
-                flush(function () {
-                    assert.equal(el.expand, true);
-                    var menu = el.shadowRoot.querySelector('paper-listbox');
-                    assert.notEqual(getComputedStyle(menu).display, 'none');
-                    var selectedItem = menu.focusedItem;
-                    assert.isDefined(selectedItem);
-                    assert.equal(menu.indexOf(selectedItem), 0);
-
-                    // up-arrow
-                    MockInteractions.keyDownOn(menu, 38);
-                    flush(function () {
-                        selectedItem = menu.focusedItem;
-                        assert.isDefined(selectedItem);
-                        assert.equal(menu.indexOf(selectedItem), el._suggestions.length -
-                            1);
-                        done();
-                    });
-                });
-            });
-
-            /*            
-                        test('Value is set when typed input matches exactly one record, and dropdown does not open',
-                            function(done) {
-                                var input = el.inputElement;
-                                input.bindValue = 'i';
-                                MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(0));
-                                input.fire('change');
-                                flush(function(){
-            
-                                    assert.equal(el.displayValue, 'India');
-                                    assert.equal(el.value, 'IN');
-                                    assert.equal(el.expand, false);
-                                    assert.equal(el.invalid, false);
-                                    assert.isUndefined(el.errorMessage);
-                                    var dropdown = el.$.dropdown;
-                                    dropdown && assert.equal(dropdown.opened, false);
-                                    done();
-                                });
-                        });
-             */
-            test('When typed input matches more than one record, dropdown is displayed with matching records on top',
-                function (done) {
-                    var input = el.inputElement;
-                    input.bindValue = 'un';
-                    MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
-                    input.fire('change');
-
-                    flush(function () {
-
-                        assert.equal(el.value, el._invalidValue);
-                        assert.equal(el.expand, true);
-                        var menu = el.shadowRoot.querySelector('paper-listbox');
-                        assert.isNotNull(menu);
-                        assert.notEqual(getComputedStyle(menu).display, 'none');
-                        var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-
-                        var item0 = menuItems[0].dataItem
-                        var item1 = menuItems[1].dataItem;
-
-                        assert.isTrue((item0[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
-                        assert.isTrue((item1[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
-                        done();
-                    });
-                });
-
-            test('When typed input does not match any record, control is set to error and dropdown is displayed',
-                function (done) {
-                    var input = el.inputElement;
-                    input.set('bindValue', 'Ux');
-                    MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
-                    input.fire('change');
-                    flush(function () {
-                        assert.equal(el.value, el._invalidValue);
-                        assert.equal(el.expand, true);
-                        var menu = el.shadowRoot.querySelector('paper-listbox');
-                        assert.isNotNull(menu);
-                        assert.notEqual(getComputedStyle(menu).display, 'none');
-                        flush(function () {
-                            assert.equal(el.invalid, true);
-                            assert.equal(el.errorMessage, 'invalidValue');
-                            done();
-                        });
-                    });
-                });
-
-            test('When allowFreeText is set and typed input does not match any record, no error is raised and input is set as value',
-                function (done) {
-                    var el = fixture('freetext');
-                    el.set('listdata', listdata);
-                    flush(function () {
-                        var input = el.inputElement;
-                        input.set('bindValue', 'UwU');
-                        MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
-                        input.fire('change');
-                        flush(function () {
-                            assert.equal(el.value, 'UwU');
-                            assert.equal(el.invalid, false);
-                            assert.isUndefined(el.errorMessage);
-                            done();
-                        });
-                    });
-                });
-
-            /*             test('When backspace is pressed, new set of matches are displayed in dropdown', function(done) {
-                            var input = el.inputElement;
-                            input.set('bindValue', 'Cha');
-                            MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(2));
-                            input.fire('change');
-                            assert.equal(el.value, 'CD');
-                            assert.equal(el.expand, false);
-                            input.set('bindValue', 'Ch');
-                            // backspace
-                            MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(46));
-                            flush(function(){
-                                var menu = el.shadowRoot.querySelector('paper-listbox');
-                                assert.isNotNull(menu);
-                                assert.notEqual(getComputedStyle(menu).display, 'none');
-                                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                                assert.equal((menuItems[0].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
-                                assert.equal((menuItems[1].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
-                                assert.equal((menuItems[2].dataItem[el.displayproperty]).toLowerCase().indexOf('ch'), 0);
-                                assert.notEqual(el.invalid, true);
-                                assert.notEqual(el.errorMessage, 'invalidValue');
-                                done();
-                            });
-                        });
-             */
-            test('When value is pre-set, the displayValue is updated', function () {
-                var el = fixture('with-value');
-                el.set('listdata', listdata);
-
-                assert.equal(el.value, 'IN');
-                assert.equal(el.displayValue, 'India');
-            });
         });
 
         suite('<oe-combo with template as display input>', function () {
@@ -961,205 +659,20 @@
                 arrow = el.$.dropdownicon;
             });
 
-            test('Setting value updates the display', function () {
-                el.set('value', (listdata[2])[el.valueproperty]);
-                assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
-                el.set('value', (listdata[4])[el.valueproperty]);
-                assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
-            });
 
-            test('Setting value, sets selectedItem', function () {
-                el.set('value', (listdata[3])[el.valueproperty]);
-                assert.equal(el.selectedItem, listdata[3]);
-            });
-
-            test('dropdown is not visible by default', function () {
-                assert.notEqual(el.expand, true);
-                var dropdown = el.$.dropdown;
-                dropdown && assert.equal(dropdown.opened, false);
-            });
             test('input is readonly', function () {
                 var input = el.inputElement;
                 input && assert.equal(input.readonly, true);
             });
-            test('template div is visible', function () {
 
+            test('template div is visible', function () {
                 var templateDiv = el.$.templateDiv;
                 assert.notEqual(templateDiv, undefined);
             });
 
-            test('dropdown is displayed when arrow is tapped', function () {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var dropdown = el.$.dropdown;
-                assert.isDefined(dropdown);
-                assert.notEqual(dropdown.opened, false);
-            });
-
-            test('dropdown items are displayed as per the template', function () {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var dropdown = el.$.dropdown;
-                assert.isDefined(dropdown);
-                assert.notEqual(dropdown.opened, false);
-
-                var items = el.$.menu.querySelectorAll('paper-item');
-                for (var i = 0; i < items.length; i++) {
-                    var item = items[i];
-                    assert.equal(item.children.length, 2);
-                    assert.equal(item.children[0].nodeName, 'SPAN');
-                    assert.equal(item.children[0].className, 'layout flex centered');
-                    assert.equal(item.children[1].nodeName, 'SPAN');
-                }
-
-            });
-
-            test('When dropdown is open and arrow is tapped, dropdown closes', function () {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, false);
-
-                var dropdown = el.$.dropdown;
-                dropdown && assert.notEqual(dropdown.opened, true);
-            });
-
-            test('All listdata items are displayed in menu', function (done) {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                var menu = el.shadowRoot.querySelector('paper-listbox');
-                assert.isDefined(menu);
-                flush(function () {
-                    var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                    assert.equal(menuItems.length, listdata.length);
-                    done();
-                });
-            });
-
-            test('Displayed data is sorted', function (done) {
-                var sEl = fixture('sorted');
-                var newlist = JSON.parse(JSON.stringify(listdata));
-                sEl.set('listdata', newlist);
-                //new list should be sorted now.
-                assert.deepEqual(sEl.listdata[0], listdata[1]);
-                assert.deepEqual(newlist[0], listdata[1]);
-                sArrow = sEl.$.dropdownicon;
-
-                MockInteractions.tap(sArrow);
-                var menu = sEl.shadowRoot.querySelector('paper-material');
-                assert.isDefined(menu);
-                flush(function () {
-                    var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                    assert.equal(menuItems.length, newlist.length);
-                    assert.equal(menuItems[0].querySelector('span').innerHTML, (listdata[1])[sEl.displayproperty]);
-                    done();
-                });
-            });
-
-            test('When item in dropdown is tapped, it is set as selected', function (done) {
-                MockInteractions.tap(arrow);
-                var menu = el.shadowRoot.querySelector('paper-material');
-                assert.isDefined(menu);
-                flush(function () {
-                    var menuItems = domApiFn(menu).querySelectorAll('paper-item');
-                    assert.equal(menuItems.length, listdata.length);
-                    assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
-                    MockInteractions.tap(menuItems[1]);
-                    flush(function () {
-                        assert.equal(el.value, (listdata[1])[el.valueproperty]);
-                        assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
-                        assert.equal(el.selectedItem, listdata[1]);
-                        done();
-                    });
-                });
-            });
-
-            test('drowdown closes once selection is made', function (done) {
-                MockInteractions.tap(arrow);
-                assert.equal(el.expand, true);
-                flush(function () {
-                    var dropdown = el.$.dropdown;
-                    var menuItems = domApiFn(dropdown).querySelectorAll('paper-item');
-                    MockInteractions.tap(menuItems[1]);
-                    assert.notEqual(el.expand, true);
-                    flush(function () {
-                        assert.equal(dropdown.opened, false);
-                        done();
-                    });
-                });
-            });
-
-            /* 
-                        test('down arrow + enter selects first element and closes menu', function(done) {
-                            var input = el.inputElement;
-                            MockInteractions.focus(input);
-                            MockInteractions.keyUpOn(input, 40);
-                            flush(function() {
-                                MockInteractions.pressEnter(input);
-                                _asyncFn(function() {
-                                    assert.equal(el.expand, false);
-                                    assert.equal(el.value, (listdata[0])[el.valueproperty]);
-                                    done();
-                                }, 500);
-                            });
-                        });
-            
-                        test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function(
-                            done) {
-                            var input = el.inputElement;
-                            MockInteractions.keyUpOn(input, 40);
-            
-                            flush(function() {
-                                assert.equal(el.expand, true);
-                                var menu = el.shadowRoot.querySelector('paper-listbox');
-                                assert.notEqual(getComputedStyle(menu).display, 'none');
-                                var selectedItem = menu.focusedItem;
-                                assert.isDefined(selectedItem);
-                                assert.equal(menu.indexOf(selectedItem), 0);
-            
-                                MockInteractions.keyUpOn(input, 40);
-                                flush(function() {
-                                    selectedItem = menu.focusedItem;
-                                    assert.isDefined(selectedItem);
-                                    assert.equal(menu.indexOf(selectedItem), 1);
-                                    done();
-                                });
-                            });
-                        });
-            
-                        test('When up arrow key is pressed on open dropdown, highlighted item are rotated', function(done) {
-                            var input = el.inputElement;
-                            MockInteractions.keyUpOn(input, 40);
-            
-                            flush(function() {
-                                assert.equal(el.expand, true);
-                                var menu = el.shadowRoot.querySelector('paper-listbox');
-                                assert.notEqual(getComputedStyle(menu).display, 'none');
-                                var selectedItem = menu.focusedItem;
-                                assert.isDefined(selectedItem);
-                                assert.equal(menu.indexOf(selectedItem), 0);
-            
-                                // up-arrow
-                                MockInteractions.keyUpOn(input, 38);
-                                flush(function() {
-                                    selectedItem = menu.focusedItem;
-                                    assert.isDefined(selectedItem);
-                                    assert.equal(menu.indexOf(selectedItem), el._suggestions.length -
-                                        1);
-                                    done();
-                                });
-                            });
-                        });
-            
-            
-            
-            
-            
-             */
-
-
-
         });
+
+
         suite('<oe-combo listurl>', function () {
 
             var server;

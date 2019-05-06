@@ -54,6 +54,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             display: block;
           }
 
+          :host(:focus){
+            outline:none;
+          }
+          
           span.required {
             vertical-align: bottom;
             color: var(--paper-input-container-invalid-color, var(--google-red-500));
