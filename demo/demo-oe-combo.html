@@ -35,8 +35,17 @@
       <template>
         <dom-bind>
           <template>
+              <custom-style>
+                  <style>
+                    .custom-input {
+                      --paper-input-container-ms-clear:{
+                            display:none;
+                      };
+                    }
+                  </style>
+                </custom-style>
             <span>{{cval}}</span>
-            <oe-combo error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}"
+            <oe-combo class="custom-input" error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}"
               listdata='[{"c":"IN","d":"India"},{"c":"INA","d":"Indiana"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
               <iron-icon slot="prefix" icon="home"></iron-icon>
             </oe-combo>

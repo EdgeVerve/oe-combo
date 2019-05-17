@@ -93,7 +93,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             cursor: pointer;
           }
 
-
+          input::-ms-clear {
+            @apply --paper-input-container-ms-clear;
+          }
 
           .iron-selected {
             background: var(--combo-selected-backgroud, #e0e0e0);
