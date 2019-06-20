@@ -346,8 +346,7 @@
                     var selectedItem = menu.focusedItem;
                     assert.isDefined(selectedItem);
                     assert.equal(menu.indexOf(selectedItem), 0);
-
-                    MockInteractions.keyUpOn(input, 40);
+                    MockInteractions.keyDownOn(menu, 40);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -372,7 +371,7 @@
                     assert.equal(menu.indexOf(selectedItem), 0);
 
                     // up-arrow
-                    MockInteractions.keyUpOn(input, 38);
+                    MockInteractions.keyDownOn(menu, 38);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -499,7 +498,16 @@
             });
         });
 
-
+        suite('a11y', function () {
+            setup(function(done) {
+                el = fixture('basic');
+                el.set('listdata', listdata);
+                flush(function(){
+                    done();
+                });
+            });
+            a11ySuite('basic'); // eslint-disable-line no-undef
+        });
 
         suite('<oe-combo multi', function() {
 
@@ -641,15 +649,15 @@
 
             });
 
-            test('down arrow + enter selects first element and closes menu', function(done) {
+            test('down arrow + enter selects first element and menu remains opened', function(done) {
                 var input = el.inputElement;
                 MockInteractions.focus(input);
                 MockInteractions.keyUpOn(input, 40);
-                flush(function() {
-                    MockInteractions.pressEnter(input);
+                flush(function() {                    
+                    MockInteractions.pressEnter(el.$.menu.focusedItem);
                     Polymer.Base.async(function() {
-                        assert.equal(el.expand, false);
-                        assert.equal(el.value, (listdata[0])[el.valueproperty]);
+                        assert.equal(el.expand, true);
+                        assert.equal(el.value[0], (listdata[0])[el.valueproperty]);
                         done();
                     }, 500);
                 });
@@ -668,7 +676,8 @@
                     assert.isDefined(selectedItem);
                     assert.equal(menu.indexOf(selectedItem), 0);
 
-                    MockInteractions.keyUpOn(input, 40);
+                    MockInteractions.keyDownOn(menu, 40);
+                   // MockInteractions.keyUpOn(input, 40);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -693,7 +702,8 @@
                     assert.equal(menu.indexOf(selectedItem), 0);
 
                     // up-arrow
-                    MockInteractions.keyUpOn(input, 38);
+                    MockInteractions.keyDownOn(menu, 38);
+                    //MockInteractions.keyUpOn(input, 38);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -725,7 +735,6 @@
               assert.equal(el.selectedItem, undefined);
             });
         });
-
 
         suite('<oe-combo with template>', function() {
 
@@ -896,8 +905,7 @@
                     var selectedItem = menu.focusedItem;
                     assert.isDefined(selectedItem);
                     assert.equal(menu.indexOf(selectedItem), 0);
-
-                    MockInteractions.keyUpOn(input, 40);
+                    MockInteractions.keyDownOn(menu, 40);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -920,7 +928,8 @@
                     assert.equal(menu.indexOf(selectedItem), 0);
 
                     // up-arrow
-                    MockInteractions.keyUpOn(input, 38);
+                    //MockInteractions.keyUpOn(input, 38);
+                    MockInteractions.keyDownOn(menu, 38);
                     flush(function() {
                         selectedItem = menu.focusedItem;
                         assert.isDefined(selectedItem);
@@ -1071,9 +1080,9 @@
                 var dropdown = el.$.dropdown;
                 dropdown && assert.equal(dropdown.opened, false);
             });
-            test('input is hidden', function() {
+            test('input is readonly', function() {
                 var input = el.inputElement;
-                input && assert.equal(input.type, "hidden");
+                input && assert.equal(input.readonly, true);
             });
             test('template div is visible', function() {
 
@@ -1187,7 +1196,7 @@
                 var input = el.inputElement;
                 MockInteractions.focus(input);
                 MockInteractions.keyUpOn(input, 40);
-                flush(function() {
+                flush(function() {                    
                     MockInteractions.pressEnter(input);
                     Polymer.Base.async(function() {
                         assert.equal(el.expand, false);
@@ -1196,7 +1205,7 @@
                     }, 500);
                 });
             });
-
+/* 
             test('When down arrow key is pressed on open dropdown, highlighted item are rotated', function(
                 done) {
                 var input = el.inputElement;
@@ -1244,14 +1253,7 @@
                 });
             });
 
-
-
-
-
-
-
-
-
+ */
         });
         suite('<oe-combo listurl>', function() {
 

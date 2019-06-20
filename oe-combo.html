@@ -75,14 +75,19 @@ specifying `listurl` property.
       }
     }
 
+    .dropdown-content> ::content paper-item:hover {
+      background-color: #DDD;
+    }
+
+
     .dropdown-content> ::content {
       max-height: 235px;
     }
 
+    /* 
     #templateDiv {
       padding-bottom: 10px;
-    }
-
+    } */
   </style>
   <template>
 
@@ -93,56 +98,39 @@ specifying `listurl` property.
         <label hidden$="[[!label]]">
           <oe-i18n-msg msgid=[[label]]>[[label]]</oe-i18n-msg>
           <template is="dom-if" if={{required}}>
-            <span class="required"> *</span>
+            <span class="required" aria-label="mandatory"> *</span>
           </template>
         </label>
         <div id="templateDiv"></div>
-        <input is="iron-input" id="[[_inputId]]" aria-labelledby$="[[_ariaLabelledBy]]" aria-describedby$="[[_ariaDescribedBy]]"
-          disabled$="[[disabled]]" bind-value="{{displayValue}}" invalid="{{invalid}}" prevent-invalid-input="[[preventInvalidInput]]"
-          validator="[[validator]]" required$="[[required]]" autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]"
-          placeholder$="[[placeholder]]" readonly$="[[_readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]"
+        <input is="iron-input" role="combobox" aria-required$="[[required]]" aria-autocomplete="both" aria-expanded="[[expand]]"
+          aria-haspopup="true" aria-owns="menu" id="[[_inputId]]" aria-labelledby$="[[_ariaLabelledBy]]"
+          aria-describedby$="[[_ariaDescribedBy]]" disabled$="[[disabled]]" bind-value="{{displayValue}}" invalid="{{invalid}}"
+          prevent-invalid-input="[[preventInvalidInput]]" validator="[[validator]]" required$="[[required]]"
+          autocomplete$="[[autocomplete]]" inputmode$="[[inputmode]]" name$="[[name]]" placeholder$="[[placeholder]]"
+          readonly$="[[_readonly]]" size$="[[size]]" autocapitalize$="[[autocapitalize]]" autocorrect$="[[autocorrect]]"
           on-change="_onChange" tabindex$="[[tabindex]]" autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]"
-          multiple$="[[multiple]]" on-keyup="_keyup" on-keydown="_keydown" on-tap="_dropdownClick"/>
+          multiple$="[[multiple]]" on-keyup="_keyup" on-keydown="_keydown" on-tap="_dropdownClick" />
         <div suffix>
-          <iron-icon id="dropdownicon" icon="arrow-drop-down"></iron-icon>
+          <iron-icon id="dropdownicon" aria-label="Open" tabindex="-1" icon="arrow-drop-down"></iron-icon>
           <template is="dom-if" if={{showRefresh}}>
             <iron-icon icon="refresh" on-tap="_fetchListData"></iron-icon>
           </template>
         </div>
-        <oe-input-error invalid={{invalid}} placeholders={{errorPlaceholders}} error-message=[[errorMessage]]></oe-input-error>
+        <oe-input-error invalid={{invalid}} role="alert" placeholders={{errorPlaceholders}} error-message=[[errorMessage]]></oe-input-error>
       </paper-input-container>
       <!-- </div> -->
       <div>
-        <iron-dropdown id="dropdown" vertical-align="{{verticalAlign}}" vertical-offset="{{verticalOffset}}" no-auto-focus opened={{expand}}>
+        <iron-dropdown id="dropdown" vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]"
+          no-auto-focus opened={{expand}}>
           <paper-material tabindex="-1" class="dropdown-content" disabled$="[[disabled]]">
-            <paper-menu id="menu" multi$="[[multi]]">
-              <template id="itemlist" is="dom-repeat" items="{{_suggestions}}">
-                <template is="dom-if" if={{multi}}>
-
-                  <paper-item on-mouseover="onMouseOver" data-item={{item}} disabled$="[[disabledoption]]">
-                    <span>{{_getDisplayValue(item)}}</span>
-                  </paper-item>
-
-                </template>
-                <template is="dom-if" if={{!multi}}>
-                  <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
-                    <span>{{_getDisplayValue(item)}}</span>
-                  </paper-item>
-                </template>
+            <paper-menu id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
+              <template id="itemlist" is="dom-repeat" items="[[_suggestions]]">
+                <paper-item role="option" aria-label$="[[_getDisplayValue(item)]]" on-tap="onItemSelected" data-item={{item}}
+                  disabled$="[[disabledoption]]">
+                  <span>[[_getDisplayValue(item)]]</span>
+                </paper-item>
               </template>
             </paper-menu>
-            <!--adding reset and select all buttons-->
-            <!-- <template is="dom-if" if={{multi}}>                          
-                  <div class="layout horizontal">
-                        <template is="dom-if" if={{selectall}}>  
-                      <paper-button id="selectall" on-tap="toggleSelect">Select All</paper-button>
-                      </template>
-                <template is="dom-if" if={{reset}}>  
-                            <paper-button id="reset" on-tap="toggleSelect">Reset</paper-button>
-                            </template> 
-           
-                </div>
-            </template> -->
           </paper-material>
         </iron-dropdown>
       </div>
@@ -157,6 +145,9 @@ specifying `listurl` property.
       },
       _onChange: function (e) {
         e.stopPropagation();
+        if (this.showTemplate) {
+          return;
+        }
         this.validate();
       },
       properties: {
@@ -227,7 +218,13 @@ specifying `listurl` property.
 
         /*Flag to control whether refresh butyon is displayed or not.*/
         showRefresh: {
-          type: Boolean
+          type: Boolean,
+          value: false
+        },
+        /*Flag to control whether only the filtered values should be displayed.*/
+        showFilteredOnly: {
+          type: Boolean,
+          value: false
         },
         _suggestions: {
           type: Array,
@@ -272,12 +269,15 @@ specifying `listurl` property.
           value: false
         },
         verticalOffset: {
-          type: String,
-          value: 0
+          type: Number
         },
         verticalAlign: {
-          type: String,
-          value: 'top'
+          type: String
+        },
+        /** Disable caching of listdata */
+        disableCache: {
+          type: Boolean,
+          value: false
         }
       },
       behaviors: [
@@ -290,7 +290,7 @@ specifying `listurl` property.
       _selectedItemsChanged: function (e) {
         if (this.multi) {
           if (this.$.menu.selectedValues.sort().join() === this.__prevSelectedValues) {
-              return;
+            return;
           }
 
           var items = [];
@@ -315,7 +315,7 @@ specifying `listurl` property.
             this.value = values;
           } else {
             this.displayValue = "";
-            this.value = [];
+            this.value = null;
           }
           this.fire('pt-item-confirmed', item);
           this.setValidity(true, '');
@@ -323,11 +323,18 @@ specifying `listurl` property.
 
       },
 
+      //Overriding paper-input-behavior
+      _focusBlurHandler: function (event) {
+        Polymer.IronControlState._focusBlurHandler.call(this, event); // Forward the focus to the nested input.
+        if (this.focused && !this._shiftTabPressed && this._focusableElement && !this.expand) {
+          this._focusableElement.focus();
+        }
+      },
 
       _fetchListData: function () {
         var self = this;
         /* If List-Key is present, check if cache exists and set it on listdata */
-        if (OEUtils.oeCache && (this.listkey || this.listurl)) {
+        if (!self.disableCache && OEUtils.oeCache && (this.listkey || this.listurl)) {
           var listkey = this.listkey || this.hashFunc(this.listurl);
           window.addEventListener('oe-cache-' + listkey + '-updated', function (e) {
             self.set('listdata', e.detail);
@@ -358,8 +365,10 @@ specifying `listurl` property.
           ajaxCall.method = 'get';
           ajaxCall.addEventListener('response', function (event) {
             self.set('listdata', event.detail.response);
+            if (self.disableCache) {
+              return;
+            }
             var listkey = self.listkey || self.hashFunc(self.listurl);
-
             self.fire('oe-update-cache', {
               key: listkey,
               data: event.detail.response
@@ -412,82 +421,97 @@ specifying `listurl` property.
         return isValid;
       },
       _setDisplayAndValidate: function () {
-        //!multi
-        if (!Array.isArray(this.value) && !this.multi) {
-          if (this.value !== null && this.value !== undefined && this.listdata) {
-            var matchFound = false;
-            for (var idx = 0; idx < this.listdata.length; idx++) {
-              var item = this.listdata[idx];
-              if ((this.valueproperty && this.value == item[this.valueproperty]) || this.value == item) {
-                matchFound = true;
-                this.displayValue = this._getDisplayValue(item);
-                this.selectedItem = item;
-                this.setValidity(true, undefined);
-                this.$.menu.select(idx);
-                break;
-              }
-            }
-            if (!matchFound) {
-              if (this.value && typeof this.value === 'object') {
-                this.selectedItem = this.value;
-                this.displayValue = this._getDisplayValue(this.value);
-                this.setValidity(true, undefined);
-              } else if (this.allowFreeText) {
-                this.selectedItem = this.value;
-                this.displayValue = this.value;
-                this.setValidity(true, undefined);
-              } else {
-                this.setValidity(false, 'invalidValue');
-              }
-              this.$.menu.select(-1);
-            }
-          } else {
-            this.displayValue = '';
-            this.set('selectedItem', undefined);
-            this.setValidity(true, undefined);
-          }
-        } else {
-          var selectedItemsIndex = [];
-          if (this.value !== null && this.value !== undefined && this.value.length > 0 && this.listdata) {
-            var matchFound = false;
-            var numberOfRecords = 0;
-            this.displayValue = "";
-            for (var idx = 0; idx < this.listdata.length; idx++) {
-              var item = this.listdata[idx];
-              if (!Array.isArray(this.value) && ((this.valueproperty && this.value == item[this.valueproperty]) ||
-                  this.value == item)) {
-                matchFound = true;
-                // this._selectedItemsChanged(item);
-                this.displayValue = this._getDisplayValue(item);
-                var selectedItems = this.selectedItems || [];
-                selectedItems.push(item);
-                this.$.menu.select(idx);
-                this.set(selectedItems, selectedItems);
 
-                break;
-              } else {
-                if ((this.valueproperty && this.value.indexOf(item[this.valueproperty]) > -1) || this.value.indexOf(
-                    item) > -1) {
-                  selectedItemsIndex.push(idx);
-                  this.displayValue += ((numberOfRecords == 0 ? "" : ", ") + (this._getDisplayValue(item)));
-                  numberOfRecords++;
-                }
+        if (this.value === null || this.value === undefined || !this.listdata) {
+          //if value or listdata is not present 
+          this.displayValue = '';
+          this.set('selectedItem', undefined);
+          this.setValidity(true, undefined);
+          return;
+        }
+
+        var menuList = this.$.menu;
+
+
+        if (this.multi) {
+          //Multiple selection sets displayValue,selectedItems,validity
+          if (typeof this.value === "string") {
+            try {
+              //parse the value to get the array
+              var valueArr = JSON.parse(this.value);
+              if (Array.isArray(valueArr)) {
+                this.set('value', valueArr);
+                return;
+              }
+            } catch (e) {
+              this.displayValue = '';
+              this.setValidity(false, 'invalidValue');
+              return;
+            }
+          } else if (Array.isArray(this.value)) {
+            var selectedItemsIndex = [];
+            var selectedItems = [];
+            var displayValues = [];
+            for (var idx = 0, len = this.listdata.length; idx < len; idx++) {
+              var item = this.listdata[idx];
+              if (this.value.indexOf(this._getItemValue(item)) !== -1) {
+                selectedItems.push(item);
+                selectedItemsIndex.push(idx);
+                displayValues.push(this._getDisplayValue(item));
               }
             }
-            if (!Array.isArray(this.value) && matchFound) {
-              this.setValidity(true, undefined);
-            } else if (Array.isArray(this.value) && (numberOfRecords == this.value.length)) {
+            this.displayValue = displayValues.join(', ');
+            this.set('selectedItems', selectedItems);
+            this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
+            if (selectedItems.length === this.value.length) {
+              menuList.set('selectedValues', selectedItemsIndex);
               this.setValidity(true, undefined);
             } else {
               this.setValidity(false, 'invalidValue');
             }
           } else {
-            this.displayValue = '';
-            this.setValidity(true, undefined);
+            for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
+              let item = this.listdata[idx];
+              if (this.value === this._getItemValue(item)) {
+                //Match found
+                this.displayValue = this._getDisplayValue(item);
+                this.set('selectedItems', [item]);
+                this.setValidity(true, undefined);
+
+                //Select the item in paper-list
+                menuList.select(idx);
+                return;
+              }
+            }
           }
-          var menuSelected = this.$.menu.selectedValues || [];
-          this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
-          this.$.menu.set('selectedValues', selectedItemsIndex);
+        } else {
+          //Single selection sets displayValue,selectedItem,validity
+          for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
+            let item = this.listdata[idx];
+            if (this.value === this._getItemValue(item)) {
+              //Match found
+              this.displayValue = this._getDisplayValue(item);
+              this.selectedItem = item;
+              this.setValidity(true, undefined);
+
+              //Select the item in paper-list
+              menuList.select(idx);
+              return;
+            }
+          }
+
+          //Match not found
+          if (typeof this.value === 'object') {
+            this.displayValue = this._getDisplayValue(this.value);
+            this.selectedItem = this.value;
+            this.setValidity(true, undefined);
+          } else if (this.allowFreeText) {
+            this.displayValue = this.value;
+            this.selectedItem = this.value;
+            this.setValidity(true, undefined);
+          } else {
+            this.setValidity(false, 'invalidValue');
+          }
         }
       },
 
@@ -530,7 +554,7 @@ specifying `listurl` property.
       _showTemplateChanged: function (e) {
         if (this.showTemplate) {
           this.$.templateDiv.style.display = "flex";
-          this.inputElement.type = "hidden";
+          this.inputElement.readonly = true;
         } else {
           this.$.templateDiv.style.display = "none";;
           this.inputElement.type = "text";
@@ -543,10 +567,17 @@ specifying `listurl` property.
           this._handleDownEvent(e);
         } else if (e.keyCode == 38) {
           //up
-          this._handleUpEvent(e);
+          //this._handleUpEvent(e);
         } else if (e.keyCode == 13) {
           //Enter
           this._handleEnterEvent(e);
+        } else if (e.keyCode == 37 || e.keyCode == 39) {
+          //ignore for left/right arrow keys
+        } else if (e.keyCode == 27) {
+          //escape key
+          this.set('expand', false);
+        } else if (e.keyCode == 8) {
+          //backspace key
         } else if (e.keyCode != 9) {
           //ignore tab in
           //Pass only the unselected text for search
@@ -565,33 +596,14 @@ specifying `listurl` property.
           this._menuOpen(false);
         }
         var suggestionsMenu = this.$.menu;
-        this.async(function(){
+        this.async(function () {
           if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-            var selectedItem = suggestionsMenu.focusedItem;
-            var index = 0;
-            if (typeof (selectedItem) != 'undefined') {
-              index = Number(suggestionsMenu.indexOf(selectedItem));
-              //Math.min(index + 1, this._suggestions.length - 1);
-              index = index < this._suggestions.length - 1 ? index + 1 : 0;
+            suggestionsMenu.focus();
+            if (typeof suggestionsMenu.focusedItem === 'undefined') {
+              suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
             }
-            suggestionsMenu.select(index);
-            this.inputElement.focus();
           }
         });
-      },
-
-      _handleUpEvent: function (e) { // eslint-disable-line no-unused-vars
-        var suggestionsMenu = this.$.menu;
-        if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          var selectedItem = suggestionsMenu.focusedItem;
-          if (typeof (selectedItem) != 'undefined') {
-            var index = Number(suggestionsMenu.indexOf(selectedItem));
-            //Math.max(index - 1, -1);
-            index = index > 0 ? index - 1 : this._suggestions.length - 1;
-            suggestionsMenu.select(index);
-          }
-          this.inputElement.focus();
-        }
       },
 
       _handleEnterEvent: function (e) { // eslint-disable-line no-unused-vars
@@ -616,9 +628,18 @@ specifying `listurl` property.
 
       _menuOpen: function (sort) {
         var elementPos = (window.innerHeight / this.getBoundingClientRect().top);
-        var validatePos = elementPos < 1.7
-        this.set('verticalAlign', validatePos ? 'bottom' : 'top');
-        this.set('verticalOffset', validatePos ? 63 : 10);
+        var showDropDownAbove = elementPos > 0 && elementPos < 1.7;
+
+        if (this.verticalAlign !== undefined) {
+          this.set('_verticalAlign', this.verticalAlign);
+        } else {
+          this.set('_verticalAlign', showDropDownAbove ? 'bottom' : 'top');
+        }
+        if (this.verticalOffset !== undefined) {
+          this.set('_verticalOffset', this.verticalOffset);
+        } else {
+          this.set('_verticalOffset', showDropDownAbove ? 55 : -8);
+        }
         this.set('expand', true);
         if (sort) this.set('sort', true);
         else this.set('sort', false);
@@ -664,27 +685,31 @@ specifying `listurl` property.
 
 
       /*When using custom templates, bind it to mouseover event of template component as on-mouseover="onMouseOver"*/
-      onMouseOver: function (e) {
-        var suggestionsMenu = this.$.menu;
-        if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-          suggestionsMenu.select(e.model.index);
-          this.inputElement.focus();
-        }
-      },
+      // onMouseOver: function (e) {
+      //   var suggestionsMenu = this.$.menu;
+      //   if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+      //     suggestionsMenu.select(e.model.index);
+      //     this.inputElement.focus();
+      //   }
+      // },
 
       /* on-tap it will fire */
       onItemSelected: function (e) {
+        if (this.multi) {
+          return;
+        }
+        e.stopPropagation();
         var item = e.model.item;
         if (this.showTemplate) {
           this.$.templateDiv.innerHTML = "";
           var children = e.currentTarget.children[0]
-          this.$.templateDiv.appendChild(children)
+          this.$.templateDiv.appendChild(children);
+          this.inputElement.style.zIndex = -1;
+          this.inputElement.style.position = "absolute";
         }
 
         this._setSelectedItem(item);
         this.inputElement.focus();
-        e.stopPropagation();
-
       },
 
       /*Revisit getDisplayValue with iron-list template */
@@ -694,6 +719,14 @@ specifying `listurl` property.
           ret = ret[this.displayproperty];
         }
         return (ret !== null && ret !== undefined) ? ret.toString() : '';
+      },
+
+      _getItemValue:function(item) {
+        var ret = item;
+        if (ret && this.valueproperty) {
+          ret = ret[this.valueproperty];
+        }
+        return ret;
       },
 
       /* It will fire when we type any key except ['enter', 'up', 'down']*/
@@ -767,8 +800,11 @@ specifying `listurl` property.
             unmatch.push(item);
           }
         }
-
-        this._suggestions = match.concat(unmatch);
+        if (this.showFilteredOnly) {
+          this._suggestions = match;
+        } else {
+          this._suggestions = match.concat(unmatch);
+        }
         return results;
       },
       /*
