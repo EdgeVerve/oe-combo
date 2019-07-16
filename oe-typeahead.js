@@ -122,7 +122,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
           autocorrect$="[[autocorrect]]" tabindex$="[[tabindex]]"
           autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" />
         </iron-input>
-        <slot slot="suffix"></slot>
+        <slot slot="suffix" name="suffix"></slot>
         <paper-input-error invalid={{invalid}} slot="add-on">
           <oe-i18n-msg id="i18n-error" msgid={{errorMessage}} placeholders={{placeholders}}></oe-i18n-msg>
         </paper-input-error>
