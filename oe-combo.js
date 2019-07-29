@@ -561,7 +561,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var menuList = this.$.menu;
     var listItems = (this._suggestions && this._suggestions.length > 0) ? this._suggestions : this.listdata;
 
-    if (this.value === null || this.value === undefined || !this.listdata) {
+    if (this.value === null || this.value === undefined || this.value === '' || !this.listdata) {
       //if value or listdata is not present 
       this.displayValue = '';
       this.set('selectedItem', undefined);
@@ -903,7 +903,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var self = this;
     var eventPath = event.path || (event.composedPath && event.composedPath());
     if (event.target !== self && eventPath[0] !== self.$.dropdownicon) {
-      console.log('closed due to click event', eventPath);
+      // console.log('closed due to click event', eventPath);
       this._menuClose();
     }
   }
