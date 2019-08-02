@@ -21,6 +21,7 @@ import "@polymer/iron-dropdown/iron-dropdown.js";
 import "@polymer/iron-input/iron-input.js";
 import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/iron-icons/iron-icons.js";
+import "@polymer/paper-icon-button/paper-icon-button.js";
 import "oe-ajax/oe-ajax.js";
 import "oe-i18n-msg/oe-i18n-msg.js";
 import "oe-utils/oe-cache-utils.js";
@@ -105,6 +106,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             cursor: pointer;
           }
 
+          paper-icon-button{
+            width:24px;
+            height:24px;
+            padding:0px;
+          }
+
           .dropdown-content > ::slotted(*) paper-item {
             --paper-item-selected: {
               background-color: #ccc;
@@ -147,9 +154,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" />
             </iron-input>
             <div slot="suffix">
-              <iron-icon id="dropdownicon" on-tap="_dropdownClick" icon="arrow-drop-down"></iron-icon>
+              <paper-icon-button id="dropdownicon" on-tap="_dropdownClick" icon="arrow-drop-down"></paper-icon-button>
               <template is="dom-if" if={{showRefresh}}>
-                <iron-icon icon="refresh" on-tap="_fetchListData"></iron-icon>
+                <paper-icon-button icon="refresh" on-tap="_fetchListData"></paper-icon-button>
               </template>
             </div>
             <paper-input-error invalid={{invalid}} slot="add-on">
@@ -389,7 +396,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       }.bind(this));
       if (matchedRecord) {
         this._setSelectedItem(matchedRecord);
-      }else if(this.allowFreeText){
+      } else if (this.allowFreeText) {
         var newValue = this.displayValue;
         if (this.valueproperty || this.displayproperty) {
           newValue = {};
@@ -569,7 +576,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var menuList = this.$.menu;
     var listItems = (this._suggestions && this._suggestions.length > 0) ? this._suggestions : this.listdata;
 
-    if (this.value === null || this.value === undefined || !this.listdata) {
+    if (this.value === null || this.value === undefined || this.value === '' || !this.listdata) {
       //if value or listdata is not present 
       this.displayValue = '';
       this.set('selectedItem', undefined);
@@ -581,7 +588,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       return;
     }
 
-    
+
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
       if (typeof this.value === "string") {
@@ -854,7 +861,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.$.menu = this.shadowRoot.querySelector('#menu');
       this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
       cb();
-      if(this.value){
+      if (this.value) {
         this._setDisplayAndValidate();
       }
     }
@@ -879,6 +886,15 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       if (this.listdata) {
         this.set('_suggestions', this.listdata);
         this._menuOpen(false);
+        var suggestionsMenu = this.$.menu;
+        this.async(function () {
+          if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+            suggestionsMenu.focus();
+            if (typeof suggestionsMenu.focusedItem === 'undefined') {
+              suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
+            }
+          }
+        }, 500);
       }
     }
   }
@@ -901,8 +917,8 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   _closeIfApplicable(event) {
     var self = this;
     var eventPath = event.path || (event.composedPath && event.composedPath());
-    if (event.target !== self && eventPath[0] !== self.$.dropdownicon) {
-      console.log('closed due to click event', eventPath);
+    if (event.target !== self && eventPath.indexOf(self.$.dropdownicon) === -1) {
+      // console.log('closed due to click event', eventPath);
       this._menuClose();
     }
   }

@@ -59,14 +59,14 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
   }
 
   static get template() {
-    return html `
+    return html`
       <style>
         :host {
           display: block;
         }
       </style>
 
-      <paper-dropdown-menu id="dropdown" role="combobox" label=[[label]] disabled=[[disabled]]>
+      <paper-dropdown-menu id="dropdown" role="combobox" no-label-float=[[noLabelFloat]] no-animations=[[noAnimations]] label=[[label]] disabled=[[disabled]]>
       <slot slot="prefix"></slot>
       <paper-listbox slot="dropdown-content" id="menu">
       
@@ -103,6 +103,15 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
         notify: true
       },
 
+      noLabelFloat: {
+        type: Boolean,
+        value: false
+      },
+
+      noAnimations: {
+        type: Boolean,
+        value: false
+      },
       /**
        * Selected record in the list. `value` equals `selectedItem`[`valueproperty`].
        * When records are plain strings, it is same as `value`
@@ -178,7 +187,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
    * Event listener to set the value based on the user selection,
    * @param {Event} e selected-items-changed event by paper-listbox
    */
-  _selectedItemsChanged(e) {}
+  _selectedItemsChanged(e) { }
 
   /**
    * Check of cache store in OEUtils namespace and add event listeners. 
@@ -189,7 +198,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
     /* If List-Key is present, check if cache exists and set it on listdata */
     if (OEUtils.oeCache && (this.listkey || this.listurl)) {
       var listkey = this.listkey || this.hashFunc(this.listurl);
-      window.addEventListener('oe-cache-' + listkey + '-updated', function(e) {
+      window.addEventListener('oe-cache-' + listkey + '-updated', function (e) {
         self.set('listdata', e.detail);
       });
 
@@ -222,7 +231,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
       ajaxCall.handleAs = 'json';
       ajaxCall.url = this.listurl;
       ajaxCall.method = 'get';
-      ajaxCall.addEventListener('response', function(event) {
+      ajaxCall.addEventListener('response', function (event) {
         self.set('listdata', event.detail.response);
         var listkey = self.listkey || self.hashFunc(self.listurl);
 
@@ -231,7 +240,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
           data: event.detail.response
         });
       });
-      ajaxCall.addEventListener('error', function(event) { // eslint-disable-line no-unused-vars
+      ajaxCall.addEventListener('error', function (event) { // eslint-disable-line no-unused-vars
         console.error('error fetching the list');
       });
       ajaxCall.generateRequest();
@@ -322,7 +331,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
     super.connectedCallback();
 
     if (this.childTemplate) {
-      this.async(function() {
+      this.async(function () {
         const itemList = this.shadowRoot.querySelector('#itemlist');
         this.__customTemplatize(itemList, this.childTemplate);
 
@@ -384,7 +393,7 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
     this.setValidity(true, undefined);
     this.$.dropdown.close();
 
-    this.async(function() {
+    this.async(function () {
       this.fire('change');
     });
   }
