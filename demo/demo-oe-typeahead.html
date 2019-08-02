@@ -10,13 +10,13 @@
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
   <script type="module">
-    import '@polymer/iron-demo-helpers/demo-pages-shared-styles'; 
-    import '@polymer/iron-demo-helpers/demo-snippet'; 
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
     import '@polymer/iron-image/iron-image';
     import '@polymer/paper-item/paper-item-body';
     import '@polymer/iron-flex-layout/iron-flex-layout';
     import '@polymer/iron-flex-layout/iron-flex-layout-classes';
-    import '@polymer/polymer/lib/elements/dom-bind'; 
+    import '@polymer/polymer/lib/elements/dom-bind';
     import '@polymer/polymer/lib/elements/custom-style';
   </script>
 
@@ -27,6 +27,107 @@
   </script>
   <custom-style>
     <style include="demo-pages-shared-styles">
+      .custom-class:hover {
+        --border-color: black;
+        --label-color: black;
+        --prefix-color: black;
+        --suffix-color: black;
+      }
+
+      .custom-class[invalid] {
+        --border-thick: 2px;
+        --border-color: red;
+        --label-color: red;
+        --prefix-color: red;
+        --suffix-color: red;
+      }
+
+      .custom-class[focused]:not([invalid]) {
+        caret-color: blue;
+        --border-thick: 2px;
+        --border-color: blue;
+        --label-color: blue;
+        --prefix-color: blue;
+        --suffix-color: blue;
+      }
+
+      .custom-class {
+        --border-thick: 1px;
+        --border-color: #828282c9;
+        --label-color: #828282c9;
+        --prefix-color: #828282c9;
+        --suffix-color: #828282c9;
+        --paper-input-container: {
+          margin-bottom: 16px;
+          margin-top: 8px;
+          border-width: 0px;
+          box-shadow: 0px 0px 0px var(--border-thick) var(--border-color);
+          border-radius: 4px;
+          padding: 0px 0px 0px 5px;
+          box-sizing: border-box;
+        }
+        --iron-input: {
+          padding: 5px 3px 1px 8px;
+        }
+        --paper-font-caption: {
+          position: absolute;
+        }
+        --paper-input-container-label-floating: {
+          z-index: 2;
+          top: 8px;
+          padding-top: 0px !important;
+          display: flex;
+          background: #FFF;
+
+        }
+        --paper-input-container-underline: {
+          display: none;
+        }
+
+        --paper-input-container-underline-focus: {
+          display: none;
+        }
+        --paper-input-container-disabled: {
+          border: 1px dotted #212121;
+          border-radius: 4px;
+          padding: 0px 0px 0px 5px;
+          box-sizing: border-box;
+
+        }
+        --oe-label-mixin: {
+          color: var(--label-color);
+          padding: 4px 4px 0px 4px;
+          margin-left: 4px;
+          width: auto;
+        }
+        --oe-required-mixin: {
+          color: #FF9800;
+        }
+        --paper-input-prefix: {
+          color: var(--prefix-color);
+          padding: 0px 0px 0px 5px;
+          height: 22px;
+        }
+        --paper-input-suffix: {
+          color: var(--suffix-color);
+          display: flex;
+          align-items: center;
+          border-left: 1px solid var(--suffix-color);
+          border-radius: 0px 4px 4px 0px;
+          background-color: #eeeeee;
+          box-sizing: border-box;
+          height: 32px;
+          margin-bottom: -2px;
+        }
+        --oe-input-error: {
+          padding-top: 2px;
+          padding-left: 8px;
+          font-size: 12px;
+        }
+        --paper-material: {
+          padding-top: 10px;
+        }
+      }
     </style>
   </custom-style>
 </head>
@@ -57,9 +158,9 @@
               </pre>
             </template>
 
-            <oe-typeahead label="Preset Value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" 
-            dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING"
-            displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
+            <oe-typeahead label="Preset Value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10"
+              dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING" 
+              displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
 
             <oe-typeahead dir="auto" label="كنية" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
           </template>
@@ -73,10 +174,10 @@
         <dom-bind>
           <template>
             <oe-typeahead label="Disabled" disabled searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value0}}"></oe-typeahead>
-            <oe-typeahead label="Read Only" readonly searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10" 
-            dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING"
-            displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
-
+            <oe-typeahead label="Read Only" readonly searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10"
+              dataurl="https://jsonplaceholder.typicode.com/photos/VALUE_STRING" 
+              displayproperty="title" valueproperty="id" value="1"></oe-typeahead>
+           
             <oe-typeahead label="Required" required searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value1}}"></oe-typeahead>
             <span>[[value1]]</span>
             <oe-typeahead label="Strict" strict searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10" displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
@@ -123,6 +224,21 @@
           </template>
         </oe-typeahead>
 
+      </template>
+    </demo-snippet>
+    <h3>oe-typeahead with custom style</h3>
+    <demo-snippet>
+      <template>
+          <oe-typeahead class="custom-class" label="Required & Strict" required strict searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10"
+          displayproperty="title" valueproperty="url"></oe-typeahead>
+      <oe-typeahead class="custom-class"  label="Object property as value" searchurl="https://jsonplaceholder.typicode.com/photos?title_like=SEARCH_STRING&_limit=10"
+      displayproperty="title" valueproperty="url" value="{{value2}}"></oe-typeahead>
+    <template is="dom-if" if=[[value2]]>
+      <label>[[value2]]</label>
+    </template>
+    <oe-typeahead  class="custom-class"  label="Disabled" disabled searchurl="https://jsonplaceholder.typicode.com/albums?title_like=SEARCH_STRING&_limit=10"
+    displayproperty="title" valueproperty="url" value="{{value0}}">
+  </oe-typeahead>
       </template>
     </demo-snippet>
   </div>
