@@ -902,7 +902,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   _closeIfApplicable(event) {
     var self = this;
     var eventPath = event.path || (event.composedPath && event.composedPath());
-    if (event.target !== self && eventPath[0] !== self.$.dropdownicon) {
+    if (event.target !== self && eventPath.indexOf(self.$.dropdownicon) === -1) {
       // console.log('closed due to click event', eventPath);
       this._menuClose();
     }
