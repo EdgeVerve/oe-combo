@@ -57,7 +57,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     :host {
       display: block;
     }
-
+    paper-input-container {
+      display: inline-block;
+      width: 100%;
+    }
     input{
       @apply --paper-input-container-shared-input-style;
     }
@@ -100,6 +103,16 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     
     .dropdown-content > ::slotted(*){
       max-height: 240px;
+    }
+    iron-input {
+      @apply --iron-input;
+    }
+
+    label{
+      @apply --oe-label-mixin;
+    }
+    paper-input-error{
+      @apply --oe-input-error;
     }
     
   </style>
@@ -233,7 +246,13 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
        */
       scrollAction : {
         type: String
-      }
+      },
+      invalid: {
+        type: Boolean,
+        value: false, 
+        notify: true,
+        reflectToAttribute: true
+      },
     };
   }
   static get _invalidValue(){

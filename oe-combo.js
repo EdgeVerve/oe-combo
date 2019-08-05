@@ -124,6 +124,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           .dropdown-content > ::slotted(*){
             max-height: 235px;
           }
+          iron-input {
+            @apply --iron-input;
+          }
+      
+          label{
+            @apply --oe-label-mixin;
+          }
+          paper-input-error{
+            @apply --oe-input-error;
+          }
         </style>
         <div id="cover" style="position:relative;">
           <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]"
@@ -220,7 +230,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: Object,
         notify: true
       },
-
+      invalid: {
+        type: Boolean,
+        value: false, 
+        notify: true,
+        reflectToAttribute: true
+      },
 
       /**
        * Selected record in the list. `value` equals `selectedItem`[`valueproperty`].
