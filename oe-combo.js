@@ -700,7 +700,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._readonly = true;
     }
     this._suggestions = [];
-
+    this._setDisplayAndValidate();
     if (this.childTemplate) {
       /**
        * When a custom template is provided for list items , 
