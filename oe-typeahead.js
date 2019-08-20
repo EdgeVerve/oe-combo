@@ -287,7 +287,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     }
     // }
 
-    this.addEventListener('pt-item-confirmed', this.validate.bind(this));
+    //Every pt-item-confirmed is preceded by _setSelectedItem
+    //Every _setSelectedItem calls validate function anyway.
+    //No need to perform duplicate validations.
+    //this.addEventListener('pt-item-confirmed', this.validate.bind(this));
   }
 
   /**
@@ -296,9 +299,9 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
    * 
    * @param {event} e
    */
-  _onBlur(e) { // eslint-disable-line no-unused-vars
-    this.validate();
-  }
+  // _onBlur(e) { // eslint-disable-line no-unused-vars
+  //   this.validate();
+  // }
   // _onFocus(e) { // eslint-disable-line no-unused-vars
   //   this.inputElement.select();
   // }
@@ -342,6 +345,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
           }
         }
         self._setSelectedItem(newValue);
+        self.notifyChange();
       }
     } else {
       self.noDataFound = false;
@@ -358,7 +362,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       });
       if (newValue) {
         self._setSelectedItem(newValue);
-        self.validate();
+        self.notifyChange();
       }
     }
   }
@@ -423,12 +427,19 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
         if (typeof (selectedItem) != 'undefined') {
           this._setSelectedItem(selectedItem.dataItem);
           this.fire('pt-item-confirmed', selectedItem.dataItem);
-          this.async(function () {
-            this.fire('change');
-          });
+          this.notifyChange();
         }
       }
     }
+  }
+
+  notifyChange(){
+    this.async(function () {
+      this.fire('change');
+      if(this.fieldId){
+        this.fire('oe-field-changed', {fieldId: this.fieldId, value: this.value});
+      }
+    });
   }
   _onKeyDown(e) {
     var keycode = e.keyCode || e.which || e.key;
@@ -462,9 +473,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
   onItemSelected(e) {
     this._setSelectedItem(e.model.item);
     this.fire('pt-item-confirmed', e.model.item);
-    this.async(function () {
-      this.fire('change');
-    });
+    this.notifyChange();
     e.stopPropagation();
   }
   /** 

@@ -408,9 +408,11 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           }
         }
         this._setSelectedItem(newValue);
+      } else {
+        //this.setValidity(false, 'invalidValue');
+        this.validate();
       }
     }
-    this.validate();
   }
 
   /**
@@ -1069,11 +1071,15 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.value = item;
     }
     this.fire('pt-item-confirmed', item);
-    this.setValidity(true, undefined);
+    // value-change will perform validation anyway.
+    //this.setValidity(true, undefined);
     this._menuClose();
 
     this.async(function () {
       this.fire('change');
+      if(this.fieldId){
+        this.fire('oe-field-changed', {fieldId: this.fieldId, value: this.value});
+      }
     });
   }
 
