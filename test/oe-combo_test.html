@@ -494,6 +494,8 @@
                 assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
                 el.set('value', [(listdata[4])[el.valueproperty]]);
                 assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
+                el.set('value', [(listdata[2])[el.valueproperty], (listdata[4])[el.valueproperty]]);
+                assert.equal(el.displayValue, `${(listdata[2])[el.displayproperty]}, ${(listdata[4])[el.displayproperty]}`);
             });
 
             test('When item in dropdown is tapped, it is set as selected', function (done) {
@@ -563,6 +565,101 @@
                 assert.equal(el.selectedItem, undefined);
             });
         });
+
+    suite('<oe-combo multi value-as-text>', function () {
+
+        setup(function (done) {
+            el = fixture('multi');
+            el.set('listdata', listdata);
+            el.set('valueAsText', true);
+            flush(function () {
+                arrow = el.$.dropdownicon;
+                done();
+            });
+        });
+
+        test('Multi/ValueAsText: Setting value updates the display', function (done) {
+            el.set('value', `${(listdata[2])[el.valueproperty]}`);
+            flush(function(){
+              assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
+              done();
+            })
+        });
+        test('Multi/ValueAsText: Setting multiple values updates the display', function (done) {
+          el.set('value', `${(listdata[2])[el.valueproperty]},${(listdata[4])[el.valueproperty]}`);
+          flush(function(){
+            assert.equal(el.displayValue, `${(listdata[2])[el.displayproperty]}, ${(listdata[4])[el.displayproperty]}`);
+            done();
+          });
+        });
+
+        test('Multi/ValueAsText: When item in dropdown is tapped, it is set as selected', function (done) {
+            MockInteractions.tap(arrow);
+            flush(function () {
+                var menu = el.shadowRoot.querySelector('paper-material');
+                assert.isDefined(menu);
+                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                assert.equal(menuItems.length, listdata.length);
+                assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+                MockInteractions.tap(menuItems[1]);
+                flush(function () {
+                    assert.equal(el.value, (listdata[1])[el.valueproperty]);
+                    assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
+                    assert.equal(el.selectedItems.indexOf(listdata[1]), 0);
+                    done();
+                });
+            });
+        });
+
+        test('Multi/ValueAsText: When more than one  item in dropdown is tapped, it is set as selected', function (done) {
+            MockInteractions.tap(arrow);
+            flush(function () {
+                var menu = el.shadowRoot.querySelector('paper-material');
+                assert.isDefined(menu);
+                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                assert.equal(menuItems.length, listdata.length);
+                var selectedItems = [];
+                var selectedValues = [];
+                var displayValue = "";
+                assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+                MockInteractions.tap(menuItems[1]);
+                flush(function () {
+                    selectedItems.push(listdata[1]);
+                    selectedValues.push((listdata[1])[el.valueproperty])
+                    MockInteractions.tap(menuItems[2]);
+                    flush(function () {
+                        selectedItems.push(listdata[2]);
+                        selectedValues.push((listdata[2])[el.valueproperty])
+                        assert.deepEqual(el.value, selectedValues.join(','));
+                        assert.deepEqual(el.displayValue, ((listdata[1])[el.displayproperty] + ", " + (listdata[2])[el.displayproperty]));
+                        assert.deepEqual(el.selectedItems, selectedItems);
+                        done();
+                    });
+                });
+            });
+        });
+
+        test('Multi/ValueAsText: When value is pre-set, the displayValue is updated', function () {
+            var el = fixture('with-value');
+            el.set('listdata', listdata);
+            assert.equal(el.value, 'IN');
+            assert.equal(el.displayValue, 'India');
+        });
+
+        test('Multi/ValueAsText: selectedItem is updated when value is set', function () {
+            var el = fixture('with-value');
+            el.set('listdata', listdata);
+            assert.equal(el.value, 'IN');
+            assert.equal(el.displayValue, 'India');
+            assert.equal(el.selectedItem, listdata.find(function (item) {
+                return item.code === 'IN';
+            }));
+
+            el.set('value', undefined);
+            assert.equal(el.displayValue, '');
+            assert.equal(el.selectedItem, undefined);
+        });
+    });
 
     suite('<oe-combo with template>', function () {
 

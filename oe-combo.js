@@ -212,7 +212,13 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: Boolean,
         value: false
       },
-
+      /**
+       * When multi is true, this flag exposes value as comma separated text instead of an array
+       */
+      valueAsText: {
+        type: Boolean,
+        value: false
+      },
       /**
        * When set to true, the selected value is shown as the template given for the combo
        * 
@@ -448,10 +454,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.push('selectedItems', item);
           values.push(this._getItemValue(item));
         }
-        this.value = values;
+        if(this.valueAsText){
+          this.value = values.join(',');
+        } else {
+          this.value = values;
+        }
       } else {
         this.displayValue = "";
-        this.value = [];
+        if(this.valueAsText){
+          this.value = undefined;
+        } else {
+          this.value = [];
+        }
       }
       this.fire('pt-item-confirmed', item);
       this.setValidity(true, undefined);
@@ -558,6 +572,29 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     return isValid;
   }
 
+  _validateArrayItems(value, listItems, menuList) {
+    var selectedItemsIndex = [];
+    var selectedItems = [];
+    var displayValues = [];
+    for (var idx = 0, len = listItems.length; idx < len; idx++) {
+      var item = listItems[idx];
+      if (value.indexOf(this._getItemValue(item)) !== -1) {
+        selectedItems.push(item);
+        selectedItemsIndex.push(idx);
+        displayValues.push(this._getDisplayValue(item));
+      }
+    }
+    this.displayValue = displayValues.join(', ');
+    this.set('selectedItems', selectedItems);
+    this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
+    if (selectedItems.length === value.length) {
+      menuList && menuList.set('selectedValues', selectedItemsIndex);
+      this.setValidity(true, undefined);
+    } else {
+      this.setValidity(false, 'invalidValue');
+    }
+
+  }
   /**
    * Observer function listening to changes in `value` and `listdata`
    * Computes the display of the oe-combo and selects the correct values from paper-listbox,
@@ -594,39 +631,25 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
       if (typeof this.value === "string") {
-        try {
-          //parse the value to get the array
-          var valueArr = JSON.parse(this.value);
-          if (Array.isArray(valueArr)) {
-            this.set('value', valueArr);
+        if(this.valueAsText) {
+          var arrValue = this.value.split(',');
+          this._validateArrayItems(arrValue, listItems, menuList);
+        } else {
+          try {
+            //parse the value to get the array
+            var valueArr = JSON.parse(this.value);
+            if (Array.isArray(valueArr)) {
+              this.set('value', valueArr);
+              return;
+            }
+          } catch (e) {
+            this.displayValue = '';
+            this.setValidity(false, 'invalidValue');
             return;
           }
-        } catch (e) {
-          this.displayValue = '';
-          this.setValidity(false, 'invalidValue');
-          return;
         }
       } else if (Array.isArray(this.value)) {
-        var selectedItemsIndex = [];
-        var selectedItems = [];
-        var displayValues = [];
-        for (var idx = 0, len = listItems.length; idx < len; idx++) {
-          var item = listItems[idx];
-          if (this.value.indexOf(this._getItemValue(item)) !== -1) {
-            selectedItems.push(item);
-            selectedItemsIndex.push(idx);
-            displayValues.push(this._getDisplayValue(item));
-          }
-        }
-        this.displayValue = displayValues.join(', ');
-        this.set('selectedItems', selectedItems);
-        this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
-        if (selectedItems.length === this.value.length) {
-          menuList && menuList.set('selectedValues', selectedItemsIndex);
-          this.setValidity(true, undefined);
-        } else {
-          this.setValidity(false, 'invalidValue');
-        }
+        this._validateArrayItems(this.value, listItems, menuList);
       } else {
         for (let idx = 0, len = listItems.length; idx < len; idx++) {
           let item = listItems[idx];
