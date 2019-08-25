@@ -174,7 +174,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                     <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
                       <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
                         <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
-                          <span>[[_getDisplayValue(item)]]</span>
+                          ${this.itemTemplate}
                         </paper-item>
                       </template>
                     </paper-listbox>
@@ -187,6 +187,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     `;
   }
 
+  static get itemTemplate(){
+    return html`<span>[[_getDisplayValue(item)]]</span>`;
+  }
   static get properties() {
     return {
       /**

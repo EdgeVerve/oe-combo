@@ -147,7 +147,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
             <paper-listbox id="menu">
               <template id="itemlist" is="dom-repeat" items="{{_suggestions}}" sort="sortData">
                 <paper-item class="default" on-tap="onItemSelected" data-item={{item}}>
-                  <span>{{_getDisplayValue(item)}}</span>
+                  ${this.itemTemplate}
                 </paper-item>
               </template>
             </paper-listbox>
@@ -156,6 +156,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       </div>
     </div>
     `;
+  }
+
+  static get itemTemplate(){
+    return html`<span>{{_getDisplayValue(item)}}</span>`;
   }
 
   static get properties() {

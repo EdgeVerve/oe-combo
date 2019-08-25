@@ -72,13 +72,17 @@ class OeDropdown extends mixinBehaviors([IronFormElementBehavior], PolymerElemen
       
       <template is="dom-repeat" id="itemlist" items="{{listdata}}">
         <paper-item on-tap="onItemSelected" data-item={{item}} disabled$="[[disabledoption]]">
-          <span>{{_getDisplayValue(item)}}</span>
+          ${this.itemTemplate}
         </paper-item>
       </template>
 
       </paper-listbox>
     </paper-dropdown-menu>
     `;
+  }
+
+  static get itemTemplate(){
+    return html`<span>{{_getDisplayValue(item)}}</span>`;
   }
 
   static get properties() {
