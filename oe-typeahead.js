@@ -8,6 +8,7 @@
 import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
 import { mixinBehaviors } from "@polymer/polymer/lib/legacy/class.js";
 import { PaperInputBehavior } from "@polymer/paper-input/paper-input-behavior.js";
+import { IronControlState } from "@polymer/iron-behaviors/iron-control-state";
 import { IronFormElementBehavior } from "@polymer/iron-form-element-behavior/iron-form-element-behavior.js";
 /* beautify preserve:start */
 import { OECommonMixin } from "oe-mixins/oe-common-mixin.js";
@@ -324,7 +325,22 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       this.inputElement;
   }
 
- 
+   /**
+   * Forward focus to inputElement. Overriden from IronControlState.
+   * Fix : set focused property only if the event is not from a slotted element.
+   */
+   
+  _focusBlurHandler(event) {
+    if(!this.isLightDescendant(event.target)){
+      IronControlState._focusBlurHandler.call(this, event);
+    }
+    
+    // Forward the focus to the nested input.
+    if (this.focused && !this._shiftTabPressed && this._focusableElement) {
+      this._focusableElement.focus();
+    }
+  }
+
   /**
    * Checks response for search/data and sets the noDataFound property
    */
