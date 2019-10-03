@@ -187,7 +187,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     `;
   }
 
-  static get itemTemplate(){
+  static get itemTemplate() {
     return html`<span>[[_getDisplayValue(item)]]</span>`;
   }
   static get properties() {
@@ -241,7 +241,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       },
       invalid: {
         type: Boolean,
-        value: false, 
+        value: false,
         notify: true,
         reflectToAttribute: true
       },
@@ -457,14 +457,14 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.push('selectedItems', item);
           values.push(this._getItemValue(item));
         }
-        if(this.valueAsText){
+        if (this.valueAsText) {
           this.value = values.join(',');
         } else {
           this.value = values;
         }
       } else {
         this.displayValue = "";
-        if(this.valueAsText){
+        if (this.valueAsText) {
           this.value = undefined;
         } else {
           this.value = [];
@@ -634,7 +634,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
       if (typeof this.value === "string") {
-        if(this.valueAsText) {
+        if (this.valueAsText) {
           var arrValue = this.value.split(',');
           this._validateArrayItems(arrValue, listItems, menuList);
         } else {
@@ -843,7 +843,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         if (typeof (selectedItem) != 'undefined') {
           this._setSelectedItem(selectedItem.dataItem);
         }
-        this.inputElement.focus();
+        this._focusableElement.focus();
       }
     }
   }
@@ -971,7 +971,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     }
 
     this._setSelectedItem(item);
-    this.inputElement.focus();
+    this._focusableElement.focus();
 
   }
 
@@ -1103,8 +1103,8 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
     this.async(function () {
       this.fire('change');
-      if(this.fieldId){
-        this.fire('oe-field-changed', {fieldId: this.fieldId, value: this.value});
+      if (this.fieldId) {
+        this.fire('oe-field-changed', { fieldId: this.fieldId, value: this.value });
       }
     });
   }
