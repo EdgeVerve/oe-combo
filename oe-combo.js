@@ -623,6 +623,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.displayValue = '';
       this.set('selectedItem', undefined);
       this.setValidity(true, undefined);
+      if (this.showTemplate) {
+        this.__setTemplateItem(null);
+      }
       if (menuList) {
         menuList._selectMulti();
         menuList.selectedValues = [];
@@ -677,7 +680,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.displayValue = this._getDisplayValue(item);
           this.selectedItem = item;
           this.setValidity(true, undefined);
-
+          if (this.showTemplate) {
+            this.__setTemplateItem(item);
+          }
           //Select the item in paper-list
           menuList && menuList.select(idx);
           return;
@@ -962,18 +967,41 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     }
     e.stopPropagation();
     var item = e.model.item;
-    if (this.showTemplate) {
-      this.shadowRoot.querySelector('#templateDiv').innerHTML = "";
-      var children = e.currentTarget.children[0];
-      this.shadowRoot.querySelector('#templateDiv').appendChild(children);
-      this.inputElement.style.zIndex = -1;
-      this.inputElement.style.position = "absolute";
-    }
 
     this._setSelectedItem(item);
     this._focusableElement.focus();
 
   }
+
+  __setTemplateItem(item) {
+    var templateDiv = this.shadowRoot.querySelector('#templateDiv');
+    templateDiv.innerHTML = "";
+
+    if (!item) {
+      this.inputElement.style.zIndex = "";
+      this.inputElement.style.position = "";
+      return;
+    }
+
+    var repeater = this.shadowRoot.querySelector('#itemlist');
+    var menu = this.shadowRoot.querySelector('#menu');
+
+    if (!menu || !repeater || !templateDiv) {
+      return;
+    }
+
+    var selected = Array.from(menu.children).find(function (el) {
+      return repeater.itemForElement(el) === item;
+    });
+
+
+    if (selected) {
+      templateDiv.appendChild(selected.children[0]);
+      this.inputElement.style.zIndex = -1;
+      this.inputElement.style.position = "absolute";
+    }
+  }
+
 
   /**
   * Returns the display property of the item or the item
@@ -1097,6 +1125,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.value = item;
     }
     this.fire('pt-item-confirmed', item);
+
     // value-change will perform validation anyway.
     //this.setValidity(true, undefined);
     this._menuClose();
