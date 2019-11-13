@@ -974,12 +974,14 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   }
 
   __setTemplateItem(item) {
+    var self = this;
     var templateDiv = this.shadowRoot.querySelector('#templateDiv');
     templateDiv.innerHTML = "";
 
     if (!item) {
       this.inputElement.style.zIndex = "";
       this.inputElement.style.position = "";
+      this.inputElement.style.display = "";
       return;
     }
 
@@ -990,15 +992,28 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       return;
     }
 
-    var selected = Array.from(menu.children).find(function (el) {
-      return repeater.itemForElement(el) === item;
-    });
+    function handleTemplateClone() {
+      var selected = Array.from(menu.children).find(function (el) {
+        return repeater.itemForElement(el) === item;
+      });
 
+      if (selected) {
+        templateDiv.appendChild(selected.children[0]);
+        self.inputElement.style.zIndex = -1;
+        self.inputElement.style.position = "absolute";
+        self.inputElement.style.display = "none";
+      }
+      self._menuClose();
+    }
 
-    if (selected) {
-      templateDiv.appendChild(selected.children[0]);
-      this.inputElement.style.zIndex = -1;
-      this.inputElement.style.position = "absolute";
+    if (repeater.items.length !== this.listdata.length) {
+      this.set('_suggestions', this.listdata.slice());
+      repeater.render();
+      this.async(function () {
+        handleTemplateClone();
+      }, 0);
+    } else {
+      handleTemplateClone();
     }
   }
 
