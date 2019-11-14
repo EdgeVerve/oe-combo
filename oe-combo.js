@@ -54,6 +54,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             display: block;
           }
 
+          :host(:focus){
+            outline:none;
+          }
+          
           span.required {
             vertical-align: bottom;
             color: var(--paper-input-container-invalid-color, var(--google-red-500));
@@ -89,7 +93,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             cursor: pointer;
           }
 
-
+          input::-ms-clear {
+            @apply --paper-input-container-ms-clear;
+          }
 
           .iron-selected {
             background: var(--combo-selected-backgroud, #e0e0e0);
@@ -105,18 +111,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             }
           }
           
-	    .dropdown-content>  ::slotted(*) paper-item:hover {
-	      background-color: #DDD;
-	    }
+          .dropdown-content>  ::slotted(*) paper-item:hover {
+            background-color: #DDD;
+          }
           .dropdown-content > ::slotted(*){
             max-height: 235px;
           }
-
-    /* 
-          #templateDiv {
-            padding-bottom: 10px;
-    } */
-
         </style>
         <div id="cover" style="position:relative;">
           <paper-input-container no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]"
@@ -147,17 +147,24 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             </paper-input-error>
           </paper-input-container>
           <div>
-            <iron-dropdown id="dropdown" no-animations vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" no-auto-focus opened={{expand}}>
-              <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
-                <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
-                  <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
-                    <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
-                      <span>[[_getDisplayValue(item)]]</span>
-                    </paper-item>
-                  </template>
-                </paper-listbox>
-              </paper-material>
-            </iron-dropdown>
+            <dom-if if=[[_dropdownAttached]] id="dropdownContainer">
+              <template>
+                <iron-dropdown id="dropdown" 
+                  scroll-action="[[scrollAction]]" no-animations 
+                  vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" 
+                  no-auto-focus opened=[[expand]]>
+                  <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
+                    <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
+                      <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
+                        <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
+                          <span>[[_getDisplayValue(item)]]</span>
+                        </paper-item>
+                      </template>
+                    </paper-listbox>
+                  </paper-material>
+                </iron-dropdown>
+              </template>
+            </dom-if>
           </div>
         </div>
     `;
@@ -305,9 +312,24 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: String
       },
 
+      /**
+       * scrollAction binded to iron-dropdown
+       * * "lock" - Prevents scrolling of body
+       * * "refit" - Moves the dropdown based on scroll
+       * * "cancel" - Closes the dropdown on scroll
+       */
+      scrollAction : {
+        type: String
+      },
+
       verticalAlign: {
         type: String
-      }
+      },
+
+      _dropdownAttached:{
+        type:Boolean,
+        value:false
+      },
       /**
        * Fired when the element item is selected
        * 
@@ -342,6 +364,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   _onChange(eve) {
     eve.stopPropagation();
+    if(this.multi){
+      this.validate();
+      return;
+    }
+    if(this.displayValue && this.displayValue != this._getDisplayValue(this.selectedItem)){
+      var matchedRecord = this._matchedResults.find(function(rec){
+        return this.displayValue === this._getDisplayValue(rec)
+      }.bind(this));
+      if(matchedRecord){
+        this._setSelectedItem(matchedRecord);
+      }
+    }
     this.validate();
   }
 
@@ -442,6 +476,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         });
       });
       ajaxCall.addEventListener('error', function (event) { // eslint-disable-line no-unused-vars
+        self.fire("error",event);
         console.error('error fetching the list');
       });
       ajaxCall.generateRequest();
@@ -450,9 +485,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   _listDataChanged(newV, oldV) { // eslint-disable-line no-unused-vars
     if (this.listdata) {
+      var self = this;
       if (this.sort) {
         this.listdata.sort(this.sortData.bind(this));
       }
+      this.listMeta = this.listdata.map(function(d){
+        var metaObj = {
+          value : self._getItemValue(d),
+          display: self._getDisplayValue(d)
+        }
+        metaObj.searchKey = metaObj.display.toLocaleLowerCase();
+        return metaObj;
+      });
     }
   }
 
@@ -472,6 +516,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
+    if(!isValid){
+      this.value = this._invalidValue;
+    }
     return isValid;
   }
 
@@ -485,15 +532,28 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _setDisplayAndValidate(newV, newL) { // eslint-disable-line no-unused-vars
 
+    if(this.value === this._invalidValue){
+      return;
+    }
+    if(!this.isConnected){
+      return;
+    }
+
+    var menuList = this.$.menu;
+
     if (this.value === null || this.value === undefined || !this.listdata) {
       //if value or listdata is not present 
       this.displayValue = '';
       this.set('selectedItem', undefined);
       this.setValidity(true, undefined);
+      if(menuList){
+        menuList._selectMulti();
+        menuList.selectedValues = [];
+      }
       return;
     }
 
-    var menuList = this.$.menu;
+    
 
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
@@ -526,7 +586,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         this.set('selectedItems', selectedItems);
         this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
         if (selectedItems.length === this.value.length) {
-          menuList.set('selectedValues', selectedItemsIndex);
+          menuList && menuList.set('selectedValues', selectedItemsIndex);
           this.setValidity(true, undefined);
         } else {
           this.setValidity(false, 'invalidValue');
@@ -541,7 +601,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             this.setValidity(true, undefined);
 
             //Select the item in paper-list
-            menuList.select(idx);
+            menuList && menuList.select(idx);
             return;
           }
         }
@@ -557,7 +617,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.setValidity(true, undefined);
 
           //Select the item in paper-list
-          menuList.select(idx);
+          menuList && menuList.select(idx);
           return;
         }
       }
@@ -578,11 +638,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   }
 
+  static get _invalidValue(){
+    return {};
+  }
+
   /**
    * Constructor gets the light-dom element for templating
    */
   constructor() {
     super();
+    this._invalidValue = OeCombo._invalidValue;
     if (!this.ctor && !this.multi) {
       this.childTemplate = this.queryEffectiveChildren('template[item-template]');
     }
@@ -601,26 +666,33 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._readonly = true;
     }
     this._suggestions = [];
+	  this._setDisplayAndValidate();
+
     if (this.childTemplate) {
-      this.async(function () {
+      /**
+       * When a custom template is provided for list items , 
+       * The dropdown is attached when the component is attached so as to change the template of the dom-repeat
+       */
+      this._initDropdown(function () {
         const itemList = this.shadowRoot.querySelector('#itemlist');
         this.__customTemplatize(itemList, this.childTemplate);
-      }.bind(this), 300);
+      }.bind(this));
     }
 
-    this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
   }
 
   /**
    * Key down event listener for oe-combo
    */
   _keydown(e) {// eslint-disable-line no-unused-vars
-    if (e.keyCode == 40 || e.keyCode == 38) {
-      e.preventDefault();
-    } else if (e.keyCode == 13 && this.expand) {
-      e.stopPropagation();
-    } else if (e.keyCode == 9 && this.expand) {
-      this.$.dropdown.close();
+    if (!this.readonly) {
+        if (e.keyCode == 40 || e.keyCode == 38) {
+            e.preventDefault();
+        } else if (e.keyCode == 13 && this.expand) {
+            e.stopPropagation();
+        } else if (e.keyCode == 9 && this.expand) {
+            this.set('expand',false);
+        }
     }
   }
 
@@ -646,34 +718,33 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    * @param {Event} e 
    */
   _keyup(e) {
+        if (!this.readonly) {
+            if (e.keyCode == 40) {
+                //down button
+                this._handleDownEvent(e);
+            } else if (e.keyCode == 38) {
+                //up
+                //this._handleUpEvent(e);
+            } else if (e.keyCode == 13) {
+                //Enter
+                this._handleEnterEvent(e);
+            } else if (e.keyCode == 37 || e.keyCode == 39) {
+                //ignore for left/right arrow keys
+            } else if (e.keyCode == 27) {
+                //escape key
+                this.set('expand', false);
+            } else if (e.keyCode != 9) {
+                //ignore tab in
+                //Pass only the unselected text for search
+                var searchTerm = this.displayValue;
+                if (this._focusableElement.selectionStart > 0) {
+                    searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
+                }
 
-    if (e.keyCode == 40) {
-      //down button
-      this._handleDownEvent(e);
-    } else if (e.keyCode == 38) {
-      //up
-      //this._handleUpEvent(e);
-    } else if (e.keyCode == 13) {
-      //Enter
-      this._handleEnterEvent(e);
-    } else if (e.keyCode == 37 || e.keyCode == 39) {
-      //ignore for left/right arrow keys
-    } else if (e.keyCode == 27) {
-      //escape key
-      this.set('expand', false);
-    } else if (e.keyCode == 8) {
-      //backspace key
-    } else if (e.keyCode != 9) {
-      //ignore tab in
-      //Pass only the unselected text for search
-      var searchTerm = this.displayValue;
-      if (this._focusableElement.selectionStart > 0) {
-        searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
-      }
-
-      this._search(e, searchTerm.trim());
+                this._search(e, searchTerm.trim());
+            }
+        }
     }
-  }
 
   /**
    * Down key listener to open and display the menu box.
@@ -685,8 +756,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._suggestions = this.listdata;
       this._menuOpen(false);
     }
-    var suggestionsMenu = this.$.menu;
     this.async(function () {
+      var suggestionsMenu = this.$.menu;
+      var itemsList = suggestionsMenu.querySelector('#itemlist');
+      itemsList.render();
       suggestionsMenu._updateItems();
       if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
         suggestionsMenu.focus();
@@ -694,7 +767,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
         }
       }
-    });
+    },300);
   }
 
   /**
@@ -710,8 +783,6 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this._setSelectedItem(selectedItem.dataItem);
         }
         this.inputElement.focus();
-      } else {
-        this.$.dropdown.close();
       }
     }
   }
@@ -721,7 +792,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _menuClose() {
     this._suggestions = [];
-    this.$.dropdown.close();
+    this.set('expand',false);
   }
 
   /**
@@ -742,10 +813,32 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else {
       this.set('_verticalOffset', showDropDownAbove ? 55 : -8);
     }
-    this.$.dropdown.open();
+    this._initDropdown(function(){
+      this.set('expand',true);
+    }.bind(this));
     if (sort) this.set('sort', true);
     else this.set('sort', false);
   }
+
+  _initDropdown(cb){
+    if(this._dropdownAttached){
+      cb();
+    }else{
+      function onRender(){
+        this.$.dropdownContainer.removeEventListener('dom-change',onRender);
+        this.$.dropdown = this.shadowRoot.querySelector('#dropdown');
+        this.fire('combo-dropdown-attached',this.$.dropdown);
+        this.$.menu = this.shadowRoot.querySelector('#menu');
+        this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
+        cb();
+        this._setDisplayAndValidate();
+      }
+
+      this.$.dropdownContainer.addEventListener('dom-change',onRender.bind(this));
+      this.set('_dropdownAttached',true);
+    }
+  }
+
 
   /**
    * Shows all the listdata items when drop down arrow clicks
@@ -771,7 +864,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var hold = document.querySelector('html');
     var self = this;
     if (this.expand) {
-      this.$.dropdown.style.width = this.offsetWidth - 10 + 'px';
+      this.$.dropdown.style.width = this.offsetWidth + 'px';
       hold.addEventListener('click', self.boundClickHandler);
     } else {
       hold.removeEventListener('click', self.boundClickHandler);
@@ -852,6 +945,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       return;
     }
     var results = self._findMatchedObjects(term);
+    /* 
     if (results.length == 1 && e.keyCode != 8) {
       //there is exactly only one match. set it directly.
       //no need to open the menu.
@@ -859,10 +953,11 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
       //get length of current displayvalue and make remaining as selected
       this.inputElement.inputElement.setSelectionRange(term.length, self.displayValue.length);
-    } else {
+    } else { */
+      this._matchedResults = results;
       self._menuOpen(true);
       var suggestionsMenu = self.$.menu;
-      if (self.allowFreeText) {
+      if (self.allowFreeText && results.length === 0) {
         var newValue = self.displayValue;
         if (self.valueproperty || self.displayproperty) {
           newValue = {};
@@ -875,11 +970,10 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         }
         self._setSelectedItem(newValue);
       } else if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-        //suggestionsMenu.select(0);
-        self.inputElement.focus();
+        suggestionsMenu.select(0);
+        self._focusableElement.focus();
       }
-    }
-
+    
   }
 
   /**
@@ -890,22 +984,21 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     var match = [],
       results = [],
       unmatch = [];
+    var searchVal = val.toLocaleLowerCase();
 
     //replacing special characters from the string with space from regular expression
-    val = val.replace(/[`~!@#$%^&*()|+\=?;:'",.<>\{\}\[\]\\\/]/gi, ''); // eslint-disable-line
-    var regEx = new RegExp(val, 'i');
-    var regEx2 = new RegExp('^' + val, 'i');
+    // val = val.replace(/[`~!@#$%^&*()|+\=?;:'",.<>\{\}\[\]\\\/]/gi, ''); // eslint-disable-line
+    // var regEx = new RegExp(val, 'i');
+    // var regEx2 = new RegExp('^' + val, 'i');
     //loop through out the list for checking the object's matches on val
     for (var idx = 0; idx < this.listdata.length; idx++) {
       var item = this.listdata[idx];
-      var dispVal = this._getDisplayValue(item);
-      var obj = dispVal.match(regEx);
-      if (obj) {
-        // if the obj matches push to the result array
+      var itemMeta = this.listMeta[idx];
+      var searchIdx = itemMeta.searchKey.indexOf(searchVal);
+      if (searchIdx !== -1) {
+        // if the data contains the key push to the match array
         match.push(item);
-        if (dispVal.match(regEx2)) {
-          results.push(item);
-        }
+        results.push(item);
       } else {
         unmatch.push(item);
       }
