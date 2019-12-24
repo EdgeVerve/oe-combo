@@ -891,7 +891,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.$.dropdownContainer.removeEventListener('dom-change', onRender);
       this.$.dropdown = this.shadowRoot.querySelector('#dropdown');
       this.fire('combo-dropdown-attached', this.$.dropdown);
-      this.$.menu = this.shadowRoot.querySelector('#menu');
+      this.$.menu = this.$.dropdown.querySelector('#menu');
       this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
       cb();
       if (this.value) {
