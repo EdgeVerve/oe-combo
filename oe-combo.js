@@ -374,6 +374,13 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
        * @event oe-update-cache
        * @param {Object} detail contains the key as hashed listurl and detail the listadata
        */
+      
+      /**
+       * Fired when the value of the field is changed by the user
+       *
+       * @event oe-field-changed
+       */
+
     };
   }
 
