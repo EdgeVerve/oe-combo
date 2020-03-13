@@ -865,7 +865,7 @@
             test('loads data from listkey', function (done) {
                 var el = fixture('with-listkey2');
                 _asyncFn(function () {
-                    assert.deepEqual(el.listdata, undefined);
+                    assert.deepEqual(el.listdata, []);
                     done();
                 }, 100);
             });

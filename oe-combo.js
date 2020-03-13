@@ -308,6 +308,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       listdata: {
         type: Array,
         notify: true,
+        value:function(){
+          return [];
+        },
         observer: '_listDataChanged'
       },
 
