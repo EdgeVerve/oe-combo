@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <link rel="icon" href="data:,">
+
+  <title>oe-dropdown-submenu demo</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <script type="module">
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
+    import '@polymer/polymer/lib/elements/dom-bind';
+    import '@polymer/polymer/lib/elements/custom-style';
+  </script>
+
+  <script type="module" src="../oe-dropdown-submenu.js"></script>
+  <custom-style>
+    <style include="demo-pages-shared-styles">
+      oe-dropdown-submenu {
+        --oe-dropdown-submenu: {
+          width: 300px;
+        }
+      }
+    </style>
+  </custom-style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>oe-dropdown-submenu</h3>
+    <demo-snippet>
+      <template>
+        <oe-dropdown-submenu valueproperty="id" id="dropdown"></oe-dropdown-submenu>
+        <script>
+          setTimeout(function () {
+            var dropdown = document.getElementById('dropdown');
+            var deals = [{ name: 'All', 'field-id': 'all', id: 'all' }, { name: 'FX2', id: 'fx', 'field-id': 'fx', children: [{ name: 'Spot', id: 'qbe_deal_1', 'field-id': 'qbe_deal_1' }, { name: 'Outright', id: 'qbe_deal_2', 'field-id': 'qbe_deal_2' }] },
+            { name: 'FX Plus2', id: 'fxPlus', 'field-id': 'fx-plus', children: [{ name: 'Spot Plus', id: 'qbe_deal_11', 'field-id': 'qbe_deal_11' }, { name: 'Outright plus', id: 'qbe_deal_25', 'field-id': 'qbe_deal_25' }] },
+            { name: 'Money Market2', id: 'mm', 'field-id': 'mm', children: [{ name: 'Term', id: 'qbe_deal_9', 'field-id': 'qbe_deal_9' }, { name: 'Com Loan', id: 'qbe_deal_8', 'field-id': 'qbe_deal_8' }] },
+            { name: 'Commodities2', id: 'commodity', 'field-id': 'commodity', children: [{ name: 'Gold Dore Bar', id: 'qbe_deal_36', 'field-id': 'qbe_deal_36' }, { name: 'Commodity', id: 'qbe_deal_37', 'field-id': 'qbe_deal_37' }] },
+            { name: 'OBS2', id: 'obs', 'field-id': 'obs', children: [{ name: 'FRAs', id: 'qbe_deal_19', 'field-id': 'qbe_deal_19' }, { name: 'Futures', id: 'qbe_deal_21', 'field-id': 'qbe_deal_21' }] }];
+            dropdown.set('listdata', deals);
+          }, 1000);
+        </script>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+
+</html>
