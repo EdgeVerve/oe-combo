@@ -142,7 +142,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             <label slot="label" hidden$="[[!label]]">
                 <oe-i18n-msg msgid=[[label]]>[[label]]</oe-i18n-msg>
                 <template is="dom-if" if={{required}}>
-            		<span class="required" aria-label="mandatory"> *</span>
+            		<span class="required" aria-label=" "> *</span>
                 </template>
             </label>
             <div slot="input" id="templateDiv"></div>
