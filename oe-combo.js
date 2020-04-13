@@ -112,17 +112,15 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             padding:0px;
           }
 
-          .dropdown-content > ::slotted(*) paper-item {
+          .droplist paper-item {
             --paper-item-selected: {
               background-color: #ccc;
             }
           }
           
-          .dropdown-content>  ::slotted(*) paper-item:hover {
+          .droplist paper-item:hover {
             background-color: #DDD;
-          }
-          .dropdown-content > ::slotted(*){
-            max-height: 235px;
+            @apply --combo-item-hover;
           }
           iron-input {
             @apply --iron-input;
@@ -170,7 +168,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                   scroll-action="[[scrollAction]]" no-animations 
                   vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" 
                   no-auto-focus opened=[[expand]]>
-                  <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
+                  <paper-material slot="dropdown-content" class="droplist" tabindex="-1" disabled$="[[disabled]]">
                     <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
                       <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
                         <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
