@@ -116,6 +116,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             --paper-item-selected: {
               background-color: #ccc;
             }
+            --paper-item-focused: {
+              background-color: transparent;
+            }
+            --paper-item-focused-before: {
+              background-color: transparent;
+            }
           }
           
           .droplist paper-item:hover {
