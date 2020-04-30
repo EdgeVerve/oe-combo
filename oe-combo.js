@@ -21,6 +21,7 @@ import "@polymer/iron-dropdown/iron-dropdown.js";
 import "@polymer/iron-input/iron-input.js";
 import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/iron-icons/iron-icons.js";
+import "@polymer/paper-icon-button/paper-icon-button.js";
 import "oe-ajax/oe-ajax.js";
 import "oe-i18n-msg/oe-i18n-msg.js";
 import "oe-utils/oe-cache-utils.js";
@@ -105,6 +106,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             cursor: pointer;
           }
 
+          paper-icon-button{
+            width:24px;
+            height:24px;
+            padding:0px;
+          }
+
           .dropdown-content > ::slotted(*) paper-item {
             --paper-item-selected: {
               background-color: #ccc;
@@ -116,6 +123,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           }
           .dropdown-content > ::slotted(*){
             max-height: 235px;
+          }
+          iron-input {
+            @apply --iron-input;
+          }
+      
+          label{
+            @apply --oe-label-mixin;
+          }
+          paper-input-error{
+            @apply --oe-input-error;
           }
         </style>
         <div id="cover" style="position:relative;">
@@ -137,9 +154,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" />
             </iron-input>
             <div slot="suffix">
-              <iron-icon id="dropdownicon" on-tap="_dropdownClick" icon="arrow-drop-down"></iron-icon>
+              <paper-icon-button id="dropdownicon" on-tap="_dropdownClick" icon="arrow-drop-down"></paper-icon-button>
               <template is="dom-if" if={{showRefresh}}>
-                <iron-icon icon="refresh" on-tap="_fetchListData"></iron-icon>
+                <paper-icon-button icon="refresh" on-tap="_fetchListData"></paper-icon-button>
               </template>
             </div>
             <paper-input-error invalid={{invalid}} slot="add-on">
@@ -157,7 +174,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                     <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
                       <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
                         <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
-                          <span>[[_getDisplayValue(item)]]</span>
+                          ${this.itemTemplate}
                         </paper-item>
                       </template>
                     </paper-listbox>
@@ -170,6 +187,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     `;
   }
 
+  static get itemTemplate() {
+    return html`<span>[[_getDisplayValue(item)]]</span>`;
+  }
   static get properties() {
     return {
       /**
@@ -195,7 +215,13 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: Boolean,
         value: false
       },
-
+      /**
+       * When multi is true, this flag exposes value as comma separated text instead of an array
+       */
+      valueAsText: {
+        type: Boolean,
+        value: false
+      },
       /**
        * When set to true, the selected value is shown as the template given for the combo
        * 
@@ -213,7 +239,12 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: Object,
         notify: true
       },
-
+      invalid: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        reflectToAttribute: true
+      },
 
       /**
        * Selected record in the list. `value` equals `selectedItem`[`valueproperty`].
@@ -318,7 +349,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
        * * "refit" - Moves the dropdown based on scroll
        * * "cancel" - Closes the dropdown on scroll
        */
-      scrollAction : {
+      scrollAction: {
         type: String
       },
 
@@ -326,9 +357,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         type: String
       },
 
-      _dropdownAttached:{
-        type:Boolean,
-        value:false
+      _dropdownAttached: {
+        type: Boolean,
+        value: false
       },
       /**
        * Fired when the element item is selected
@@ -343,6 +374,13 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
        * @event oe-update-cache
        * @param {Object} detail contains the key as hashed listurl and detail the listadata
        */
+      
+      /**
+       * Fired when the value of the field is changed by the user
+       *
+       * @event oe-field-changed
+       */
+
     };
   }
 
@@ -364,19 +402,33 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   _onChange(eve) {
     eve.stopPropagation();
-    if(this.multi){
+    if (this.multi) {
       this.validate();
       return;
     }
-    if(this.displayValue && this.displayValue != this._getDisplayValue(this.selectedItem)){
-      var matchedRecord = this._matchedResults.find(function(rec){
-        return this.displayValue === this._getDisplayValue(rec)
+    if (this.displayValue && this.displayValue != this._getDisplayValue(this.selectedItem)) {
+      var matchedRecord = this._matchedResults.find(function (rec) {
+        return this.displayValue === this._getDisplayValue(rec);
       }.bind(this));
-      if(matchedRecord){
+      if (matchedRecord) {
         this._setSelectedItem(matchedRecord);
+      } else if (this.allowFreeText) {
+        var newValue = this.displayValue;
+        if (this.valueproperty || this.displayproperty) {
+          newValue = {};
+          if (this.valueproperty) {
+            newValue[this.valueproperty] = this.displayValue;
+          }
+          if (this.displayproperty) {
+            newValue[this.displayproperty] = this.displayValue;
+          }
+        }
+        this._setSelectedItem(newValue);
+      } else {
+        //this.setValidity(false, 'invalidValue');
+        this.validate();
       }
     }
-    this.validate();
   }
 
   /**
@@ -412,10 +464,18 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           this.push('selectedItems', item);
           values.push(this._getItemValue(item));
         }
-        this.value = values;
+        if (this.valueAsText) {
+          this.value = values.join(',');
+        } else {
+          this.value = values;
+        }
       } else {
         this.displayValue = "";
-        this.value = [];
+        if (this.valueAsText) {
+          this.value = undefined;
+        } else {
+          this.value = [];
+        }
       }
       this.fire('pt-item-confirmed', item);
       this.setValidity(true, undefined);
@@ -476,7 +536,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         });
       });
       ajaxCall.addEventListener('error', function (event) { // eslint-disable-line no-unused-vars
-        self.fire("error",event);
+        self.fire("error", event);
         console.error('error fetching the list');
       });
       ajaxCall.generateRequest();
@@ -489,11 +549,11 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       if (this.sort) {
         this.listdata.sort(this.sortData.bind(this));
       }
-      this.listMeta = this.listdata.map(function(d){
+      this.listMeta = this.listdata.map(function (d) {
         var metaObj = {
-          value : self._getItemValue(d),
+          value: self._getItemValue(d),
           display: self._getDisplayValue(d)
-        }
+        };
         metaObj.searchKey = metaObj.display.toLocaleLowerCase();
         return metaObj;
       });
@@ -516,12 +576,35 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
-    if(!isValid){
+    if (!isValid) {
       this.value = this._invalidValue;
     }
     return isValid;
   }
 
+  _validateArrayItems(value, listItems, menuList) {
+    var selectedItemsIndex = [];
+    var selectedItems = [];
+    var displayValues = [];
+    for (var idx = 0, len = listItems.length; idx < len; idx++) {
+      var item = listItems[idx];
+      if (value.indexOf(this._getItemValue(item)) !== -1) {
+        selectedItems.push(item);
+        selectedItemsIndex.push(idx);
+        displayValues.push(this._getDisplayValue(item));
+      }
+    }
+    this.displayValue = displayValues.join(', ');
+    this.set('selectedItems', selectedItems);
+    this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
+    if (selectedItems.length === value.length) {
+      menuList && menuList.set('selectedValues', selectedItemsIndex);
+      this.setValidity(true, undefined);
+    } else {
+      this.setValidity(false, 'invalidValue');
+    }
+
+  }
   /**
    * Observer function listening to changes in `value` and `listdata`
    * Computes the display of the oe-combo and selects the correct values from paper-listbox,
@@ -532,68 +615,57 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _setDisplayAndValidate(newV, newL) { // eslint-disable-line no-unused-vars
 
-    if(this.value === this._invalidValue){
+    if (this.value === this._invalidValue) {
       return;
     }
-    if(!this.isConnected){
+    if (!this.isConnected) {
       return;
     }
 
     var menuList = this.$.menu;
+    var listItems = (this._suggestions && this._suggestions.length > 0) ? this._suggestions : this.listdata;
 
-    if (this.value === null || this.value === undefined || !this.listdata) {
+    if (this.value === null || this.value === undefined || this.value === '' || !this.listdata) {
       //if value or listdata is not present 
       this.displayValue = '';
       this.set('selectedItem', undefined);
       this.setValidity(true, undefined);
-      if(menuList){
+      if (this.showTemplate) {
+        this.__setTemplateItem(null);
+      }
+      if (menuList) {
         menuList._selectMulti();
         menuList.selectedValues = [];
       }
       return;
     }
 
-    
 
     if (this.multi) {
       //Multiple selection sets displayValue,selectedItems,validity
       if (typeof this.value === "string") {
-        try {
-          //parse the value to get the array
-          var valueArr = JSON.parse(this.value);
-          if (Array.isArray(valueArr)) {
-            this.set('value', valueArr);
+        if (this.valueAsText) {
+          var arrValue = this.value.split(',');
+          this._validateArrayItems(arrValue, listItems, menuList);
+        } else {
+          try {
+            //parse the value to get the array
+            var valueArr = JSON.parse(this.value);
+            if (Array.isArray(valueArr)) {
+              this.set('value', valueArr);
+              return;
+            }
+          } catch (e) {
+            this.displayValue = '';
+            this.setValidity(false, 'invalidValue');
             return;
           }
-        } catch (e) {
-          this.displayValue = '';
-          this.setValidity(false, 'invalidValue');
-          return;
         }
       } else if (Array.isArray(this.value)) {
-        var selectedItemsIndex = [];
-        var selectedItems = [];
-        var displayValues = [];
-        for (var idx = 0, len = this.listdata.length; idx < len; idx++) {
-          var item = this.listdata[idx];
-          if (this.value.indexOf(this._getItemValue(item)) !== -1) {
-            selectedItems.push(item);
-            selectedItemsIndex.push(idx);
-            displayValues.push(this._getDisplayValue(item));
-          }
-        }
-        this.displayValue = displayValues.join(', ');
-        this.set('selectedItems', selectedItems);
-        this.set('__prevSelectedValues', selectedItemsIndex.sort().join());
-        if (selectedItems.length === this.value.length) {
-          menuList && menuList.set('selectedValues', selectedItemsIndex);
-          this.setValidity(true, undefined);
-        } else {
-          this.setValidity(false, 'invalidValue');
-        }
+        this._validateArrayItems(this.value, listItems, menuList);
       } else {
-        for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
-          let item = this.listdata[idx];
+        for (let idx = 0, len = listItems.length; idx < len; idx++) {
+          let item = listItems[idx];
           if (this.value === this._getItemValue(item)) {
             //Match found
             this.displayValue = this._getDisplayValue(item);
@@ -608,14 +680,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       }
     } else {
       //Single selection sets displayValue,selectedItem,validity
-      for (let idx = 0, len = this.listdata.length; idx < len; idx++) {
-        let item = this.listdata[idx];
+      for (let idx = 0, len = listItems.length; idx < len; idx++) {
+        let item = listItems[idx];
         if (this.value === this._getItemValue(item)) {
           //Match found
           this.displayValue = this._getDisplayValue(item);
           this.selectedItem = item;
           this.setValidity(true, undefined);
-
+          if (this.showTemplate) {
+            this.__setTemplateItem(item);
+          }
           //Select the item in paper-list
           menuList && menuList.select(idx);
           return;
@@ -638,7 +712,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
 
   }
 
-  static get _invalidValue(){
+  static get _invalidValue() {
     return {};
   }
 
@@ -666,8 +740,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this._readonly = true;
     }
     this._suggestions = [];
-	  this._setDisplayAndValidate();
-
+    this._setDisplayAndValidate();
     if (this.childTemplate) {
       /**
        * When a custom template is provided for list items , 
@@ -686,13 +759,13 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _keydown(e) {// eslint-disable-line no-unused-vars
     if (!this.readonly) {
-        if (e.keyCode == 40 || e.keyCode == 38) {
-            e.preventDefault();
-        } else if (e.keyCode == 13 && this.expand) {
-            e.stopPropagation();
-        } else if (e.keyCode == 9 && this.expand) {
-            this.set('expand',false);
-        }
+      if (e.keyCode == 40 || e.keyCode == 38) {
+        e.preventDefault();
+      } else if (e.keyCode == 13 && this.expand) {
+        e.stopPropagation();
+      } else if (e.keyCode == 9 && this.expand) {
+        this.set('expand', false);
+      }
     }
   }
 
@@ -718,33 +791,33 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    * @param {Event} e 
    */
   _keyup(e) {
-        if (!this.readonly) {
-            if (e.keyCode == 40) {
-                //down button
-                this._handleDownEvent(e);
-            } else if (e.keyCode == 38) {
-                //up
-                //this._handleUpEvent(e);
-            } else if (e.keyCode == 13) {
-                //Enter
-                this._handleEnterEvent(e);
-            } else if (e.keyCode == 37 || e.keyCode == 39) {
-                //ignore for left/right arrow keys
-            } else if (e.keyCode == 27) {
-                //escape key
-                this.set('expand', false);
-            } else if (e.keyCode != 9) {
-                //ignore tab in
-                //Pass only the unselected text for search
-                var searchTerm = this.displayValue;
-                if (this._focusableElement.selectionStart > 0) {
-                    searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
-                }
-
-                this._search(e, searchTerm.trim());
-            }
+    if (!this.readonly) {
+      if (e.keyCode == 40) {
+        //down button
+        this._handleDownEvent(e);
+      } else if (e.keyCode == 38) {
+        //up
+        //this._handleUpEvent(e);
+      } else if (e.keyCode == 13) {
+        //Enter
+        this._handleEnterEvent(e);
+      } else if (e.keyCode == 37 || e.keyCode == 39) {
+        //ignore for left/right arrow keys
+      } else if (e.keyCode == 27) {
+        //escape key
+        this.set('expand', false);
+      } else if (e.keyCode != 9) {
+        //ignore tab in
+        //Pass only the unselected text for search
+        var searchTerm = this.displayValue;
+        if (this._focusableElement.selectionStart > 0) {
+          searchTerm = searchTerm.substring(0, this._focusableElement.selectionStart);
         }
+
+        this._search(e, searchTerm.trim());
+      }
     }
+  }
 
   /**
    * Down key listener to open and display the menu box.
@@ -767,7 +840,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
         }
       }
-    },300);
+    }, 300);
   }
 
   /**
@@ -782,7 +855,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         if (typeof (selectedItem) != 'undefined') {
           this._setSelectedItem(selectedItem.dataItem);
         }
-        this.inputElement.focus();
+        this._focusableElement.focus();
       }
     }
   }
@@ -792,7 +865,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   _menuClose() {
     this._suggestions = [];
-    this.set('expand',false);
+    this.set('expand', false);
   }
 
   /**
@@ -813,29 +886,30 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else {
       this.set('_verticalOffset', showDropDownAbove ? 55 : -8);
     }
-    this._initDropdown(function(){
-      this.set('expand',true);
+    this._initDropdown(function () {
+      this.set('expand', true);
     }.bind(this));
     if (sort) this.set('sort', true);
     else this.set('sort', false);
   }
 
-  _initDropdown(cb){
-    if(this._dropdownAttached){
+  _initDropdown(cb) {
+    function onRender() {
+      this.$.dropdownContainer.removeEventListener('dom-change', onRender);
+      this.$.dropdown = this.shadowRoot.querySelector('#dropdown');
+      this.fire('combo-dropdown-attached', this.$.dropdown);
+      this.$.menu = this.$.dropdown.querySelector('#menu');
+      this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
       cb();
-    }else{
-      function onRender(){
-        this.$.dropdownContainer.removeEventListener('dom-change',onRender);
-        this.$.dropdown = this.shadowRoot.querySelector('#dropdown');
-        this.fire('combo-dropdown-attached',this.$.dropdown);
-        this.$.menu = this.shadowRoot.querySelector('#menu');
-        this.$.menu.addEventListener('selected-items-changed', this._selectedItemsChanged.bind(this));
-        cb();
+      if (this.value) {
         this._setDisplayAndValidate();
       }
-
-      this.$.dropdownContainer.addEventListener('dom-change',onRender.bind(this));
-      this.set('_dropdownAttached',true);
+    }
+    if (this._dropdownAttached) {
+      cb();
+    } else {
+      this.$.dropdownContainer.addEventListener('dom-change', onRender.bind(this));
+      this.set('_dropdownAttached', true);
     }
   }
 
@@ -852,6 +926,15 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       if (this.listdata) {
         this.set('_suggestions', this.listdata);
         this._menuOpen(false);
+        var suggestionsMenu = this.$.menu;
+        this.async(function () {
+          if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+            suggestionsMenu.focus();
+            if (typeof suggestionsMenu.focusedItem === 'undefined') {
+              suggestionsMenu._setFocusedItem(suggestionsMenu.items[0]);
+            }
+          }
+        }, 500);
       }
     }
   }
@@ -874,8 +957,8 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   _closeIfApplicable(event) {
     var self = this;
     var eventPath = event.path || (event.composedPath && event.composedPath());
-    if (event.target !== self && eventPath[0] !== self.$.dropdownicon) {
-      console.log('closed due to click event', eventPath);
+    if (event.target !== self && eventPath.indexOf(self.$.dropdownicon) === -1) {
+      // console.log('closed due to click event', eventPath);
       this._menuClose();
     }
   }
@@ -891,18 +974,56 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     }
     e.stopPropagation();
     var item = e.model.item;
-    if (this.showTemplate) {
-      this.shadowRoot.querySelector('#templateDiv').innerHTML = "";
-      var children = e.currentTarget.children[0];
-      this.shadowRoot.querySelector('#templateDiv').appendChild(children);
-      this.inputElement.style.zIndex = -1;
-      this.inputElement.style.position = "absolute";
-    }
 
     this._setSelectedItem(item);
-    this.inputElement.focus();
+    this._focusableElement.focus();
 
   }
+
+  __setTemplateItem(item) {
+    var self = this;
+    var templateDiv = this.shadowRoot.querySelector('#templateDiv');
+    templateDiv.innerHTML = "";
+
+    if (!item) {
+      this.inputElement.style.zIndex = "";
+      this.inputElement.style.position = "";
+      this.inputElement.style.display = "";
+      return;
+    }
+
+    var repeater = this.shadowRoot.querySelector('#itemlist');
+    var menu = this.shadowRoot.querySelector('#menu');
+
+    if (!menu || !repeater || !templateDiv) {
+      return;
+    }
+
+    function handleTemplateClone() {
+      var selected = Array.from(menu.children).find(function (el) {
+        return repeater.itemForElement(el) === item;
+      });
+
+      if (selected) {
+        templateDiv.appendChild(selected.children[0]);
+        self.inputElement.style.zIndex = -1;
+        self.inputElement.style.position = "absolute";
+        self.inputElement.style.display = "none";
+      }
+      self._menuClose();
+    }
+
+    if (repeater.items.length !== this.listdata.length) {
+      this.set('_suggestions', this.listdata.slice());
+      repeater.render();
+      this.async(function () {
+        handleTemplateClone();
+      }, 0);
+    } else {
+      handleTemplateClone();
+    }
+  }
+
 
   /**
   * Returns the display property of the item or the item
@@ -954,26 +1075,26 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       //get length of current displayvalue and make remaining as selected
       this.inputElement.inputElement.setSelectionRange(term.length, self.displayValue.length);
     } else { */
-      this._matchedResults = results;
-      self._menuOpen(true);
-      var suggestionsMenu = self.$.menu;
-      if (self.allowFreeText && results.length === 0) {
-        var newValue = self.displayValue;
-        if (self.valueproperty || self.displayproperty) {
-          newValue = {};
-          if (self.valueproperty) {
-            newValue[self.valueproperty] = self.displayValue;
-          }
-          if (self.displayproperty) {
-            newValue[self.displayproperty] = self.displayValue;
-          }
+    this._matchedResults = results;
+    self._menuOpen(true);
+    var suggestionsMenu = self.$.menu;
+    if (self.allowFreeText && results.length === 0) {
+      var newValue = self.displayValue;
+      if (self.valueproperty || self.displayproperty) {
+        newValue = {};
+        if (self.valueproperty) {
+          newValue[self.valueproperty] = self.displayValue;
         }
-        self._setSelectedItem(newValue);
-      } else if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
-        suggestionsMenu.select(0);
-        self._focusableElement.focus();
+        if (self.displayproperty) {
+          newValue[self.displayproperty] = self.displayValue;
+        }
       }
-    
+      self._setSelectedItem(newValue);
+    } else if (suggestionsMenu && typeof (suggestionsMenu) != 'undefined') {
+      suggestionsMenu.select(0);
+      self._focusableElement.focus();
+    }
+
   }
 
   /**
@@ -1026,11 +1147,16 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.value = item;
     }
     this.fire('pt-item-confirmed', item);
-    this.setValidity(true, undefined);
+
+    // value-change will perform validation anyway.
+    //this.setValidity(true, undefined);
     this._menuClose();
 
     this.async(function () {
       this.fire('change');
+      if (this.fieldId) {
+        this.fire('oe-field-changed', { fieldId: this.fieldId, value: this.value });
+      }
     });
   }
 

@@ -8,6 +8,7 @@
 import { html, PolymerElement } from "@polymer/polymer/polymer-element.js";
 import { mixinBehaviors } from "@polymer/polymer/lib/legacy/class.js";
 import { PaperInputBehavior } from "@polymer/paper-input/paper-input-behavior.js";
+import { IronControlState } from "@polymer/iron-behaviors/iron-control-state";
 import { IronFormElementBehavior } from "@polymer/iron-form-element-behavior/iron-form-element-behavior.js";
 /* beautify preserve:start */
 import { OECommonMixin } from "oe-mixins/oe-common-mixin.js";
@@ -57,7 +58,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     :host {
       display: block;
     }
-
+    paper-input-container {
+      display: inline-block;
+      width: 100%;
+    }
     input{
       @apply --paper-input-container-shared-input-style;
     }
@@ -101,6 +105,16 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     .dropdown-content > ::slotted(*){
       max-height: 240px;
     }
+    iron-input {
+      @apply --iron-input;
+    }
+
+    label{
+      @apply --oe-label-mixin;
+    }
+    paper-input-error{
+      @apply --oe-input-error;
+    }
     
   </style>
     <oe-ajax id="iajax" auto url=[[_getRequestUrl(searchString)]] last-response={{_suggestions}} on-response="_onAjaxResponse"
@@ -122,7 +136,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
           autocorrect$="[[autocorrect]]" tabindex$="[[tabindex]]"
           autosave$="[[autosave]]" results$="[[results]]" accept$="[[accept]]" multiple$="[[multiple]]" />
         </iron-input>
-        <slot slot="suffix"></slot>
+        <slot slot="suffix" name="suffix"></slot>
         <paper-input-error invalid={{invalid}} slot="add-on">
           <oe-i18n-msg id="i18n-error" msgid={{errorMessage}} placeholders={{placeholders}}></oe-i18n-msg>
         </paper-input-error>
@@ -134,7 +148,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
             <paper-listbox id="menu">
               <template id="itemlist" is="dom-repeat" items="{{_suggestions}}" sort="sortData">
                 <paper-item class="default" on-tap="onItemSelected" data-item={{item}}>
-                  <span>{{_getDisplayValue(item)}}</span>
+                  ${this.itemTemplate}
                 </paper-item>
               </template>
             </paper-listbox>
@@ -143,6 +157,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       </div>
     </div>
     `;
+  }
+
+  static get itemTemplate(){
+    return html`<span>{{_getDisplayValue(item)}}</span>`;
   }
 
   static get properties() {
@@ -233,7 +251,19 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
        */
       scrollAction : {
         type: String
-      }
+      },
+      invalid: {
+        type: Boolean,
+        value: false, 
+        notify: true,
+        reflectToAttribute: true
+      },
+
+      /**
+       * Fired when the value of the field is changed by the user
+       *
+       * @event oe-field-changed
+       */
     };
   }
   static get _invalidValue(){
@@ -268,7 +298,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     }
     // }
 
-    this.addEventListener('pt-item-confirmed', this.validate.bind(this));
+    //Every pt-item-confirmed is preceded by _setSelectedItem
+    //Every _setSelectedItem calls validate function anyway.
+    //No need to perform duplicate validations.
+    //this.addEventListener('pt-item-confirmed', this.validate.bind(this));
   }
 
   /**
@@ -277,9 +310,9 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
    * 
    * @param {event} e
    */
-  _onBlur(e) { // eslint-disable-line no-unused-vars
-    this.validate();
-  }
+  // _onBlur(e) { // eslint-disable-line no-unused-vars
+  //   this.validate();
+  // }
   // _onFocus(e) { // eslint-disable-line no-unused-vars
   //   this.inputElement.select();
   // }
@@ -298,7 +331,22 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       this.inputElement;
   }
 
- 
+   /**
+   * Forward focus to inputElement. Overriden from IronControlState.
+   * Fix : set focused property only if the event is not from a slotted element.
+   */
+   
+  _focusBlurHandler(event) {
+    if(!this.isLightDescendant(event.target)){
+      IronControlState._focusBlurHandler.call(this, event);
+    }
+    
+    // Forward the focus to the nested input.
+    if (this.focused && !this._shiftTabPressed && this._focusableElement) {
+      this._focusableElement.focus();
+    }
+  }
+
   /**
    * Checks response for search/data and sets the noDataFound property
    */
@@ -323,6 +371,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
           }
         }
         self._setSelectedItem(newValue);
+        self.notifyChange();
       }
     } else {
       self.noDataFound = false;
@@ -339,7 +388,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
       });
       if (newValue) {
         self._setSelectedItem(newValue);
-        self.validate();
+        self.notifyChange();
       }
     }
   }
@@ -404,12 +453,19 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
         if (typeof (selectedItem) != 'undefined') {
           this._setSelectedItem(selectedItem.dataItem);
           this.fire('pt-item-confirmed', selectedItem.dataItem);
-          this.async(function () {
-            this.fire('change');
-          });
+          this.notifyChange();
         }
       }
     }
+  }
+
+  notifyChange(){
+    this.async(function () {
+      this.fire('change');
+      if(this.fieldId){
+        this.fire('oe-field-changed', {fieldId: this.fieldId, value: this.value});
+      }
+    });
   }
   _onKeyDown(e) {
     var keycode = e.keyCode || e.which || e.key;
@@ -443,9 +499,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
   onItemSelected(e) {
     this._setSelectedItem(e.model.item);
     this.fire('pt-item-confirmed', e.model.item);
-    this.async(function () {
-      this.fire('change');
-    });
+    this.notifyChange();
     e.stopPropagation();
   }
   /** 

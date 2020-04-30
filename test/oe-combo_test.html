@@ -2,201 +2,203 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>oe-combo test</title>
+  <title>oe-combo test</title>
 
-    <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
-    <script src="../node_modules/chai/chai.js"></script>
-    <script src="../node_modules/mocha/mocha.js"></script>
-    <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
 
-    <script src="../node_modules/fakerest/dist/FakeRest.min.js"></script>
-    <script src="../node_modules/sinon/pkg/sinon.js"></script>
-    <script type="module" src="../oe-combo.js"></script>
+  <script src="../node_modules/fakerest/dist/FakeRest.min.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+  <script type="module" src="../oe-combo.js"></script>
 </head>
 
 <body>
-    <test-fixture id="basic">
-        <template>
-            <oe-combo displayproperty="description" valueproperty="code"></oe-combo>
-        </template>
-    </test-fixture>
+  <test-fixture id="basic">
+    <template>
+      <oe-combo displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
 
-    <test-fixture id="with-template">
-        <template>
-            <oe-combo displayproperty="description" valueproperty="code">
-                <template item-template>
-                    <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}}>
-                        <span class="layout flex centered">{{item.description}}</span>
-                        <span>{{item.code}}</span>
-                    </paper-item>
-                </template>
-            </oe-combo>
+  <test-fixture id="with-template">
+    <template>
+      <oe-combo displayproperty="description" valueproperty="code">
+        <template item-template>
+          <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}}>
+            <span class="layout flex centered">{{item.description}}</span>
+            <span>{{item.code}}</span>
+          </paper-item>
         </template>
-    </test-fixture>
-    <test-fixture id="with-template-template-as-input">
-        <template>
-            <oe-combo show-template displayproperty="description" valueproperty="code">
-                <template item-template>
-                    <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}}>
-                        <span class="layout flex centered">{{item.description}}</span>
-                        <span>{{item.code}}</span>
-                    </paper-item>
-                </template>
-            </oe-combo>
+      </oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-template-template-as-input">
+    <template>
+      <oe-combo show-template displayproperty="description" valueproperty="code">
+        <template item-template>
+          <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}}>
+            <span class="layout flex centered">{{item.description}}</span>
+            <span>{{item.code}}</span>
+          </paper-item>
         </template>
-    </test-fixture>
+      </oe-combo>
+    </template>
+  </test-fixture>
 
-    <test-fixture id="sorted">
-        <template>
-            <oe-combo sort displayproperty="description" valueproperty="code"></oe-combo>
-        </template>
-    </test-fixture>
+  <test-fixture id="sorted">
+    <template>
+      <oe-combo sort displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
 
-    <test-fixture id="freetext">
-        <template>
-            <oe-combo allow-free-text displayproperty="description" valueproperty="code"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="multi">
-        <template>
-            <oe-combo multi displayproperty="description" valueproperty="code"></oe-combo>
-        </template>
-    </test-fixture>
+  <test-fixture id="freetext">
+    <template>
+      <oe-combo allow-free-text displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="multi">
+    <template>
+      <oe-combo multi displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
 
-    <test-fixture id="with-value">
-        <template>
-            <oe-combo value="IN" displayproperty="description" valueproperty="code"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-listurl">
-        <template>
-            <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-error-listurl">
-        <template>
-            <oe-combo listurl="get-error-list" displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-existing-listurl">
-        <template>
-            <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-listkey-listurl">
-        <template>
-            <oe-combo listkey="countries" listurl="get-object-list" displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-listkey1">
-        <template>
-            <oe-combo listkey="countries" show-refresh displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
-    <test-fixture id="with-listkey2">
-        <template>
-            <oe-combo listkey="states" displayproperty="description"></oe-combo>
-        </template>
-    </test-fixture>
+  <test-fixture id="with-value">
+    <template>
+      <oe-combo value="IN" displayproperty="description" valueproperty="code"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-listurl">
+    <template>
+      <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-error-listurl">
+    <template>
+      <oe-combo listurl="get-error-list" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-existing-listurl">
+    <template>
+      <oe-combo listurl="get-object-list" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-listkey-listurl">
+    <template>
+      <oe-combo listkey="countries" listurl="get-object-list" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-listkey1">
+    <template>
+      <oe-combo listkey="countries" show-refresh displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
+  <test-fixture id="with-listkey2">
+    <template>
+      <oe-combo listkey="states" displayproperty="description"></oe-combo>
+    </template>
+  </test-fixture>
 
 
-    <script type="module">
-        import { DomApi } from "@polymer/polymer/lib/legacy/polymer.dom";
-        import '@polymer/iron-test-helpers/mock-interactions';
-        import { timeOut, microTask } from '@polymer/polymer/lib/utils/async.js';
+  <script type="module">
+    import { DomApi } from "@polymer/polymer/lib/legacy/polymer.dom";
+    import '@polymer/iron-test-helpers/mock-interactions';
+    import { timeOut, microTask } from '@polymer/polymer/lib/utils/async.js';
 
-        function _asyncFn(callback, waitTime) {
-            return waitTime > 0 ? timeOut.run(callback.bind(this), waitTime) :
+    function _asyncFn(callback, waitTime) {
+      return waitTime > 0 ? timeOut.run(callback.bind(this), waitTime) :
                 ~microTask.run(callback.bind(this));
-        }
+    }
 
-        function domApiFn(node) {
-            return new DomApi(node);
-        }
+    function domApiFn(node) {
+      return new DomApi(node);
+    }
 
         // import { timeOut } from '@polymer/polymer/lib/utils/async.js';
-        var el;
-        var arrow;
-        var sArrow;
-        var listkey;
-        var isRequestMade = false;
-        var urlListKey = "countries";
-        var listdata = [{
-            'code': 'IN',
-            'description': 'India'
-        }, {
-            'code': 'AU',
-            'description': 'Australia'
-        }, {
-            'code': 'UK',
-            'description': 'United Kingdom'
-        }, {
-            'code': 'US',
-            'description': 'United States'
-        }, {
-            'code': 'CN',
-            'description': 'China'
-        }, {
-            'code': 'CL',
-            'description': 'Chille'
-        }, {
-            'code': 'CD',
-            'description': 'Chad'
-        }];
-        var stringdata = [
-            'India',
-            'Ireland',
-            'Indonesia',
-            'United States of America',
-            'United Kingdom',
-            'Uganda',
-            'Uruguay'
-        ];
-        var states = [{
-            'code': 'AP',
-            'description': 'Andhra Pradesh'
-        }, {
-            'code': 'GJ',
-            'description': 'Gujarat'
-        }, {
-            'code': 'TN',
-            'description': 'Tamil Nadu'
-        }, {
-            'code': 'KA',
-            'description': 'Karnataka'
-        }, {
-            'code': 'MH',
-            'description': 'Maharashtra'
-        }, {
-            'code': 'DL',
-            'description': 'Delhi'
-        }, {
-            'code': 'CHD',
-            'description': 'Chandigarh'
-        }];
+    var el;
+    var arrow;
+    var sArrow;
+    var listkey;
+    var isRequestMade = false;
+    var urlListKey = "countries";
+    var listdata = [{
+        'code': 'IN',
+        'description': 'India'
+      }, {
+        'code': 'AU',
+        'description': 'Australia'
+      }, {
+        'code': 'UK',
+        'description': 'United Kingdom'
+      }, {
+        'code': 'US',
+        'description': 'United States'
+      }, {
+        'code': 'CN',
+        'description': 'China'
+      }, {
+        'code': 'CL',
+        'description': 'Chille'
+      }, {
+        'code': 'CD',
+        'description': 'Chad'
+    }];
+    var stringdata = [
+      'India',
+      'Ireland',
+      'Indonesia',
+      'United States of America',
+      'United Kingdom',
+      'Uganda',
+      'Uruguay'
+    ];
+    var states = [{
+        'code': 'AP',
+        'description': 'Andhra Pradesh'
+      }, {
+        'code': 'GJ',
+        'description': 'Gujarat'
+      }, {
+        'code': 'TN',
+        'description': 'Tamil Nadu'
+      }, {
+        'code': 'KA',
+        'description': 'Karnataka'
+      }, {
+        'code': 'MH',
+        'description': 'Maharashtra'
+      }, {
+        'code': 'DL',
+        'description': 'Delhi'
+      }, {
+        'code': 'CHD',
+        'description': 'Chandigarh'
+    }];
 
-        suite('<oe-combo basic>', function () {
+    function _dropdownClicked(cb, targetArrow) {
+      if (!targetArrow) {
+        targetArrow = arrow
+      }
+      MockInteractions.tap(targetArrow);
+      flush(cb);
+    }
 
-            setup(function (done) {
-                el = fixture('basic');
-                el.set('listdata', listdata);
-                flush(function () {
-                    arrow = el.$.dropdownicon;
-                    done();
-                });
-            });
+    suite('<oe-combo basic>', function () {
 
-            function _dropdownClicked(cb, targetArrow) {
-                if (!targetArrow) {
-                    targetArrow = arrow
-                }
-                MockInteractions.tap(targetArrow);
-                flush(cb);
-            }
+      setup(function (done) {
+        el = fixture('basic');
+        el.set('listdata', listdata);
+        flush(function () {
+          arrow = el.$.dropdownicon;
+          done();
+        });
+      });
+
+            
 
             test('has displayproperty', function () {
                 assert.equal(el.displayproperty, 'description');
@@ -405,30 +407,29 @@
                 }, 300);
             });
 
-            test('When typed input matches more than one record, dropdown is displayed with matching records on top',
-                function (done) {
-                    var input = el.inputElement;
-                    input.bindValue = 'un';
-                    MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
-                    input.fire('change');
+            test('When typed input matches more than one record, dropdown is displayed with matching records on top', function (done) {
+              var input = el.inputElement;
+              input.bindValue = 'un';
+              MockInteractions.keyUpOn(input, input.bindValue.charCodeAt(1));
+              input.fire('change');
 
-                    flush(function () {
+              flush(function () {
 
-                        assert.equal(el.value, el._invalidValue);
-                        assert.equal(el.expand, true);
-                        var menu = el.shadowRoot.querySelector('paper-listbox');
-                        assert.isNotNull(menu);
-                        assert.notEqual(getComputedStyle(menu).display, 'none');
-                        var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                assert.equal(el.value, el._invalidValue);
+                assert.equal(el.expand, true);
+                var menu = el.shadowRoot.querySelector('paper-listbox');
+                assert.isNotNull(menu);
+                assert.notEqual(getComputedStyle(menu).display, 'none');
+                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
 
-                        var item0 = menuItems[0].dataItem
-                        var item1 = menuItems[1].dataItem;
+                var item0 = menuItems[0].dataItem
+                var item1 = menuItems[1].dataItem;
 
-                        assert.isTrue((item0[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
-                        assert.isTrue((item1[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
-                        done();
-                    });
-                });
+                assert.isTrue((item0[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
+                assert.isTrue((item1[el.displayproperty]).toLowerCase().indexOf(el.displayValue) >= 0);
+                done();
+              });
+            });
 
             test('When typed input does not match any record, control is set to error and dropdown is displayed',
                 function (done) {
@@ -477,7 +478,7 @@
             });
         });
 
-        suite('<oe-combo multi>', function () {
+    suite('<oe-combo multi>', function () {
 
             setup(function (done) {
                 el = fixture('multi');
@@ -493,6 +494,8 @@
                 assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
                 el.set('value', [(listdata[4])[el.valueproperty]]);
                 assert.equal(el.displayValue, (listdata[4])[el.displayproperty]);
+                el.set('value', [(listdata[2])[el.valueproperty], (listdata[4])[el.valueproperty]]);
+                assert.equal(el.displayValue, `${(listdata[2])[el.displayproperty]}, ${(listdata[4])[el.displayproperty]}`);
             });
 
             test('When item in dropdown is tapped, it is set as selected', function (done) {
@@ -563,7 +566,102 @@
             });
         });
 
-        suite('<oe-combo with template>', function () {
+    suite('<oe-combo multi value-as-text>', function () {
+
+        setup(function (done) {
+            el = fixture('multi');
+            el.set('listdata', listdata);
+            el.set('valueAsText', true);
+            flush(function () {
+                arrow = el.$.dropdownicon;
+                done();
+            });
+        });
+
+        test('Multi/ValueAsText: Setting value updates the display', function (done) {
+            el.set('value', `${(listdata[2])[el.valueproperty]}`);
+            flush(function(){
+              assert.equal(el.displayValue, (listdata[2])[el.displayproperty]);
+              done();
+            })
+        });
+        test('Multi/ValueAsText: Setting multiple values updates the display', function (done) {
+          el.set('value', `${(listdata[2])[el.valueproperty]},${(listdata[4])[el.valueproperty]}`);
+          flush(function(){
+            assert.equal(el.displayValue, `${(listdata[2])[el.displayproperty]}, ${(listdata[4])[el.displayproperty]}`);
+            done();
+          });
+        });
+
+        test('Multi/ValueAsText: When item in dropdown is tapped, it is set as selected', function (done) {
+            MockInteractions.tap(arrow);
+            flush(function () {
+                var menu = el.shadowRoot.querySelector('paper-material');
+                assert.isDefined(menu);
+                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                assert.equal(menuItems.length, listdata.length);
+                assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+                MockInteractions.tap(menuItems[1]);
+                flush(function () {
+                    assert.equal(el.value, (listdata[1])[el.valueproperty]);
+                    assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
+                    assert.equal(el.selectedItems.indexOf(listdata[1]), 0);
+                    done();
+                });
+            });
+        });
+
+        test('Multi/ValueAsText: When more than one  item in dropdown is tapped, it is set as selected', function (done) {
+            MockInteractions.tap(arrow);
+            flush(function () {
+                var menu = el.shadowRoot.querySelector('paper-material');
+                assert.isDefined(menu);
+                var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+                assert.equal(menuItems.length, listdata.length);
+                var selectedItems = [];
+                var selectedValues = [];
+                var displayValue = "";
+                assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+                MockInteractions.tap(menuItems[1]);
+                flush(function () {
+                    selectedItems.push(listdata[1]);
+                    selectedValues.push((listdata[1])[el.valueproperty])
+                    MockInteractions.tap(menuItems[2]);
+                    flush(function () {
+                        selectedItems.push(listdata[2]);
+                        selectedValues.push((listdata[2])[el.valueproperty])
+                        assert.deepEqual(el.value, selectedValues.join(','));
+                        assert.deepEqual(el.displayValue, ((listdata[1])[el.displayproperty] + ", " + (listdata[2])[el.displayproperty]));
+                        assert.deepEqual(el.selectedItems, selectedItems);
+                        done();
+                    });
+                });
+            });
+        });
+
+        test('Multi/ValueAsText: When value is pre-set, the displayValue is updated', function () {
+            var el = fixture('with-value');
+            el.set('listdata', listdata);
+            assert.equal(el.value, 'IN');
+            assert.equal(el.displayValue, 'India');
+        });
+
+        test('Multi/ValueAsText: selectedItem is updated when value is set', function () {
+            var el = fixture('with-value');
+            el.set('listdata', listdata);
+            assert.equal(el.value, 'IN');
+            assert.equal(el.displayValue, 'India');
+            assert.equal(el.selectedItem, listdata.find(function (item) {
+                return item.code === 'IN';
+            }));
+
+            el.set('value', undefined);
+            assert.equal(el.displayValue, '');
+            assert.equal(el.selectedItem, undefined);
+        });
+    });
+
+    suite('<oe-combo with template>', function () {
 
             setup(function (done) {
                 el = fixture('with-template');
@@ -651,7 +749,7 @@
 
         });
 
-        suite('<oe-combo with template as display input>', function () {
+    suite('<oe-combo with template as display input>', function () {
 
             setup(function () {
                 el = fixture('with-template-template-as-input');
@@ -673,7 +771,7 @@
         });
 
 
-        suite('<oe-combo listurl>', function () {
+    suite('<oe-combo listurl>', function () {
 
             var server;
             var xhr, requests;
@@ -734,7 +832,7 @@
             });
         });
 
-        suite('<oe-combo listkey>', function () {
+    suite('<oe-combo listkey>', function () {
             //request is not made and picked from cache previously
             test('loads data from listkey', function (done) {
                 var el = fixture('with-existing-listurl');
@@ -808,8 +906,125 @@
 
 
         });
-    </script>
 
+    suite('oe-events', function() {
+      setup(function (done) {
+        el = fixture('basic');
+        el.set('listdata', listdata);
+        el.set('fieldId', 'comboField');
+        flush(function () {
+          arrow = el.$.dropdownicon;
+          done();
+        });
+      });
+
+      test('when value is typed, oe-field-ok triggers only once', function(done){
+        el.addEventListener('oe-field-ok', function(evt){
+          //console.log(evt.type, evt.detail, el.value);
+          expect(evt.detail.fieldId).to.equal('comboField');
+          done();
+        });
+
+        MockInteractions.focus(el.inputElement);
+        el.set('displayValue', 'Australia');
+        MockInteractions.pressAndReleaseKeyOn(el.inputElement, 65 /*'a'*/);
+        flush(function(){
+          el.inputElement.fire('change');
+          MockInteractions.blur(el.inputElement);
+        });
+      });
+
+      test('when value is selected from dropdown, oe-field-ok triggers only once', function(done){
+        el.addEventListener('oe-field-ok', function(evt){
+          //console.log(evt.type, evt.detail, el.value);
+          expect(evt.detail.fieldId).to.equal('comboField');
+          done();
+        });
+
+        _dropdownClicked(function () {
+          var menu = el.shadowRoot.querySelector('paper-material');
+          assert.isDefined(menu);
+          flush(function () {
+            var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+            assert.equal(menuItems.length, listdata.length);
+            assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+            MockInteractions.tap(menuItems[1]);
+            assert.equal(el.value, (listdata[1])[el.valueproperty]);
+            assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
+            assert.equal(el.selectedItem, listdata[1]);
+          });
+        });
+      });
+
+      test('when value is typed, oe-field-changed triggers only once', function(done){
+        el.addEventListener('oe-field-changed', function(evt){
+          expect(evt.detail).to.deep.equal({fieldId: 'comboField', value: 'AU'});
+          done();
+        });
+
+        MockInteractions.focus(el.inputElement);
+        el.set('displayValue', 'Australia');
+        MockInteractions.pressAndReleaseKeyOn(el.inputElement, 65 /*'a'*/);
+        flush(function(){
+          el.inputElement.fire('change');
+          MockInteractions.blur(el.inputElement);
+        });
+      });
+
+      test('when value is selected from dropdown, oe-field-changed triggers only once', function(done){
+        el.addEventListener('oe-field-changed', function(evt){
+          expect(evt.detail).to.deep.equal({fieldId: 'comboField', value: listdata[1][el.valueproperty]});
+          done();
+        });
+
+        _dropdownClicked(function () {
+          var menu = el.shadowRoot.querySelector('paper-material');
+          assert.isDefined(menu);
+          flush(function () {
+            var menuItems = domApiFn(menu).querySelectorAll('paper-item');
+            assert.equal(menuItems.length, listdata.length);
+            assert.notEqual(el.value, (listdata[1])[el.valueproperty]);
+            MockInteractions.tap(menuItems[1]);
+            assert.equal(el.value, (listdata[1])[el.valueproperty]);
+            assert.equal(el.displayValue, (listdata[1])[el.displayproperty]);
+            assert.equal(el.selectedItem, listdata[1]);
+          });
+        });
+      });
+
+      test('change event is NOT triggered if fieldid is missing', function(done){
+        el.set('fieldId', null);
+
+        el.addEventListener('oe-field-changed', function(evt){
+          expect(true).to.be.false;
+          done();
+        });
+
+        MockInteractions.focus(el.inputElement);
+        el.set('displayValue', 'Australia');
+        MockInteractions.pressAndReleaseKeyOn(el.inputElement, 65 /*'a'*/);
+        flush(function(){
+          el.inputElement.fire('change');
+          MockInteractions.blur(el.inputElement);
+          setTimeout(done, 2000);
+        });
+      });
+
+      test('changing the value directly triggers field-ok but NOT field-changed', function(done){
+        el.addEventListener('oe-field-changed', function(evt){
+          expect(true).to.be.false;
+          done();
+        });
+        el.addEventListener('oe-field-ok', function(evt){
+          expect(el.displayValue).to.equal('Australia');
+          setTimeout(done, 2000);
+        });
+
+        el.set('value', 'AU');
+      });      
+
+    });
+    </script>
 </body>
 
 </html>

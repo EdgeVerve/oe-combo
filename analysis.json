@@ -7,17 +7,204 @@
       "path": "oe-combo.js",
       "properties": [
         {
+          "name": "errorPlaceholders",
+          "type": "Array | null | undefined",
+          "description": "i18n placeholders for the error",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 31,
+              "column": 8
+            },
+            "end": {
+              "line": 33,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Array"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "userErrorMessage",
+          "type": "Object | null | undefined",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "errorMessage",
+          "type": "string | null | undefined",
+          "description": "Error message displayed",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 54,
+              "column": 8
+            },
+            "end": {
+              "line": 57,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_hasCustomMessage",
+          "type": "boolean | null | undefined",
+          "description": "Flag for Custom error message/code",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 60,
+              "column": 8
+            },
+            "end": {
+              "line": 63,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validationFunction",
+          "type": "string | null | undefined",
+          "description": "Custom validation function",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validateOnInput",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "fieldId",
+          "type": "string | null | undefined",
+          "description": "binding to property",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "_focusableElement",
           "type": "!HTMLElement",
           "description": "Returns a reference to the focusable element. Overridden from\nPaperInputBehavior to correctly focus the native input.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 369,
+              "line": 439,
               "column": 2
             },
             "end": {
-              "line": 372,
+              "line": 442,
               "column": 3
             }
           },
@@ -34,11 +221,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 197,
               "column": 6
             },
             "end": {
-              "line": 164,
+              "line": 197,
               "column": 29
             }
           },
@@ -55,11 +242,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 203,
               "column": 6
             },
             "end": {
-              "line": 170,
+              "line": 203,
               "column": 27
             }
           },
@@ -76,11 +263,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 172,
+              "line": 205,
               "column": 6
             },
             "end": {
-              "line": 175,
+              "line": 208,
               "column": 7
             }
           },
@@ -98,11 +285,33 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 180,
+              "line": 213,
               "column": 6
             },
             "end": {
-              "line": 183,
+              "line": 216,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "valueAsText",
+          "type": "boolean | null | undefined",
+          "description": "When multi is true, this flag exposes value as comma separated text instead of an array",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 223,
               "column": 7
             }
           },
@@ -120,11 +329,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 228,
               "column": 6
             },
             "end": {
-              "line": 193,
+              "line": 232,
               "column": 7
             }
           },
@@ -143,11 +352,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 198,
+              "line": 237,
               "column": 6
             },
             "end": {
-              "line": 201,
+              "line": 240,
               "column": 7
             }
           },
@@ -159,17 +368,40 @@
           }
         },
         {
+          "name": "invalid",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 241,
+              "column": 6
+            },
+            "end": {
+              "line": 246,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
           "name": "selectedItem",
           "type": "Object | null | undefined",
           "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 209,
+              "line": 253,
               "column": 6
             },
             "end": {
-              "line": 212,
+              "line": 256,
               "column": 7
             }
           },
@@ -187,11 +419,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 218,
+              "line": 262,
               "column": 6
             },
             "end": {
-              "line": 221,
+              "line": 265,
               "column": 7
             }
           },
@@ -209,11 +441,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 226,
+              "line": 270,
               "column": 6
             },
             "end": {
-              "line": 229,
+              "line": 273,
               "column": 7
             }
           },
@@ -231,11 +463,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 234,
+              "line": 278,
               "column": 6
             },
             "end": {
-              "line": 237,
+              "line": 281,
               "column": 7
             }
           },
@@ -253,11 +485,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 239,
+              "line": 283,
               "column": 6
             },
             "end": {
-              "line": 242,
+              "line": 286,
               "column": 7
             }
           },
@@ -275,11 +507,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 243,
+              "line": 287,
               "column": 6
             },
             "end": {
-              "line": 246,
+              "line": 290,
               "column": 7
             }
           },
@@ -297,11 +529,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 253,
+              "line": 297,
               "column": 6
             },
             "end": {
-              "line": 257,
+              "line": 301,
               "column": 7
             }
           },
@@ -320,11 +552,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 263,
+              "line": 307,
               "column": 6
             },
             "end": {
-              "line": 267,
+              "line": 311,
               "column": 7
             }
           },
@@ -343,11 +575,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 272,
+              "line": 316,
               "column": 6
             },
             "end": {
-              "line": 276,
+              "line": 320,
               "column": 7
             }
           },
@@ -366,11 +598,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 281,
+              "line": 325,
               "column": 6
             },
             "end": {
-              "line": 284,
+              "line": 328,
               "column": 7
             }
           },
@@ -388,11 +620,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 286,
+              "line": 330,
               "column": 6
             },
             "end": {
-              "line": 290,
+              "line": 334,
               "column": 7
             }
           },
@@ -411,11 +643,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 292,
+              "line": 336,
               "column": 6
             },
             "end": {
-              "line": 295,
+              "line": 339,
               "column": 7
             }
           },
@@ -433,11 +665,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 297,
+              "line": 341,
               "column": 6
             },
             "end": {
-              "line": 299,
+              "line": 343,
               "column": 7
             }
           },
@@ -454,11 +686,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 307,
+              "line": 351,
               "column": 6
             },
             "end": {
-              "line": 309,
+              "line": 353,
               "column": 7
             }
           },
@@ -475,11 +707,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 311,
+              "line": 355,
               "column": 6
             },
             "end": {
-              "line": 313,
+              "line": 357,
               "column": 7
             }
           },
@@ -488,20 +720,447 @@
               "attributeType": "String"
             }
           }
+        },
+        {
+          "name": "_dropdownAttached",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 359,
+              "column": 6
+            },
+            "end": {
+              "line": 362,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
         }
       ],
       "methods": [
+        {
+          "name": "setValidity",
+          "description": "Sets the vality and errorMessage based on the input parameters and\nthe `userErrorMessage`",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 113,
+              "column": 4
+            },
+            "end": {
+              "line": 144,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_setValidity",
+          "description": "Sets the 'invalid' flag and 'errorMessage'",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 152,
+              "column": 4
+            },
+            "end": {
+              "line": 159,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_validate",
+          "description": "Custom validation of oe-combo to check based on allowFreeText and other flags",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 2
+            },
+            "end": {
+              "line": 582,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "validate",
+          "description": "Validate, overrides Paper-Input-Behavior's validate method\nUsed to set the validity based on core input element's validity",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 177,
+              "column": 4
+            },
+            "end": {
+              "line": 221,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "boolean",
+            "desc": "validity of core input element."
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "connectedCallback",
+          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 733,
+              "column": 2
+            },
+            "end": {
+              "line": 754,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "hashFunc",
+          "description": "Generates a Hash for the given string.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 256,
+              "column": 4
+            },
+            "end": {
+              "line": 263,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "description": "String for which Hash needs to be computed"
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "hash number for the given string"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "__customTemplatize",
+          "description": "Replaces template from dom-if,dom-repeat or dom-bind with source template.\nIf the target is not a dom-if,dom-repeat or dom-bind , creates a new templateInstance ,\nattahces a stamped node and returns the instance.\nIf the target is not provided it returns a templateInstance class",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-templatize-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 8
+            },
+            "end": {
+              "line": 83,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target",
+              "type": "HTMLTemplate",
+              "description": "HTML template element for dom-if/dom-bind/dom-repeat"
+            },
+            {
+              "name": "source",
+              "type": "HTMLTemplate",
+              "description": "HTML template element to stamp (from lightdom)"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "options to stamp (from lightdom)"
+            }
+          ],
+          "return": {
+            "type": "(TemplateInstanceClass | HTMLTemplate)",
+            "desc": "Generated class bound to the source template or stamped instance."
+          },
+          "inheritedFrom": "OETemplatizeMixin"
+        },
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
         {
           "name": "_focusBlurHandler",
           "description": "Override paper-input-behavior focus-blur handler",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 339,
+              "line": 395,
               "column": 2
             },
             "end": {
-              "line": 344,
+              "line": 400,
               "column": 3
             }
           },
@@ -522,11 +1181,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 346,
+              "line": 402,
               "column": 2
             },
             "end": {
-              "line": 361,
+              "line": 431,
               "column": 3
             }
           },
@@ -546,11 +1205,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 379,
+              "line": 449,
               "column": 2
             },
             "end": {
-              "line": 404,
+              "line": 482,
               "column": 3
             }
           },
@@ -572,11 +1231,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 410,
+              "line": 488,
               "column": 2
             },
             "end": {
-              "line": 432,
+              "line": 510,
               "column": 3
             }
           },
@@ -592,11 +1251,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 439,
+              "line": 517,
               "column": 2
             },
             "end": {
-              "line": 465,
+              "line": 543,
               "column": 3
             }
           },
@@ -612,11 +1271,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 467,
+              "line": 545,
               "column": 2
             },
             "end": {
-              "line": 482,
+              "line": 560,
               "column": 3
             }
           },
@@ -634,21 +1293,34 @@
           }
         },
         {
-          "name": "_validate",
-          "description": "Custom validation of oe-combo to check based on allowFreeText and other flags",
+          "name": "_validateArrayItems",
+          "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 487,
+              "line": 584,
               "column": 2
             },
             "end": {
-              "line": 504,
+              "line": 606,
               "column": 3
             }
           },
           "metadata": {},
-          "params": []
+          "params": [
+            {
+              "name": "value"
+            },
+            {
+              "name": "listItems"
+            },
+            {
+              "name": "menuList"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "_setDisplayAndValidate",
@@ -656,11 +1328,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 514,
+              "line": 615,
               "column": 2
             },
             "end": {
-              "line": 614,
+              "line": 712,
               "column": 3
             }
           },
@@ -682,36 +1354,16 @@
           }
         },
         {
-          "name": "connectedCallback",
-          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 635,
-              "column": 2
-            },
-            "end": {
-              "line": 652,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [],
-          "return": {
-            "type": "void"
-          }
-        },
-        {
           "name": "_keydown",
           "description": "Key down event listener for oe-combo",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 657,
+              "line": 759,
               "column": 2
             },
             "end": {
-              "line": 667,
+              "line": 769,
               "column": 3
             }
           },
@@ -731,11 +1383,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 674,
+              "line": 776,
               "column": 2
             },
             "end": {
-              "line": 684,
+              "line": 786,
               "column": 3
             }
           },
@@ -757,12 +1409,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 690,
+              "line": 792,
               "column": 2
             },
             "end": {
-              "line": 717,
-              "column": 5
+              "line": 819,
+              "column": 3
             }
           },
           "metadata": {},
@@ -782,11 +1434,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 724,
+              "line": 826,
               "column": 2
             },
             "end": {
-              "line": 739,
+              "line": 843,
               "column": 3
             }
           },
@@ -808,11 +1460,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 745,
+              "line": 849,
               "column": 2
             },
             "end": {
-              "line": 758,
+              "line": 860,
               "column": 3
             }
           },
@@ -834,11 +1486,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 763,
+              "line": 865,
               "column": 2
             },
             "end": {
-              "line": 766,
+              "line": 868,
               "column": 3
             }
           },
@@ -854,11 +1506,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 773,
+              "line": 875,
               "column": 2
             },
             "end": {
-              "line": 789,
+              "line": 893,
               "column": 3
             }
           },
@@ -875,16 +1527,40 @@
           }
         },
         {
+          "name": "_initDropdown",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 895,
+              "column": 2
+            },
+            "end": {
+              "line": 913,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "cb"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_dropdownClick",
           "description": "Shows all the listdata items when drop down arrow clicks\nIt will check for open if not it will add class open and it will add to suggestions",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 795,
+              "line": 920,
               "column": 2
             },
             "end": {
-              "line": 805,
+              "line": 939,
               "column": 3
             }
           },
@@ -904,11 +1580,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 811,
+              "line": 945,
               "column": 2
             },
             "end": {
-              "line": 820,
+              "line": 954,
               "column": 3
             }
           },
@@ -924,11 +1600,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 822,
+              "line": 956,
               "column": 2
             },
             "end": {
-              "line": 829,
+              "line": 963,
               "column": 3
             }
           },
@@ -948,11 +1624,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 835,
+              "line": 969,
               "column": 2
             },
             "end": {
-              "line": 853,
+              "line": 980,
               "column": 3
             }
           },
@@ -967,16 +1643,40 @@
           }
         },
         {
+          "name": "__setTemplateItem",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "start": {
+              "line": 982,
+              "column": 2
+            },
+            "end": {
+              "line": 1024,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_getDisplayValue",
           "description": "Returns the display property of the item or the item",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 860,
+              "line": 1032,
               "column": 2
             },
             "end": {
-              "line": 866,
+              "line": 1038,
               "column": 3
             }
           },
@@ -999,11 +1699,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 873,
+              "line": 1045,
               "column": 2
             },
             "end": {
-              "line": 879,
+              "line": 1051,
               "column": 3
             }
           },
@@ -1026,11 +1726,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 884,
+              "line": 1056,
               "column": 2
             },
             "end": {
-              "line": 925,
+              "line": 1097,
               "column": 3
             }
           },
@@ -1053,11 +1753,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 931,
+              "line": 1103,
               "column": 2
             },
             "end": {
-              "line": 960,
+              "line": 1132,
               "column": 3
             }
           },
@@ -1074,11 +1774,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 967,
+              "line": 1139,
               "column": 2
             },
             "end": {
-              "line": 983,
+              "line": 1160,
               "column": 3
             }
           },
@@ -1100,11 +1800,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 989,
+              "line": 1166,
               "column": 2
             },
             "end": {
-              "line": 993,
+              "line": 1170,
               "column": 3
             }
           },
@@ -1124,11 +1824,11 @@
           "privacy": "private",
           "sourceRange": {
             "start": {
-              "line": 999,
+              "line": 1176,
               "column": 2
             },
             "end": {
-              "line": 1002,
+              "line": 1179,
               "column": 3
             }
           },
@@ -1149,11 +1849,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 43,
+          "line": 44,
           "column": 0
         },
         "end": {
-          "line": 1003,
+          "line": 1180,
           "column": 1
         }
       },
@@ -1162,15 +1862,141 @@
       "name": "OeCombo",
       "attributes": [
         {
+          "name": "error-placeholders",
+          "description": "i18n placeholders for the error",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 31,
+              "column": 8
+            },
+            "end": {
+              "line": 33,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "user-error-message",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "error-message",
+          "description": "Error message displayed",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 54,
+              "column": 8
+            },
+            "end": {
+              "line": 57,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "hidden",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validation-function",
+          "description": "Custom validation function",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validate-on-input",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "field-id",
+          "description": "binding to property",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "displayproperty",
           "description": "Property within the listdata to be used for display",
           "sourceRange": {
             "start": {
-              "line": 164,
+              "line": 197,
               "column": 6
             },
             "end": {
-              "line": 164,
+              "line": 197,
               "column": 29
             }
           },
@@ -1182,11 +2008,11 @@
           "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 203,
               "column": 6
             },
             "end": {
-              "line": 170,
+              "line": 203,
               "column": 27
             }
           },
@@ -1198,11 +2024,27 @@
           "description": "Flag to set for enabling combo to choose multiple values",
           "sourceRange": {
             "start": {
-              "line": 180,
+              "line": 213,
               "column": 6
             },
             "end": {
-              "line": 183,
+              "line": 216,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "value-as-text",
+          "description": "When multi is true, this flag exposes value as comma separated text instead of an array",
+          "sourceRange": {
+            "start": {
+              "line": 220,
+              "column": 6
+            },
+            "end": {
+              "line": 223,
               "column": 7
             }
           },
@@ -1214,11 +2056,11 @@
           "description": "When set to true, the selected value is shown as the template given for the combo",
           "sourceRange": {
             "start": {
-              "line": 189,
+              "line": 228,
               "column": 6
             },
             "end": {
-              "line": 193,
+              "line": 232,
               "column": 7
             }
           },
@@ -1230,11 +2072,11 @@
           "description": "Current selected value",
           "sourceRange": {
             "start": {
-              "line": 198,
+              "line": 237,
               "column": 6
             },
             "end": {
-              "line": 201,
+              "line": 240,
               "column": 7
             }
           },
@@ -1242,15 +2084,31 @@
           "type": "Object | null | undefined"
         },
         {
+          "name": "invalid",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 241,
+              "column": 6
+            },
+            "end": {
+              "line": 246,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
           "name": "selected-item",
           "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
           "sourceRange": {
             "start": {
-              "line": 209,
+              "line": 253,
               "column": 6
             },
             "end": {
-              "line": 212,
+              "line": 256,
               "column": 7
             }
           },
@@ -1262,11 +2120,11 @@
           "description": "Selected records from the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
           "sourceRange": {
             "start": {
-              "line": 218,
+              "line": 262,
               "column": 6
             },
             "end": {
-              "line": 221,
+              "line": 265,
               "column": 7
             }
           },
@@ -1278,11 +2136,11 @@
           "description": "Flag to control whether refresh button is displayed or not.",
           "sourceRange": {
             "start": {
-              "line": 226,
+              "line": 270,
               "column": 6
             },
             "end": {
-              "line": 229,
+              "line": 273,
               "column": 7
             }
           },
@@ -1294,11 +2152,11 @@
           "description": "Flag to control whether only the filtered values should be displayed.",
           "sourceRange": {
             "start": {
-              "line": 234,
+              "line": 278,
               "column": 6
             },
             "end": {
-              "line": 237,
+              "line": 281,
               "column": 7
             }
           },
@@ -1310,11 +2168,11 @@
           "description": "Disable caching of listdata",
           "sourceRange": {
             "start": {
-              "line": 239,
+              "line": 283,
               "column": 6
             },
             "end": {
-              "line": 242,
+              "line": 286,
               "column": 7
             }
           },
@@ -1326,11 +2184,11 @@
           "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
           "sourceRange": {
             "start": {
-              "line": 253,
+              "line": 297,
               "column": 6
             },
             "end": {
-              "line": 257,
+              "line": 301,
               "column": 7
             }
           },
@@ -1342,11 +2200,11 @@
           "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
           "sourceRange": {
             "start": {
-              "line": 263,
+              "line": 307,
               "column": 6
             },
             "end": {
-              "line": 267,
+              "line": 311,
               "column": 7
             }
           },
@@ -1358,11 +2216,11 @@
           "description": "URL from where data to be displayed in dropdown, should be fetched",
           "sourceRange": {
             "start": {
-              "line": 272,
+              "line": 316,
               "column": 6
             },
             "end": {
-              "line": 276,
+              "line": 320,
               "column": 7
             }
           },
@@ -1374,11 +2232,11 @@
           "description": "Flag to set to enable entering values not present in the listdata",
           "sourceRange": {
             "start": {
-              "line": 281,
+              "line": 325,
               "column": 6
             },
             "end": {
-              "line": 284,
+              "line": 328,
               "column": 7
             }
           },
@@ -1390,11 +2248,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 286,
+              "line": 330,
               "column": 6
             },
             "end": {
-              "line": 290,
+              "line": 334,
               "column": 7
             }
           },
@@ -1406,11 +2264,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 292,
+              "line": 336,
               "column": 6
             },
             "end": {
-              "line": 295,
+              "line": 339,
               "column": 7
             }
           },
@@ -1422,11 +2280,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 297,
+              "line": 341,
               "column": 6
             },
             "end": {
-              "line": 299,
+              "line": 343,
               "column": 7
             }
           },
@@ -1438,11 +2296,11 @@
           "description": "scrollAction binded to iron-dropdown\n* \"lock\" - Prevents scrolling of body\n* \"refit\" - Moves the dropdown based on scroll\n* \"cancel\" - Closes the dropdown on scroll",
           "sourceRange": {
             "start": {
-              "line": 307,
+              "line": 351,
               "column": 6
             },
             "end": {
-              "line": 309,
+              "line": 353,
               "column": 7
             }
           },
@@ -1454,11 +2312,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 311,
+              "line": 355,
               "column": 6
             },
             "end": {
-              "line": 313,
+              "line": 357,
               "column": 7
             }
           },
@@ -1467,6 +2325,33 @@
         }
       ],
       "events": [
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-error",
+          "description": "Fired when the field is invalid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-ok",
+          "description": "Fired when the field is valid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "register-field",
+          "description": "Fired when the element is attached to DOM to register the element",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-changed",
+          "description": "Fired when the value of the field is changed by the user",
+          "metadata": {}
+        },
         {
           "type": "CustomEvent",
           "name": "oe-update-cache",
@@ -1483,6 +2368,12 @@
           "type": "CustomEvent",
           "name": "value-changed",
           "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "invalid-changed",
+          "description": "Fired when the `invalid` property changes.",
           "metadata": {}
         },
         {
@@ -1534,17 +2425,204 @@
       "path": "oe-dropdown.js",
       "properties": [
         {
+          "name": "errorPlaceholders",
+          "type": "Array | null | undefined",
+          "description": "i18n placeholders for the error",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 31,
+              "column": 8
+            },
+            "end": {
+              "line": 33,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Array"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "userErrorMessage",
+          "type": "Object | null | undefined",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "errorMessage",
+          "type": "string | null | undefined",
+          "description": "Error message displayed",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 54,
+              "column": 8
+            },
+            "end": {
+              "line": 57,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_hasCustomMessage",
+          "type": "boolean | null | undefined",
+          "description": "Flag for Custom error message/code",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 60,
+              "column": 8
+            },
+            "end": {
+              "line": 63,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validationFunction",
+          "type": "string | null | undefined",
+          "description": "Custom validation function",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validateOnInput",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "fieldId",
+          "type": "string | null | undefined",
+          "description": "binding to property",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "displayproperty",
           "type": "string | null | undefined",
           "description": "Property within the listdata to be used for display",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 88,
+              "line": 92,
               "column": 6
             },
             "end": {
-              "line": 88,
+              "line": 92,
               "column": 29
             }
           },
@@ -1561,11 +2639,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 90,
+              "line": 94,
               "column": 6
             },
             "end": {
-              "line": 90,
+              "line": 94,
               "column": 19
             }
           },
@@ -1582,11 +2660,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 95,
+              "line": 99,
               "column": 6
             },
             "end": {
-              "line": 95,
+              "line": 99,
               "column": 27
             }
           },
@@ -1603,11 +2681,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 100,
+              "line": 104,
               "column": 6
             },
             "end": {
-              "line": 103,
+              "line": 107,
               "column": 7
             }
           },
@@ -1619,17 +2697,61 @@
           }
         },
         {
+          "name": "noLabelFloat",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 109,
+              "column": 6
+            },
+            "end": {
+              "line": 112,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "noAnimations",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 114,
+              "column": 6
+            },
+            "end": {
+              "line": 117,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
           "name": "selectedItem",
           "type": "Object | null | undefined",
           "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 110,
+              "line": 123,
               "column": 6
             },
             "end": {
-              "line": 113,
+              "line": 126,
               "column": 7
             }
           },
@@ -1647,11 +2769,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 120,
+              "line": 133,
               "column": 6
             },
             "end": {
-              "line": 124,
+              "line": 137,
               "column": 7
             }
           },
@@ -1670,11 +2792,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 130,
+              "line": 143,
               "column": 6
             },
             "end": {
-              "line": 134,
+              "line": 147,
               "column": 7
             }
           },
@@ -1693,11 +2815,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 139,
+              "line": 152,
               "column": 6
             },
             "end": {
-              "line": 143,
+              "line": 156,
               "column": 7
             }
           },
@@ -1716,11 +2838,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 145,
+              "line": 158,
               "column": 6
             },
             "end": {
-              "line": 148,
+              "line": 161,
               "column": 7
             }
           },
@@ -1734,16 +2856,421 @@
       ],
       "methods": [
         {
+          "name": "setValidity",
+          "description": "Sets the vality and errorMessage based on the input parameters and\nthe `userErrorMessage`",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 113,
+              "column": 4
+            },
+            "end": {
+              "line": 144,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_setValidity",
+          "description": "Sets the 'invalid' flag and 'errorMessage'",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 152,
+              "column": 4
+            },
+            "end": {
+              "line": 159,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_validate",
+          "description": "Custom validation of oe-dropdown to check based on allowFreeText and other flags",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 264,
+              "column": 2
+            },
+            "end": {
+              "line": 272,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "validate",
+          "description": "Validate, overrides Paper-Input-Behavior's validate method\nUsed to set the validity based on core input element's validity",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 177,
+              "column": 4
+            },
+            "end": {
+              "line": 221,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "boolean",
+            "desc": "validity of core input element."
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "connectedCallback",
+          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 333,
+              "column": 2
+            },
+            "end": {
+              "line": 346,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "hashFunc",
+          "description": "Generates a Hash for the given string.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 256,
+              "column": 4
+            },
+            "end": {
+              "line": 263,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "str",
+              "type": "string",
+              "description": "String for which Hash needs to be computed"
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "hash number for the given string"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "__customTemplatize",
+          "description": "Replaces template from dom-if,dom-repeat or dom-bind with source template.\nIf the target is not a dom-if,dom-repeat or dom-bind , creates a new templateInstance ,\nattahces a stamped node and returns the instance.\nIf the target is not provided it returns a templateInstance class",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-templatize-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 8
+            },
+            "end": {
+              "line": 83,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target",
+              "type": "HTMLTemplate",
+              "description": "HTML template element for dom-if/dom-bind/dom-repeat"
+            },
+            {
+              "name": "source",
+              "type": "HTMLTemplate",
+              "description": "HTML template element to stamp (from lightdom)"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "options to stamp (from lightdom)"
+            }
+          ],
+          "return": {
+            "type": "(TemplateInstanceClass | HTMLTemplate)",
+            "desc": "Generated class bound to the source template or stamped instance."
+          },
+          "inheritedFrom": "OETemplatizeMixin"
+        },
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
           "name": "_onChange",
           "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 170,
+              "line": 183,
               "column": 2
             },
             "end": {
-              "line": 173,
+              "line": 186,
               "column": 3
             }
           },
@@ -1763,12 +3290,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 180,
+              "line": 193,
               "column": 2
             },
             "end": {
-              "line": 180,
-              "column": 29
+              "line": 193,
+              "column": 30
             }
           },
           "metadata": {},
@@ -1789,11 +3316,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 186,
+              "line": 199,
               "column": 2
             },
             "end": {
-              "line": 208,
+              "line": 221,
               "column": 3
             }
           },
@@ -1809,11 +3336,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 215,
+              "line": 228,
               "column": 2
             },
             "end": {
-              "line": 238,
+              "line": 251,
               "column": 3
             }
           },
@@ -1829,11 +3356,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 240,
+              "line": 253,
               "column": 2
             },
             "end": {
-              "line": 246,
+              "line": 259,
               "column": 3
             }
           },
@@ -1851,33 +3378,16 @@
           }
         },
         {
-          "name": "_validate",
-          "description": "Custom validation of oe-dropdown to check based on allowFreeText and other flags",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 251,
-              "column": 2
-            },
-            "end": {
-              "line": 259,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": []
-        },
-        {
           "name": "_setDisplayAndValidate",
           "description": "Observer function listening to changes in `value` and `listdata`\nComputes the display of the oe-dropdown and selects the correct values from paper-listbox,\nbased on `value` set on the element.",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 269,
+              "line": 282,
               "column": 2
             },
             "end": {
-              "line": 304,
+              "line": 317,
               "column": 3
             }
           },
@@ -1899,36 +3409,16 @@
           }
         },
         {
-          "name": "connectedCallback",
-          "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 320,
-              "column": 2
-            },
-            "end": {
-              "line": 333,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": [],
-          "return": {
-            "type": "void"
-          }
-        },
-        {
           "name": "onItemSelected",
           "description": "on-tap of a list item it is selected",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 338,
+              "line": 351,
               "column": 2
             },
             "end": {
-              "line": 342,
+              "line": 355,
               "column": 3
             }
           },
@@ -1948,11 +3438,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 349,
+              "line": 362,
               "column": 2
             },
             "end": {
-              "line": 355,
+              "line": 368,
               "column": 3
             }
           },
@@ -1975,11 +3465,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 362,
+              "line": 375,
               "column": 2
             },
             "end": {
-              "line": 368,
+              "line": 381,
               "column": 3
             }
           },
@@ -2002,11 +3492,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 374,
+              "line": 387,
               "column": 2
             },
             "end": {
-              "line": 389,
+              "line": 402,
               "column": 3
             }
           },
@@ -2026,11 +3516,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 395,
+              "line": 408,
               "column": 2
             },
             "end": {
-              "line": 399,
+              "line": 412,
               "column": 3
             }
           },
@@ -2059,7 +3549,7 @@
           "column": 0
         },
         "end": {
-          "line": 401,
+          "line": 414,
           "column": 1
         }
       },
@@ -2068,15 +3558,141 @@
       "name": "OeDropdown",
       "attributes": [
         {
+          "name": "error-placeholders",
+          "description": "i18n placeholders for the error",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 31,
+              "column": 8
+            },
+            "end": {
+              "line": 33,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "user-error-message",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "error-message",
+          "description": "Error message displayed",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 54,
+              "column": 8
+            },
+            "end": {
+              "line": 57,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "hidden",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validation-function",
+          "description": "Custom validation function",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validate-on-input",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "field-id",
+          "description": "binding to property",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "displayproperty",
           "description": "Property within the listdata to be used for display",
           "sourceRange": {
             "start": {
-              "line": 88,
+              "line": 92,
               "column": 6
             },
             "end": {
-              "line": 88,
+              "line": 92,
               "column": 29
             }
           },
@@ -2088,11 +3704,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 90,
+              "line": 94,
               "column": 6
             },
             "end": {
-              "line": 90,
+              "line": 94,
               "column": 19
             }
           },
@@ -2104,11 +3720,11 @@
           "description": "Property of the selected record, that is set as current value.\nWhen records are plain strings, leave this property undefined",
           "sourceRange": {
             "start": {
-              "line": 95,
+              "line": 99,
               "column": 6
             },
             "end": {
-              "line": 95,
+              "line": 99,
               "column": 27
             }
           },
@@ -2120,11 +3736,11 @@
           "description": "Current selected value",
           "sourceRange": {
             "start": {
-              "line": 100,
+              "line": 104,
               "column": 6
             },
             "end": {
-              "line": 103,
+              "line": 107,
               "column": 7
             }
           },
@@ -2132,15 +3748,47 @@
           "type": "Object | null | undefined"
         },
         {
+          "name": "no-label-float",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 109,
+              "column": 6
+            },
+            "end": {
+              "line": 112,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "no-animations",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 114,
+              "column": 6
+            },
+            "end": {
+              "line": 117,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
           "name": "selected-item",
           "description": "Selected record in the list. `value` equals `selectedItem`[`valueproperty`].\nWhen records are plain strings, it is same as `value`",
           "sourceRange": {
             "start": {
-              "line": 110,
+              "line": 123,
               "column": 6
             },
             "end": {
-              "line": 113,
+              "line": 126,
               "column": 7
             }
           },
@@ -2152,11 +3800,11 @@
           "description": "Key specifies the unique key to fetch data from cache(oeCache).\nIncase, there is no data for the key specified in the cache and listurl is specified,\nthe data is fetched from the listurl and set in the cache for this key.",
           "sourceRange": {
             "start": {
-              "line": 120,
+              "line": 133,
               "column": 6
             },
             "end": {
-              "line": 124,
+              "line": 137,
               "column": 7
             }
           },
@@ -2168,11 +3816,11 @@
           "description": "Array of records to be displayed in dropdown. Can be array of primitives as well as objects.\nWhen items are objects, you should specify `displayproperty` and `valueproperty`.",
           "sourceRange": {
             "start": {
-              "line": 130,
+              "line": 143,
               "column": 6
             },
             "end": {
-              "line": 134,
+              "line": 147,
               "column": 7
             }
           },
@@ -2184,11 +3832,11 @@
           "description": "URL from where data to be displayed in dropdown, should be fetched",
           "sourceRange": {
             "start": {
-              "line": 139,
+              "line": 152,
               "column": 6
             },
             "end": {
-              "line": 143,
+              "line": 156,
               "column": 7
             }
           },
@@ -2200,11 +3848,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 145,
+              "line": 158,
               "column": 6
             },
             "end": {
-              "line": 148,
+              "line": 161,
               "column": 7
             }
           },
@@ -2213,6 +3861,27 @@
         }
       ],
       "events": [
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-error",
+          "description": "Fired when the field is invalid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-ok",
+          "description": "Fired when the field is valid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "register-field",
+          "description": "Fired when the element is attached to DOM to register the element",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
         {
           "type": "CustomEvent",
           "name": "oe-update-cache",
@@ -2274,25 +3943,50 @@
       "path": "oe-typeahead.js",
       "properties": [
         {
-          "name": "_focusableElement",
-          "type": "!HTMLElement",
-          "description": "Returns a reference to the focusable element. Overridden from\nPaperInputBehavior to correctly focus the native input.",
-          "privacy": "protected",
+          "name": "errorPlaceholders",
+          "type": "Array | null | undefined",
+          "description": "i18n placeholders for the error",
+          "privacy": "public",
           "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
             "start": {
-              "line": 295,
-              "column": 2
+              "line": 31,
+              "column": 8
             },
             "end": {
-              "line": 298,
-              "column": 3
+              "line": 33,
+              "column": 9
             }
           },
           "metadata": {
             "polymer": {
-              "readOnly": true
+              "attributeType": "Array"
             }
-          }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "userErrorMessage",
+          "type": "Object | null | undefined",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
         },
         {
           "name": "errorMessage",
@@ -2301,11 +3995,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 150,
+              "line": 168,
               "column": 6
             },
             "end": {
-              "line": 153,
+              "line": 171,
               "column": 7
             }
           },
@@ -2317,17 +4011,155 @@
           }
         },
         {
+          "name": "_hasCustomMessage",
+          "type": "boolean | null | undefined",
+          "description": "Flag for Custom error message/code",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 60,
+              "column": 8
+            },
+            "end": {
+              "line": 63,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validationFunction",
+          "type": "string | null | undefined",
+          "description": "Custom validation function",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validateOnInput",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Boolean"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "fieldId",
+          "type": "string | null | undefined",
+          "description": "binding to property",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_focusableElement",
+          "type": "!HTMLElement",
+          "description": "Returns a reference to the focusable element. Overridden from\nPaperInputBehavior to correctly focus the native input.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 328,
+              "column": 2
+            },
+            "end": {
+              "line": 331,
+              "column": 3
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
           "name": "displayValue",
           "type": "string | null | undefined",
           "description": "Value which will be displayed on input field",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 155,
+              "line": 173,
               "column": 6
             },
             "end": {
-              "line": 157,
+              "line": 175,
               "column": 7
             }
           },
@@ -2344,11 +4176,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 159,
+              "line": 177,
               "column": 6
             },
             "end": {
-              "line": 161,
+              "line": 179,
               "column": 7
             }
           },
@@ -2365,11 +4197,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 163,
+              "line": 181,
               "column": 6
             },
             "end": {
-              "line": 165,
+              "line": 183,
               "column": 7
             }
           },
@@ -2386,11 +4218,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 167,
+              "line": 185,
               "column": 6
             },
             "end": {
-              "line": 171,
+              "line": 189,
               "column": 7
             }
           },
@@ -2409,11 +4241,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 173,
+              "line": 191,
               "column": 6
             },
             "end": {
-              "line": 176,
+              "line": 194,
               "column": 7
             }
           },
@@ -2431,11 +4263,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 178,
+              "line": 196,
               "column": 6
             },
             "end": {
-              "line": 181,
+              "line": 199,
               "column": 7
             }
           },
@@ -2453,11 +4285,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 183,
+              "line": 201,
               "column": 6
             },
             "end": {
-              "line": 186,
+              "line": 204,
               "column": 7
             }
           },
@@ -2475,11 +4307,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 188,
+              "line": 206,
               "column": 6
             },
             "end": {
-              "line": 191,
+              "line": 209,
               "column": 7
             }
           },
@@ -2497,11 +4329,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 193,
+              "line": 211,
               "column": 6
             },
             "end": {
-              "line": 195,
+              "line": 213,
               "column": 7
             }
           },
@@ -2518,11 +4350,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 200,
+              "line": 218,
               "column": 6
             },
             "end": {
-              "line": 203,
+              "line": 221,
               "column": 7
             }
           },
@@ -2540,11 +4372,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 204,
+              "line": 222,
               "column": 6
             },
             "end": {
-              "line": 207,
+              "line": 225,
               "column": 7
             }
           },
@@ -2562,11 +4394,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 208,
+              "line": 226,
               "column": 6
             },
             "end": {
-              "line": 211,
+              "line": 229,
               "column": 7
             }
           },
@@ -2584,11 +4416,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 217,
+              "line": 235,
               "column": 6
             },
             "end": {
-              "line": 220,
+              "line": 238,
               "column": 7
             }
           },
@@ -2606,11 +4438,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 221,
+              "line": 239,
               "column": 6
             },
             "end": {
-              "line": 225,
+              "line": 243,
               "column": 7
             }
           },
@@ -2629,11 +4461,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 233,
+              "line": 251,
               "column": 6
             },
             "end": {
-              "line": 235,
+              "line": 253,
               "column": 7
             }
           },
@@ -2642,20 +4474,159 @@
               "attributeType": "String"
             }
           }
+        },
+        {
+          "name": "invalid",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 254,
+              "column": 6
+            },
+            "end": {
+              "line": 259,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          },
+          "defaultValue": "false"
         }
       ],
       "methods": [
+        {
+          "name": "setValidity",
+          "description": "Sets the vality and errorMessage based on the input parameters and\nthe `userErrorMessage`",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 113,
+              "column": 4
+            },
+            "end": {
+              "line": 144,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_setValidity",
+          "description": "Sets the 'invalid' flag and 'errorMessage'",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 152,
+              "column": 4
+            },
+            "end": {
+              "line": 159,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isValid",
+              "type": "boolean",
+              "description": "boolean flag for validation"
+            },
+            {
+              "name": "errorMessage",
+              "type": "string",
+              "description": "error message from the input element"
+            },
+            {
+              "name": "errorPlaceholders",
+              "type": "Array",
+              "description": "placeholders for errors"
+            }
+          ],
+          "return": {
+            "type": "void"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "_validate",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 640,
+              "column": 2
+            },
+            "end": {
+              "line": 658,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "validate",
+          "description": "Validate, overrides Paper-Input-Behavior's validate method\nUsed to set the validity based on core input element's validity",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 177,
+              "column": 4
+            },
+            "end": {
+              "line": 221,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "boolean",
+            "desc": "validity of core input element."
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
         {
           "name": "connectedCallback",
           "description": "Connected callback to attach event listeners and\nhandle templating of the listbox",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 257,
+              "line": 287,
               "column": 2
             },
             "end": {
-              "line": 271,
+              "line": 304,
               "column": 3
             }
           },
@@ -2666,29 +4637,273 @@
           }
         },
         {
-          "name": "_onBlur",
-          "description": "Applies when blur event is generated on the element to\nvalidate the value of element.",
-          "privacy": "protected",
+          "name": "hashFunc",
+          "description": "Generates a Hash for the given string.",
+          "privacy": "public",
           "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
             "start": {
-              "line": 279,
-              "column": 2
+              "line": 256,
+              "column": 4
             },
             "end": {
-              "line": 281,
-              "column": 3
+              "line": 263,
+              "column": 5
             }
           },
           "metadata": {},
           "params": [
             {
-              "name": "e",
-              "type": "event"
+              "name": "str",
+              "type": "string",
+              "description": "String for which Hash needs to be computed"
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "hash number for the given string"
+          },
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "__customTemplatize",
+          "description": "Replaces template from dom-if,dom-repeat or dom-bind with source template.\nIf the target is not a dom-if,dom-repeat or dom-bind , creates a new templateInstance ,\nattahces a stamped node and returns the instance.\nIf the target is not provided it returns a templateInstance class",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-templatize-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 8
+            },
+            "end": {
+              "line": 83,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target",
+              "type": "HTMLTemplate",
+              "description": "HTML template element for dom-if/dom-bind/dom-repeat"
+            },
+            {
+              "name": "source",
+              "type": "HTMLTemplate",
+              "description": "HTML template element to stamp (from lightdom)"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "options to stamp (from lightdom)"
+            }
+          ],
+          "return": {
+            "type": "(TemplateInstanceClass | HTMLTemplate)",
+            "desc": "Generated class bound to the source template or stamped instance."
+          },
+          "inheritedFrom": "OETemplatizeMixin"
+        },
+        {
+          "name": "_deepValue",
+          "description": "Get the value from the 'obj' based on the 'path'.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 37,
+              "column": 4
+            },
+            "end": {
+              "line": 43,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj",
+              "type": "Object",
+              "description": "object to navigate"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "description": "path for navigation"
+            }
+          ],
+          "return": {
+            "type": "Any",
+            "desc": "value present in the given path of the obj."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "_deepSet",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 45,
+              "column": 4
+            },
+            "end": {
+              "line": 62,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "obj"
+            },
+            {
+              "name": "path"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "debounce",
+          "description": "Call `debounce` to collapse multiple requests for a named task into\none invocation which is made after the wait time has elapsed with\nno new request.  If no wait time is given, the callback will be called\nat microtask timing (guaranteed before paint).\n\n    debouncedClickAction(e) {\n      // will not call `processClick` more than once per 100ms\n      this.debounce('click', function() {\n       this.processClick();\n      } 100);\n    }",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 88,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobName",
+              "type": "string",
+              "description": "String to identify the debounce job."
+            },
+            {
+              "name": "callback",
+              "type": "function (): void",
+              "description": "Function that is called (with `this`\n  context) when the wait time elapses."
+            },
+            {
+              "name": "wait",
+              "type": "number",
+              "description": "Optional wait time in milliseconds (ms) after the\n  last signal that must elapse before invoking `callback`"
+            }
+          ],
+          "return": {
+            "type": "!Object",
+            "desc": "Returns a debouncer object on which exists the\nfollowing methods: `isActive()` returns true if the debouncer is\nactive; `cancel()` cancels the debouncer if it is active;\n`flush()` immediately invokes the debounced callback if the debouncer\nis active."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "async",
+          "description": "Runs a callback function asynchronously.\n\nBy default (if no waitTime is specified), async callbacks are run at\nmicrotask timing, which will occur before paint.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "The callback function to run, bound to `this`."
+            },
+            {
+              "name": "waitTime",
+              "type": "number=",
+              "description": "Time to wait before calling the\n  `callback`.  If unspecified or 0, the callback will be run at microtask\n  timing (before paint)."
+            }
+          ],
+          "return": {
+            "type": "number",
+            "desc": "Handle that may be used to cancel the async job."
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "cancelAsync",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 120,
+              "column": 4
+            },
+            "end": {
+              "line": 122,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "handle"
             }
           ],
           "return": {
             "type": "void"
-          }
+          },
+          "inheritedFrom": "OECommonMixin"
+        },
+        {
+          "name": "fire",
+          "description": "Polymer fire function used to dispatch custom events",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-common-mixin.js",
+            "start": {
+              "line": 131,
+              "column": 4
+            },
+            "end": {
+              "line": 143,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "description": "event name"
+            },
+            {
+              "name": "detail",
+              "type": "Object",
+              "description": "data to be sent in the event"
+            },
+            {
+              "name": "options",
+              "type": "Object",
+              "description": "optionals options for the event {bubbles:Boolean,cancelable:Boolean,composed:Boolean,node:HTML Element}"
+            }
+          ],
+          "return": {
+            "type": "Event",
+            "desc": "Custom event created based on the parameters"
+          },
+          "inheritedFrom": "OECommonMixin"
         },
         {
           "name": "_onChange",
@@ -2696,11 +4911,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 285,
+              "line": 318,
               "column": 2
             },
             "end": {
-              "line": 287,
+              "line": 320,
               "column": 3
             }
           },
@@ -2715,16 +4930,40 @@
           }
         },
         {
+          "name": "_focusBlurHandler",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 338,
+              "column": 2
+            },
+            "end": {
+              "line": 347,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_onAjaxResponse",
           "description": "Checks response for search/data and sets the noDataFound property",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 304,
+              "line": 352,
               "column": 2
             },
             "end": {
-              "line": 344,
+              "line": 393,
               "column": 3
             }
           },
@@ -2744,11 +4983,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 345,
+              "line": 394,
               "column": 2
             },
             "end": {
-              "line": 366,
+              "line": 415,
               "column": 3
             }
           },
@@ -2768,11 +5007,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 367,
+              "line": 416,
               "column": 2
             },
             "end": {
-              "line": 412,
+              "line": 459,
               "column": 3
             }
           },
@@ -2787,16 +5026,36 @@
           }
         },
         {
+          "name": "notifyChange",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 461,
+              "column": 2
+            },
+            "end": {
+              "line": 468,
+              "column": 3
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
           "name": "_onKeyDown",
           "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 413,
+              "line": 469,
               "column": 2
             },
             "end": {
-              "line": 429,
+              "line": 485,
               "column": 3
             }
           },
@@ -2816,11 +5075,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 434,
+              "line": 490,
               "column": 2
             },
             "end": {
-              "line": 437,
+              "line": 493,
               "column": 3
             }
           },
@@ -2840,11 +5099,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 442,
+              "line": 498,
               "column": 2
             },
             "end": {
-              "line": 449,
+              "line": 503,
               "column": 3
             }
           },
@@ -2864,11 +5123,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 455,
+              "line": 509,
               "column": 2
             },
             "end": {
-              "line": 475,
+              "line": 529,
               "column": 3
             }
           },
@@ -2889,11 +5148,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 478,
+              "line": 532,
               "column": 2
             },
             "end": {
-              "line": 484,
+              "line": 538,
               "column": 3
             }
           },
@@ -2910,11 +5169,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 491,
+              "line": 545,
               "column": 2
             },
             "end": {
-              "line": 498,
+              "line": 552,
               "column": 3
             }
           },
@@ -2935,11 +5194,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 499,
+              "line": 553,
               "column": 2
             },
             "end": {
-              "line": 523,
+              "line": 577,
               "column": 3
             }
           },
@@ -2959,11 +5218,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 524,
+              "line": 578,
               "column": 2
             },
             "end": {
-              "line": 585,
+              "line": 639,
               "column": 3
             }
           },
@@ -2981,33 +5240,16 @@
           }
         },
         {
-          "name": "_validate",
-          "description": "",
-          "privacy": "protected",
-          "sourceRange": {
-            "start": {
-              "line": 586,
-              "column": 2
-            },
-            "end": {
-              "line": 604,
-              "column": 3
-            }
-          },
-          "metadata": {},
-          "params": []
-        },
-        {
           "name": "_suggestionsChanged",
           "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 605,
+              "line": 659,
               "column": 2
             },
             "end": {
-              "line": 607,
+              "line": 661,
               "column": 3
             }
           },
@@ -3027,11 +5269,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 613,
+              "line": 667,
               "column": 2
             },
             "end": {
-              "line": 615,
+              "line": 669,
               "column": 3
             }
           },
@@ -3056,11 +5298,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 47,
+          "line": 48,
           "column": 0
         },
         "end": {
-          "line": 617,
+          "line": 671,
           "column": 1
         }
       },
@@ -3069,15 +5311,51 @@
       "name": "OeTypeahead",
       "attributes": [
         {
+          "name": "error-placeholders",
+          "description": "i18n placeholders for the error",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 31,
+              "column": 8
+            },
+            "end": {
+              "line": 33,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "user-error-message",
+          "description": "User specified Custom error message\nIf userErrorMessage is defined, show appropriate user-error-message\nwhich is either an object\n   ```{\n      rangeOverflow:'Date should be prior',\n      default: 'Invalid Value in field'\n   }```\nor a string, 'Invalid value'\nSo check if specific error-coode is defined in user-error-message object\nIf not, see if 'default' error-code is defined\notherwise if user-error-message is string, show that error-message,\nif not, then resort to incoming-error-message.",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 49,
+              "column": 8
+            },
+            "end": {
+              "line": 51,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "error-message",
           "description": "Custom user error mesasge",
           "sourceRange": {
             "start": {
-              "line": 150,
+              "line": 168,
               "column": 6
             },
             "end": {
-              "line": 153,
+              "line": 171,
               "column": 7
             }
           },
@@ -3085,15 +5363,87 @@
           "type": "string | null | undefined"
         },
         {
+          "name": "hidden",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 65,
+              "column": 8
+            },
+            "end": {
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validation-function",
+          "description": "Custom validation function",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 72,
+              "column": 8
+            },
+            "end": {
+              "line": 74,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "validate-on-input",
+          "description": "",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 76,
+              "column": 8
+            },
+            "end": {
+              "line": 78,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "name": "field-id",
+          "description": "binding to property",
+          "sourceRange": {
+            "file": "../oe-mixins/oe-field-mixin.js",
+            "start": {
+              "line": 81,
+              "column": 8
+            },
+            "end": {
+              "line": 81,
+              "column": 23
+            }
+          },
+          "metadata": {},
+          "type": "string | null | undefined",
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
           "name": "display-value",
           "description": "Value which will be displayed on input field",
           "sourceRange": {
             "start": {
-              "line": 155,
+              "line": 173,
               "column": 6
             },
             "end": {
-              "line": 157,
+              "line": 175,
               "column": 7
             }
           },
@@ -3105,11 +5455,11 @@
           "description": "For object, which property to be shown for display in the input field",
           "sourceRange": {
             "start": {
-              "line": 159,
+              "line": 177,
               "column": 6
             },
             "end": {
-              "line": 161,
+              "line": 179,
               "column": 7
             }
           },
@@ -3121,11 +5471,11 @@
           "description": "For object, which property to be placed as value for typeahead",
           "sourceRange": {
             "start": {
-              "line": 163,
+              "line": 181,
               "column": 6
             },
             "end": {
-              "line": 165,
+              "line": 183,
               "column": 7
             }
           },
@@ -3137,11 +5487,11 @@
           "description": "Value of the object/string",
           "sourceRange": {
             "start": {
-              "line": 167,
+              "line": 185,
               "column": 6
             },
             "end": {
-              "line": 171,
+              "line": 189,
               "column": 7
             }
           },
@@ -3153,11 +5503,11 @@
           "description": "For object, has the whole object of the selection",
           "sourceRange": {
             "start": {
-              "line": 178,
+              "line": 196,
               "column": 6
             },
             "end": {
-              "line": 181,
+              "line": 199,
               "column": 7
             }
           },
@@ -3169,11 +5519,11 @@
           "description": "Duration between successive requests",
           "sourceRange": {
             "start": {
-              "line": 183,
+              "line": 201,
               "column": 6
             },
             "end": {
-              "line": 186,
+              "line": 204,
               "column": 7
             }
           },
@@ -3185,11 +5535,11 @@
           "description": "String using which pattern is matched to get suggested values",
           "sourceRange": {
             "start": {
-              "line": 188,
+              "line": 206,
               "column": 6
             },
             "end": {
-              "line": 191,
+              "line": 209,
               "column": 7
             }
           },
@@ -3201,11 +5551,11 @@
           "description": "REST API endpoint which will be used to fetch suggested values matching the pattern",
           "sourceRange": {
             "start": {
-              "line": 193,
+              "line": 211,
               "column": 6
             },
             "end": {
-              "line": 195,
+              "line": 213,
               "column": 7
             }
           },
@@ -3217,11 +5567,11 @@
           "description": "Used during edit of typeahead, this will be used to fetch/search\nfor correct object/value with given value",
           "sourceRange": {
             "start": {
-              "line": 200,
+              "line": 218,
               "column": 6
             },
             "end": {
-              "line": 203,
+              "line": 221,
               "column": 7
             }
           },
@@ -3233,55 +5583,7 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 204,
-              "column": 6
-            },
-            "end": {
-              "line": 207,
-              "column": 7
-            }
-          },
-          "metadata": {},
-          "type": "boolean | null | undefined"
-        },
-        {
-          "name": "required",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 208,
-              "column": 6
-            },
-            "end": {
-              "line": 211,
-              "column": 7
-            }
-          },
-          "metadata": {},
-          "type": "boolean | null | undefined"
-        },
-        {
-          "name": "strict",
-          "description": "Checks for typed value present in the suggestions\nIf true, throws error if value typed not present in suggested list\nIf false, allows values not present in suggestions",
-          "sourceRange": {
-            "start": {
-              "line": 217,
-              "column": 6
-            },
-            "end": {
-              "line": 220,
-              "column": 7
-            }
-          },
-          "metadata": {},
-          "type": "boolean | null | undefined"
-        },
-        {
-          "name": "no-data-found",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 221,
+              "line": 222,
               "column": 6
             },
             "end": {
@@ -3293,23 +5595,114 @@
           "type": "boolean | null | undefined"
         },
         {
+          "name": "required",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 226,
+              "column": 6
+            },
+            "end": {
+              "line": 229,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "strict",
+          "description": "Checks for typed value present in the suggestions\nIf true, throws error if value typed not present in suggested list\nIf false, allows values not present in suggestions",
+          "sourceRange": {
+            "start": {
+              "line": 235,
+              "column": 6
+            },
+            "end": {
+              "line": 238,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "no-data-found",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 239,
+              "column": 6
+            },
+            "end": {
+              "line": 243,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
           "name": "scroll-action",
           "description": "scrollAction binded to iron-dropdown\n* \"lock\" - Prevents scrolling of body\n* \"refit\" - Moves the dropdown based on scroll\n* \"cancel\" - Closes the dropdown on scroll",
           "sourceRange": {
             "start": {
-              "line": 233,
+              "line": 251,
               "column": 6
             },
             "end": {
-              "line": 235,
+              "line": 253,
               "column": 7
             }
           },
           "metadata": {},
           "type": "string | null | undefined"
+        },
+        {
+          "name": "invalid",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 254,
+              "column": 6
+            },
+            "end": {
+              "line": 259,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
         }
       ],
       "events": [
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-error",
+          "description": "Fired when the field is invalid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-ok",
+          "description": "Fired when the field is valid",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "register-field",
+          "description": "Fired when the element is attached to DOM to register the element",
+          "metadata": {},
+          "inheritedFrom": "OEFieldMixin"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "oe-field-changed",
+          "description": "Fired when the value of the field is changed by the user",
+          "metadata": {}
+        },
         {
           "type": "CustomEvent",
           "name": "error-message-changed",
@@ -3350,6 +5743,12 @@
           "type": "CustomEvent",
           "name": "no-data-found-changed",
           "description": "Fired when the `noDataFound` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "invalid-changed",
+          "description": "Fired when the `invalid` property changes.",
           "metadata": {}
         }
       ],

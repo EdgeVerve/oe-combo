@@ -10,10 +10,10 @@
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
   <script type="module">
-    import '@polymer/iron-demo-helpers/demo-pages-shared-styles'; 
-    import '@polymer/iron-demo-helpers/demo-snippet'; 
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
+    import '@polymer/iron-demo-helpers/demo-snippet';
     import '@polymer/iron-image/iron-image';
-    import '@polymer/polymer/lib/elements/dom-bind'; 
+    import '@polymer/polymer/lib/elements/dom-bind';
     import '@polymer/polymer/lib/elements/custom-style';
   </script>
 
@@ -35,17 +35,9 @@
       <template>
         <dom-bind>
           <template>
-              <custom-style>
-                  <style>
-                    .custom-input {
-                      --paper-input-container-ms-clear:{
-                            display:none;
-                      };
-                    }
-                  </style>
-                </custom-style>
             <span>{{cval}}</span>
-            <oe-combo class="custom-input" error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c" required value="{{cval}}"
+            <oe-combo error-message="Please enter a valid value" label="Country" displayproperty="d" valueproperty="c"
+              required value="{{cval}}"
               listdata='[{"c":"IN","d":"India"},{"c":"INA","d":"Indiana"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
               <iron-icon slot="prefix" icon="home"></iron-icon>
             </oe-combo>
@@ -57,9 +49,9 @@
     <h3>Show Filtered values only</h3>
     <demo-snippet>
       <template>
-        <oe-combo error-message="Please enter a valid value" 
-          show-filtered-only
-          label="Country" displayproperty="d" valueproperty="c" required listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        <oe-combo error-message="Please enter a valid value" show-filtered-only label="Country" displayproperty="d"
+          valueproperty="c" required
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
         </oe-combo>
       </template>
     </demo-snippet>
@@ -70,7 +62,8 @@
       <template>
         <dom-bind>
           <template>
-            <oe-combo label="Country" displayproperty="d" valueproperty="c" value="DE" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            <oe-combo label="Country" displayproperty="d" valueproperty="c" value="DE"
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
             </oe-combo>
           </template>
         </dom-bind>
@@ -83,8 +76,9 @@
         <dom-bind>
           <template>
             <span>{{cval}}</span>
-            <oe-combo multi error-message="Please enter a valid value" multi label="Country" displayproperty="d" valueproperty="c" required
-              value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            <oe-combo multi error-message="Please enter a valid value" multi label="Country" displayproperty="d"
+              valueproperty="c" required value="{{cval}}"
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
               <iron-icon slot="prefix" icon="home"></iron-icon>
             </oe-combo>
           </template>
@@ -97,7 +91,8 @@
       <template>
         <dom-bind>
           <template>
-            <oe-combo multi label="Country" displayproperty="d" valueproperty="c" value='["DE","IN"]' listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            <oe-combo multi label="Country" displayproperty="d" valueproperty="c" value='["DE","IN"]'
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
             </oe-combo>
           </template>
         </dom-bind>
@@ -110,7 +105,8 @@
         <dom-bind>
           <template>
             <span>{{cval}}</span>
-            <oe-combo allow-free-text label="Country" displayproperty="d" valueproperty="c" value="{{cval}}" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+            <oe-combo allow-free-text label="Country" displayproperty="d" valueproperty="c" value="{{cval}}"
+              listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
             </oe-combo>
           </template>
         </dom-bind>
@@ -120,11 +116,13 @@
     <h3>Templating the Item</h3>
     <demo-snippet>
       <template>
-        <oe-combo label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        <oe-combo label="Templated Country Items" displayproperty="d" valueproperty="c"
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
           <template item-template>
             <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
               <div class="layout horizontal flex">
-                <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <iron-image style="width:36px; height:24px;" sizing="contain"
+                  src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
                 <span class="layout flex centered">{{item.d}}</span>
                 <span>{{item.c}}</span>
               </div>
@@ -137,11 +135,26 @@
     <h3>Templating the Item with the input shown as template</h3>
     <demo-snippet>
       <template>
-        <oe-combo show-template label="Templated Country Items" displayproperty="d" valueproperty="c" listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        <oe-combo show-template label="Templated Country Items" displayproperty="d" valueproperty="c"
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
           <template item-template>
             <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
               <div class="layout horizontal flex">
-                <iron-image style="width:36px; height:24px;" sizing="contain" src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <iron-image style="width:36px; height:24px;" sizing="contain"
+                  src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <span class="layout flex centered">{{item.d}}</span>
+                <span>{{item.c}}</span>
+              </div>
+            </paper-item>
+          </template>
+        </oe-combo>
+        <oe-combo show-template value="CN" label="Templated Country Items" displayproperty="d" valueproperty="c"
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
+              <div class="layout horizontal flex">
+                <iron-image style="width:36px; height:24px;" sizing="contain"
+                  src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
                 <span class="layout flex centered">{{item.d}}</span>
                 <span>{{item.c}}</span>
               </div>
@@ -150,6 +163,158 @@
         </oe-combo>
       </template>
     </demo-snippet>
+
+    <h3>oe-combo with custom styles</h3>
+    <demo-snippet>
+      <template>
+        <custom-style>
+          <style>
+            .custom-class {
+              --paper-input-container-ms-clear: {
+                display: none;
+              }
+            }
+
+            .custom-class:hover {
+              --border-color: black;
+              --label-color: black;
+              --prefix-color: black;
+              --suffix-color: black;
+            }
+
+            .custom-class[invalid] {
+              --border-thick: 2px;
+              --border-color: red;
+              --label-color: red;
+              --prefix-color: red;
+              --suffix-color: red;
+            }
+
+            .custom-class[focused]:not([invalid]) {
+              caret-color: blue;
+              --border-thick: 2px;
+              --border-color: blue;
+              --label-color: blue;
+              --prefix-color: blue;
+              --suffix-color: blue;
+            }
+
+            .custom-class {
+              --border-thick: 1px;
+              --border-color: #828282;
+              --label-color: #828282;
+              --prefix-color: #828282;
+              --suffix-color: #828282;
+
+              --paper-input-container: {
+                margin-bottom: 16px;
+                margin-top: 8px;
+                border-width: 0px;
+                box-shadow: 0px 0px 0px var(--border-thick) var(--border-color);
+                border-radius: 4px;
+                padding: 0px 0px 0px 5px;
+                box-sizing: border-box;
+              }
+
+              --iron-input: {
+                padding: 5px 3px 1px 8px;
+              }
+
+              --paper-font-caption: {
+                position: absolute;
+              }
+
+              --paper-input-container-label-floating: {
+                z-index: 2;
+                top: 7px;
+                padding-top: 0px !important;
+                display: flex;
+                background: #FFF;
+
+              }
+
+              --paper-input-container-underline: {
+                display: none;
+              }
+
+              --paper-input-container-underline-focus: {
+                display: none;
+              }
+
+              --paper-input-container-disabled: {
+                border: 1px dotted #212121;
+                border-radius: 4px;
+                padding: 0px 0px 0px 5px;
+                box-sizing: border-box;
+
+              }
+
+              --oe-label-mixin: {
+                color: var(--label-color);
+                padding: 4px 4px 0px 4px;
+                margin-left: 4px;
+                width: auto;
+              }
+
+              --oe-required-mixin: {
+                color: #FF9800;
+              }
+
+              --paper-input-prefix: {
+                color: var(--prefix-color);
+                padding: 0px 0px 0px 5px;
+                height: 22px;
+              }
+
+              --paper-input-suffix: {
+                color: var(--suffix-color);
+                display: flex;
+                align-items: center;
+                border-left: 1px solid var(--suffix-color);
+                border-radius: 0px 4px 4px 0px;
+                background-color: #eeeeee;
+                box-sizing: border-box;
+                height: 32px;
+                margin-bottom: -2px;
+              }
+
+              --oe-input-error: {
+                padding-top: 2px;
+                padding-left: 8px;
+                font-size: 12px;
+              }
+
+              --paper-material: {
+                padding-top: 10px;
+              }
+            }
+          </style>
+        </custom-style>
+        <oe-combo class="custom-class" required label="Country" displayproperty="d" valueproperty="c" value="DE"
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        </oe-combo>
+
+        <oe-combo class="custom-class" show-template label="Templated Country Items" displayproperty="d"
+          valueproperty="c"
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"GB","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+          <template item-template>
+            <paper-item on-mouseover="onMouseOver" on-tap="onItemSelected" data-item={{item}} disabled="[[readonly]]">
+              <div class="layout horizontal flex">
+                <iron-image style="width:36px; height:15px;" sizing="contain"
+                  src="https://raw.githubusercontent.com/emcrisostomo/flags/master/png/256/{{item.c}}.png"></iron-image>
+                <span class="layout flex centered">{{item.d}}</span>
+                <span>{{item.c}}</span>
+              </div>
+            </paper-item>
+          </template>
+        </oe-combo>
+        <oe-combo class="custom-class" disabled error-message="Please enter a valid value" show-filtered-only
+          label="Country" displayproperty="d" valueproperty="c" required
+          listdata='[{"c":"IN","d":"India"},{"c":"CN","d":"China"},{"c":"DE","d":"Germany"},{"c":"FR","d":"France"},{"c":"UK","d":"United Kingdom"},{"c":"US","d":"United States"}]'>
+        </oe-combo>
+      </template>
+    </demo-snippet>
   </div>
 </body>
+
 </html>

@@ -2,7 +2,7 @@
   "name": "oe-combo",
   "description": "oeCloud implemenetation of combo box with additional behaviors",
   "main": "oe-combo.js",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "scripts": {
     "test": "polymer test --module-resolution node --skip-selenium-install",
     "lint": "eslint .",
