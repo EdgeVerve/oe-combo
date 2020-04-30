@@ -436,6 +436,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         this.validate();
       }
     }
+    else {
+      this.validate();
+    }
   }
 
   /**
