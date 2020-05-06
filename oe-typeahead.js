@@ -105,6 +105,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     .dropdown-content > ::slotted(*){
       max-height: 240px;
     }
+    .dropdown-content paper-item:hover {
+      background-color: #DDD;
+      @apply --oe-typeahead-item-hover;
+    }
     iron-input {
       @apply --iron-input;
     }

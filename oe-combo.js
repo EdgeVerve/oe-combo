@@ -126,7 +126,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           
           .droplist paper-item:hover {
             background-color: #DDD;
-            @apply --combo-item-hover;
+            @apply --oe-combo-item-hover;
           }
           iron-input {
             @apply --iron-input;
