@@ -126,7 +126,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
           
           .droplist paper-item:hover {
             background-color: #DDD;
-            @apply --combo-item-hover;
+            @apply --oe-combo-item-hover;
           }
           iron-input {
             @apply --iron-input;
@@ -1186,7 +1186,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   __resetComponent() {
     this.value = undefined; //or null
-    this.$.menu.selected = undefined;
+    if(this.$.menu) {
+      this.$.menu.selected = undefined;
+    }
     this._setDisplayAndValidate();
   }
 }
