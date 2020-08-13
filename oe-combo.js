@@ -192,6 +192,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   }
 
   static get itemTemplate() {
+    if(window.OEUtils && window.OEUtils.componentDefaults && window.OEUtils.componentDefaults["oe-combo"]){
+      return window.OEUtils.componentDefaults["oe-combo"].itemTemplate;
+    }
     return html`<span>[[_getDisplayValue(item)]]</span>`;
   }
   static get properties() {
@@ -582,7 +585,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else if (!this.allowFreeText && (!this.multi && this.displayValue != this._getDisplayValue(this.selectedItem))) {
       this.setValidity(false, 'invalidValue');
       isValid = false;
-    } else if (this.required && !this.value && !this.disabled) {
+    } else if (this.required && (!this.value || (this.value === this._invalidValue)) && !this.disabled) {
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
@@ -1190,6 +1193,11 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       this.$.menu.selected = undefined;
     }
     this._setDisplayAndValidate();
+  }
+
+  __isItemSelected(item){
+    let selected = this.multi ? this.selectedItems : [this.selectedItem];
+    return Array.isArray(selected) && selected.indexOf(item) !== -1;
   }
 }
 
