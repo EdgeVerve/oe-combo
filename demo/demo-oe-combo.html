@@ -12,16 +12,20 @@
   <script type="module">
     import '@polymer/iron-demo-helpers/demo-pages-shared-styles';
     import '@polymer/iron-demo-helpers/demo-snippet';
+    import '@polymer/paper-checkbox/paper-checkbox';
     import '@polymer/iron-image/iron-image';
     import '@polymer/polymer/lib/elements/dom-bind';
     import '@polymer/polymer/lib/elements/custom-style';
+    import {html} from '@polymer/polymer/polymer-element.js'
+    window.OEUtils = window.OEUtils || {};
+    window.OEUtils.componentDefaults = window.OEUtils.componentDefaults || {};
+    window.OEUtils.componentDefaults["oe-combo"] = {
+      itemTemplate : html`<span> <paper-checkbox hidden=[[!multi]] class="my-check" checked=[[__isItemSelected(item,selectedItem,selectedItems.*)]]></paper-checkbox>[[_getDisplayValue(item)]]</span>`
+    };
   </script>
 
   <script type="module" src="../oe-combo.js"></script>
 
-  <script type="text/javascript">
-    window.OEUtils = window.OEUtils || {};
-  </script>
   <custom-style>
     <style include="demo-pages-shared-styles">
     </style>
@@ -189,7 +193,11 @@
               --prefix-color: red;
               --suffix-color: red;
             }
-
+            .custom-class[disabled] {
+                  --border-color: none;
+                  --label-color: #212121;
+                  --suffix-color: #212121;
+                }
             .custom-class[focused]:not([invalid]) {
               caret-color: blue;
               --border-thick: 2px;

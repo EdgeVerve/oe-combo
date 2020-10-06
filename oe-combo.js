@@ -112,17 +112,21 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             padding:0px;
           }
 
-          .dropdown-content > ::slotted(*) paper-item {
+          .droplist paper-item {
             --paper-item-selected: {
               background-color: #ccc;
             }
+            --paper-item-focused: {
+              background-color: transparent;
+            }
+            --paper-item-focused-before: {
+              background-color: transparent;
+            }
           }
           
-          .dropdown-content>  ::slotted(*) paper-item:hover {
+          .droplist paper-item:hover {
             background-color: #DDD;
-          }
-          .dropdown-content > ::slotted(*){
-            max-height: 235px;
+            @apply --oe-combo-item-hover;
           }
           iron-input {
             @apply --iron-input;
@@ -142,7 +146,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
             <label slot="label" hidden$="[[!label]]">
                 <oe-i18n-msg msgid=[[label]]>[[label]]</oe-i18n-msg>
                 <template is="dom-if" if={{required}}>
-            		<span class="required" aria-label="mandatory"> *</span>
+            		<span class="required" aria-label=" "> *</span>
                 </template>
             </label>
             <div slot="input" id="templateDiv"></div>
@@ -170,7 +174,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
                   scroll-action="[[scrollAction]]" no-animations 
                   vertical-align="[[_verticalAlign]]" vertical-offset="[[_verticalOffset]]" 
                   no-auto-focus opened=[[expand]]>
-                  <paper-material slot="dropdown-content" tabindex="-1" disabled$="[[disabled]]">
+                  <paper-material slot="dropdown-content" class="droplist" tabindex="-1" disabled$="[[disabled]]">
                     <paper-listbox id="menu" role="listbox" aria-labelledby$="[[_ariaLabelledBy]]" multi$="[[multi]]">
                       <template is="dom-repeat" id="itemlist" items="{{_suggestions}}">
                         <paper-item role="option"  on-tap="onItemSelected" data-item=[[item]] disabled$="[[disabledoption]]">
@@ -188,6 +192,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
   }
 
   static get itemTemplate() {
+    if(window.OEUtils && window.OEUtils.componentDefaults && window.OEUtils.componentDefaults["oe-combo"]){
+      return window.OEUtils.componentDefaults["oe-combo"].itemTemplate;
+    }
     return html`<span>[[_getDisplayValue(item)]]</span>`;
   }
   static get properties() {
@@ -308,6 +315,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
       listdata: {
         type: Array,
         notify: true,
+        value:function(){
+          return [];
+        },
         observer: '_listDataChanged'
       },
 
@@ -428,6 +438,9 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
         //this.setValidity(false, 'invalidValue');
         this.validate();
       }
+    }
+    else {
+      this.validate();
     }
   }
 
@@ -572,7 +585,7 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
     } else if (!this.allowFreeText && (!this.multi && this.displayValue != this._getDisplayValue(this.selectedItem))) {
       this.setValidity(false, 'invalidValue');
       isValid = false;
-    } else if (this.required && !this.value && !this.disabled) {
+    } else if (this.required && (!this.value || (this.value === this._invalidValue)) && !this.disabled) {
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
@@ -1176,7 +1189,15 @@ class OeCombo extends mixinBehaviors([IronFormElementBehavior, PaperInputBehavio
    */
   __resetComponent() {
     this.value = undefined; //or null
+    if(this.$.menu) {
+      this.$.menu.selected = undefined;
+    }
     this._setDisplayAndValidate();
+  }
+
+  __isItemSelected(item){
+    let selected = this.multi ? this.selectedItems : [this.selectedItem];
+    return Array.isArray(selected) && selected.indexOf(item) !== -1;
   }
 }
 

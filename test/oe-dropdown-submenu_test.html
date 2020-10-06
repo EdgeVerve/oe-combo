@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>oe-date-range test</title>
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+
+  
+
+  <script type="module" src="../oe-dropdown-submenu.js"></script>
+</head>
+
+<body>
+  <test-fixture id="simple">
+    <template>
+      <oe-dropdown-submenu valueproperty="id" id="dropdown"></oe-dropdown-submenu>
+    </template>
+  </test-fixture>
+
+  <script type="module">
+    import '@polymer/iron-test-helpers/mock-interactions';
+    import {forceXIfStamp} from '@polymer/iron-test-helpers/test-helpers';
+    suite('<oe-dropdown-submenu>', function () {
+      var element;
+      setup(function(done){
+        element = fixture('simple');
+        var deals = [{ name: 'All', 'field-id': 'all', id: 'all' }, { name: 'FX', id: 'fx', 'field-id': 'fx', children: [{ name: 'Spot', id: 'qbe_deal_1', 'field-id': 'qbe_deal_1' }, { name: 'Outright', id: 'qbe_deal_2', 'field-id': 'qbe_deal_2' }] },
+            { name: 'FX Plus', id: 'fxPlus', 'field-id': 'fx-plus', children: [{ name: 'Spot Plus', id: 'qbe_deal_11', 'field-id': 'qbe_deal_11' }, { name: 'Outright plus', id: 'qbe_deal_25', 'field-id': 'qbe_deal_25' }] },
+            { name: 'Money Market', id: 'mm', 'field-id': 'mm', children: [{ name: 'Term', id: 'qbe_deal_9', 'field-id': 'qbe_deal_9' }, { name: 'Com Loan sgfgs sg dfgsd dfgsg', id: 'qbe_deal_8', 'field-id': 'qbe_deal_8' }] },
+            { name: 'Commodities', id: 'commodity', 'field-id': 'commodity', children: [{ name: 'Gold Dore Bar', id: 'qbe_deal_36', 'field-id': 'qbe_deal_36' }, { name: 'Commodity', id: 'qbe_deal_37', 'field-id': 'qbe_deal_37' },{ name: 'Spot Plus2', id: 'qbe_deal_55', 'field-id': 'qbe_deal_65' }, { name: 'Outright plus2', id: 'qbe_deal_78', 'field-id': 'qbe_deal_34' }] },
+            { name: 'OBS', id: 'obs', 'field-id': 'obs', children: [{ name: 'FRAs', id: 'qbe_deal_19', 'field-id': 'qbe_deal_19' }, { name: 'Futures', id: 'qbe_deal_21', 'field-id': 'qbe_deal_21' }] }];
+        element.set('listdata', deals);
+        flush(function(){
+          done();
+        })
+      })
+
+       test('click(), opens the dropdown showing list of listdata', function (done) {
+         var input = element.shadowRoot.querySelector('#input');
+         input.click();
+         var menu = element.shadowRoot.querySelector('#menu-button');
+         expect(menu.opened).to.equal(true);
+         done();
+      });
+      test('Selecting checkbox select element and its children', function (done) {
+         var input = element.shadowRoot.querySelector('#input');
+         input.click();
+         var item = element.shadowRoot.querySelector('paper-listbox').querySelectorAll('paper-item')[4];
+         item.querySelector('iron-icon').click();
+         var arr = ["qbe_deal_36", "qbe_deal_37", "qbe_deal_55", "qbe_deal_78"];
+         var f = JSON.stringify(element.value)==JSON.stringify(arr);
+         expect(f).to.equal(true);
+         done();
+      });
+      test('On select more icon shows listbox for children', function (done) {
+         var input = element.shadowRoot.querySelector('#input');
+         input.click();
+         var item = element.shadowRoot.querySelector('paper-listbox').querySelectorAll('paper-item')[2];
+         item.querySelector('iron-icon.more').click();
+         var open = item.querySelector('#submenu-button').opened;
+         expect(open).to.equal(true);
+         done();
+      });
+      test('Selecting checkbox of All children select parent element', function (done) {
+         var input = element.shadowRoot.querySelector('#input');
+         input.click();
+         var item = element.shadowRoot.querySelector('paper-listbox').querySelectorAll('paper-item')[2];
+         var iconArr = item.querySelector('paper-listbox').querySelectorAll('iron-icon');
+         iconArr.forEach(element => {
+           element.click();
+         });
+         var icon = element.shadowRoot.querySelector('paper-listbox').querySelectorAll('paper-item')[2].querySelector('iron-icon').icon;
+         expect(icon).to.equal('check-box');
+         done();
+      });
+    });
+   
+  </script>
+</body>
+
+</html>

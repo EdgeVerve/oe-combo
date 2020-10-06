@@ -105,6 +105,10 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     .dropdown-content > ::slotted(*){
       max-height: 240px;
     }
+    .dropdown-content paper-item:hover {
+      background-color: #DDD;
+      @apply --oe-typeahead-item-hover;
+    }
     iron-input {
       @apply --iron-input;
     }
@@ -646,7 +650,7 @@ class OeTypeahead extends mixinBehaviors([IronFormElementBehavior, PaperInputBeh
     } else if (this.strict && this.displayValue != this._getDisplayValue(this.selectedItem)) {
       this.setValidity(false, 'invalidValue');
       isValid = false;
-    } else if (this.required && !this.value) {
+    } else if (this.required && (!this.value || (this.value === this._invalidValue))) {
       this.setValidity(false, 'valueMissing');
       isValid = false;
     }
